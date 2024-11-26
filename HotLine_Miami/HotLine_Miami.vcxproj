@@ -171,6 +171,9 @@
     <ClCompile Include="Framework\Objects\Text\TextGo.cpp" />
     <ClCompile Include="Framework\Managers\SoundMgr.cpp" />
     <ClCompile Include="Framework\Tables\StringTable.cpp" />
+    <ClCompile Include="SceneDevS.cpp" />
+    <ClCompile Include="TileMap.cpp" />
+    <ClCompile Include="TileMapEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Framework\Animation\Animator.h" />
@@ -197,6 +200,9 @@
     <ClInclude Include="Framework\Objects\Text\TextGo.h" />
     <ClInclude Include="Framework\Managers\SoundMgr.h" />
     <ClInclude Include="Framework\Tables\StringTable.h" />
+    <ClInclude Include="SceneDevS.h" />
+    <ClInclude Include="TileMap.h" />
+    <ClInclude Include="TileMapEditor.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

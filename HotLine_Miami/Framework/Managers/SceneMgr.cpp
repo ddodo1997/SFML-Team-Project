@@ -1,8 +1,11 @@
 #include "stdafx.h"
 #include "SceneMgr.h"
+#include "SceneDevS.h"
 
 void SceneMgr::Init()
 {
+	scenes.push_back(new SceneDevS());
+
 	for (auto scene : scenes)
 	{
 		scene->Init();

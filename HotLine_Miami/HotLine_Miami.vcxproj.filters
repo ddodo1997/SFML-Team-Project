@@ -61,6 +61,9 @@
     <ClCompile Include="Framework\General\stdafx.cpp">
       <Filter>Framework\General</Filter>
     </ClCompile>
+    <ClCompile Include="SceneDevS.cpp" />
+    <ClCompile Include="TileMap.cpp" />
+    <ClCompile Include="TileMapEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Framework\Animation\AnimationClip.h">
@@ -135,6 +138,9 @@
     <ClInclude Include="Framework\General\stdafx.h">
       <Filter>Framework\General</Filter>
     </ClInclude>
+    <ClInclude Include="SceneDevS.h" />
+    <ClInclude Include="TileMap.h" />
+    <ClInclude Include="TileMapEditor.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Framework">
