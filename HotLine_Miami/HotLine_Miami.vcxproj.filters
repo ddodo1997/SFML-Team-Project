@@ -61,6 +61,10 @@
     <ClCompile Include="Framework\General\stdafx.cpp">
       <Filter>Framework\General</Filter>
     </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Framework\Objects\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneDev_K.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Framework\Animation\AnimationClip.h">
@@ -135,6 +139,10 @@
     <ClInclude Include="Framework\General\stdafx.h">
       <Filter>Framework\General</Filter>
     </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Framework\Objects\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneDev_K.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Framework">

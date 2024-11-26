@@ -1,0 +1,13 @@
+{
+    "ID": "EnemyBackBashed",
+    "LoopType": 0,
+    "FPS": 10,
+    "texId": "graphics/Enemy/Die/eBackBashed.png",
+    "Frames":
+    [
+        [0,0,60,32],
+        [60,0,60,32],
+        [0,32,60,32],
+        [60,32,60,32]
+    ]
+}
