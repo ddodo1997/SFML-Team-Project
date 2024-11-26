@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Framework\Animation\AnimationClip.cpp">
+      <Filter>Framework\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\Animation\Animator.cpp">
+      <Filter>Framework\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\Managers\DataTableMgr.cpp">
+      <Filter>Framework\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\Managers\InputMgr.cpp">
+      <Filter>Framework\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\Managers\SaveLoadMgr.cpp">
+      <Filter>Framework\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\Managers\SceneMgr.cpp">
+      <Filter>Framework\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\Managers\SoundMgr.cpp">
+      <Filter>Framework\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\Objects\GameObject.cpp">
+      <Filter>Framework\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\Objects\HitBox.cpp">
+      <Filter>Framework\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\Objects\SpriteGo.cpp">
+      <Filter>Framework\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\Scenes\Scene.cpp">
+      <Filter>Framework\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\Tables\DataTable.cpp">
+      <Filter>Framework\Tables</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\Tables\StringTable.cpp">
+      <Filter>Framework\Tables</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\Objects\Text\TextGo.cpp">
+      <Filter>Framework\Objects\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\General\Framework.cpp">
+      <Filter>Framework\General</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\General\main.cpp">
+      <Filter>Framework\General</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\General\SaveData.cpp">
+      <Filter>Framework\General</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\General\Utils.cpp">
+      <Filter>Framework\General</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\General\Variables.cpp">
+      <Filter>Framework\General</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\General\stdafx.cpp">
+      <Filter>Framework\General</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Framework\Animation\AnimationClip.h">
+      <Filter>Framework\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\Animation\Animator.h">
+      <Filter>Framework\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\Managers\DataTableMgr.h">
+      <Filter>Framework\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\Managers\InputMgr.h">
+      <Filter>Framework\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\Managers\ResourceMgr.h">
+      <Filter>Framework\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\Managers\SaveLoadMgr.h">
+      <Filter>Framework\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\Managers\SceneMgr.h">
+      <Filter>Framework\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\Managers\SoundMgr.h">
+      <Filter>Framework\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\Managers\Singleton.h">
+      <Filter>Framework\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\Objects\GameObject.h">
+      <Filter>Framework\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\Objects\HitBox.h">
+      <Filter>Framework\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\Objects\ObjectPool.h">
+      <Filter>Framework\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\Objects\SpriteGo.h">
+      <Filter>Framework\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\Scenes\Scene.h">
+      <Filter>Framework\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\Tables\DataTable.h">
+      <Filter>Framework\Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\Tables\StringTable.h">
+      <Filter>Framework\Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\Objects\Text\TextGo.h">
+      <Filter>Framework\Objects\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\General\Variables.h">
+      <Filter>Framework\General</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\General\Defines.h">
+      <Filter>Framework\General</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\General\Framework.h">
+      <Filter>Framework\General</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\General\json.hpp">
+      <Filter>Framework\General</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\General\SaveData.h">
+      <Filter>Framework\General</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\General\Utils.h">
+      <Filter>Framework\General</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\General\stdafx.h">
+      <Filter>Framework\General</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Framework">
+      <UniqueIdentifier>{98813b8f-1167-4aa7-a3ca-96ac456819b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Animation">
+      <UniqueIdentifier>{1777a109-66c9-47ab-85b7-389d95fc2190}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\General">
+      <UniqueIdentifier>{a2b7eeb0-2c84-4597-8bda-82ea7b9b0455}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Managers">
+      <UniqueIdentifier>{788fc88f-1795-4749-a482-dc46073c2e80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Objects">
+      <UniqueIdentifier>{54aa7906-ed0f-4be7-9c74-39f0f7fd440d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Scenes">
+      <UniqueIdentifier>{019ca674-1325-47ff-a7ed-44a984073775}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Map">
+      <UniqueIdentifier>{7b45a759-eee7-460f-a37f-10ba5fb76264}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Tables">
+      <UniqueIdentifier>{08091a04-a3ef-4d3b-b870-b40a5bd758eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Objects\Text">
+      <UniqueIdentifier>{0f2e7863-90da-42fc-a144-3fa4511fe0e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Scenes\Game">
+      <UniqueIdentifier>{d5e78268-4a30-45fd-b94e-e9076047743e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Objects\Entity">
+      <UniqueIdentifier>{b0191bd5-111b-4a80-b7cc-7b1e6b79545f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
