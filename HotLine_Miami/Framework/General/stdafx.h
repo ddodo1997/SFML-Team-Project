@@ -37,3 +37,4 @@ using json = nlohmann::json;
 #include "AnimationClip.h"
 #include "Animator.h"
 #include "SaveLoadMgr.h"
+#include "ViewMgr.h"

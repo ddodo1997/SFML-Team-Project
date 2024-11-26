@@ -18,16 +18,6 @@ void HitBox::UpdateTr(const sf::Transformable& tr, const sf::FloatRect& localBou
 	rect.setRotation(tr.getRotation());
 }
 
-void HitBox::UpdateBoss(const sf::Transformable& tr, const sf::FloatRect& localBound)
-{
-	rect.setOutlineColor(sf::Color::Green);
-	rect.setSize({ localBound.width * 0.8f, localBound.height * 0.95f });
-	rect.setOrigin(tr.getOrigin());
-	rect.setPosition({ tr.getPosition().x + 38.f , tr.getPosition().y});
-	rect.setScale(tr.getScale());
-	rect.setRotation(tr.getRotation());
-}
-
 void HitBox::Draw(sf::RenderWindow& window)
 {
 	if (Variables::isDrawHitBox)

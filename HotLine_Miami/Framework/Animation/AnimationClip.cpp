@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "AnimationClip.h"
 using json = nlohmann::json;
+
 bool AnimationClip::loadFromFile(const std::string& filePath)
 {
 	std::ifstream fStream(filePath);

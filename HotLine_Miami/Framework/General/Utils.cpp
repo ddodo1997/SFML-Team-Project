@@ -132,7 +132,7 @@ float Utils::Magnitude(const sf::Vector2f& vec)
     return std::sqrtf(SqrMagnitude(vec));
 }
 
-void Utils::Normailize(sf::Vector2f& vec)
+void Utils::Normalize(sf::Vector2f& vec)
 {
     float mag = Magnitude(vec);
     if (mag != 0)
