@@ -61,6 +61,16 @@
     <ClCompile Include="Framework\General\stdafx.cpp">
       <Filter>Framework\General</Filter>
     </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Framework\Objects\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="UiHudL.cpp">
+      <Filter>Framework\Objects\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneDevL.cpp">
+      <Filter>Framework\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewMgr.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Framework\Animation\AnimationClip.h">
@@ -135,6 +145,16 @@
     <ClInclude Include="Framework\General\stdafx.h">
       <Filter>Framework\General</Filter>
     </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Framework\Objects\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="UiHudL.h">
+      <Filter>Framework\Objects\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneDevL.h">
+      <Filter>Framework\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewMgr.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Framework">
