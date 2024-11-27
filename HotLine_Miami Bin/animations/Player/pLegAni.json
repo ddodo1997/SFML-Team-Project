@@ -1,7 +1,7 @@
 {
     "ID": "pLegWalk",
     "LoopType": 1,
-    "FPS": 20,
+    "FPS": 15,
     "texId": "graphics/player/Legs/pLegs_sheet.png",
     "Frames":
     [

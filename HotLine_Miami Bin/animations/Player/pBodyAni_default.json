@@ -1,7 +1,7 @@
 {
     "ID": "pBodyWalk_default",
     "LoopType": 1,
-    "FPS": 20,
+    "FPS": 8,
     "texId": "graphics/player/Walk/pWalkUnArmdNoMask_1Line.png",
     "Frames":
     [
