@@ -1,0 +1,10 @@
+{
+    "ID": "EnemyNoneStand",
+    "LoopType": 1,
+    "FPS": 7,
+    "texId": "graphics/Enemy/Stand/eNoneStand.png",
+    "Frames":
+    [
+        [0,0,60,60]
+    ]
+}

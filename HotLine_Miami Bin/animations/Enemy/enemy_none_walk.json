@@ -1,0 +1,14 @@
+{
+    "ID": "EnemyNoneWalk",
+    "LoopType": 1,
+    "FPS": 7,
+    "texId": "graphics/Enemy/Walk/eWalkNone.png",
+    "Frames":
+    [
+        [0,0,32,32],
+		[32,0,32,32],
+		[64,0,32,32],
+		[96,0,32,32],
+		[128,0,32,32]
+    ]
+}

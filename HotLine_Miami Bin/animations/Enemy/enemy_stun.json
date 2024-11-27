@@ -1,0 +1,10 @@
+{
+    "ID": "EnemyStun",
+    "LoopType": 0,
+    "FPS": 3,
+    "texId": "graphics/Enemy/Die/sprEBackBlunt_2.png",
+    "Frames":
+    [
+        [0,0,60,60]
+    ]
+}

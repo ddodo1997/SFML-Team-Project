@@ -1,0 +1,13 @@
+{
+    "ID": "EnemyNoneSneak",
+    "LoopType": 1,
+    "FPS": 7,
+    "texId": "graphics/Enemy/Stand/eNoneSneak.png",
+    "Frames":
+    [
+        [0,0,60,60],
+		[60,0,60,60],
+		[0,60,60,60],
+		[60,60,60,60]
+    ]
+}

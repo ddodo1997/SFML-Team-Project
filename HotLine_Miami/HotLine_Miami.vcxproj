@@ -149,6 +149,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Framework\Animation\Animator.cpp" />
     <ClCompile Include="Framework\Animation\AnimationClip.cpp" />
     <ClCompile Include="Framework\General\SaveData.cpp" />
@@ -171,8 +172,10 @@
     <ClCompile Include="Framework\Objects\Text\TextGo.cpp" />
     <ClCompile Include="Framework\Managers\SoundMgr.cpp" />
     <ClCompile Include="Framework\Tables\StringTable.cpp" />
+    <ClCompile Include="SceneDev_K.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="Framework\Animation\Animator.h" />
     <ClInclude Include="Framework\Animation\AnimationClip.h" />
     <ClInclude Include="Framework\General\Defines.h" />
@@ -197,6 +200,7 @@
     <ClInclude Include="Framework\Objects\Text\TextGo.h" />
     <ClInclude Include="Framework\Managers\SoundMgr.h" />
     <ClInclude Include="Framework\Tables\StringTable.h" />
+    <ClInclude Include="SceneDev_K.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
