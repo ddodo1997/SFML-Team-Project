@@ -1,0 +1,19 @@
+{
+  "textureId": "graphics/Map/Wall/",
+  "walls": [
+    {
+      "id": "wall_1",
+      "x": 1,
+      "y": 1,
+      "type": "sprWallBrickH_0",
+      "direction": "top"
+    },
+    {
+      "id": "wall_2",
+      "x": 3,
+      "y": 2,
+      "type": "sprWalls_2",
+      "direction": "right"
+    }
+  ]
+}

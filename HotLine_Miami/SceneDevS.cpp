@@ -2,6 +2,7 @@
 #include "SceneDevS.h"
 #include "TileMap.h"
 #include "TileMapEditor.h"
+#include "StageTable.h"
 SceneDevS::SceneDevS() : Scene(SceneIds::DevS)
 {
 }
@@ -9,7 +10,10 @@ SceneDevS::SceneDevS() : Scene(SceneIds::DevS)
 void SceneDevS::Init()
 {
 	tileMap = AddGo(new TileMap("Tile Map"));
+	tileMap->Initialize(STAGE_TABLE->GetTileSize(), STAGE_TABLE->GetTileCount(), STAGE_TABLE->GetFloorTiles());
+	tileMap->SetTexture(&TEXTURE_MGR.Get(STAGE_TABLE->GetTileTextureId()));
 	tileMapEditor = AddGo(new TileMapEditor("Tile Map Editor"));
+
 	Scene::Init();
 }
 

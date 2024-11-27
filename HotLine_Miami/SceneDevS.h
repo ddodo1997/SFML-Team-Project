@@ -1,6 +1,7 @@
 #pragma once
 #include "Scene.h"
 #include "json.hpp"
+#include "DataTableMgr.h"
 using json = nlohmann::json;
 class TileMap;
 class TileMapEditor;

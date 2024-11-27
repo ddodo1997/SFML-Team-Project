@@ -33,4 +33,7 @@ inline T* DataTableMgr::Get(DataTable::Types t)
 
 #define DATATABLE_MGR (DataTableMgr::Instance())
 #define STRING_TABLE (DATATABLE_MGR.Get<StringTable>(DataTable::Types::String))
+#define WALL_TABLE (DATATABLE_MGR.Get<WallTable>(DataTable::Types::Walls))
+#define ENEMY_TABLE (DATATABLE_MGR.Get<EnemyTable>(DataTable::Types::Enemies))
+#define STAGE_TABLE (DATATABLE_MGR.Get<StageTable>(DataTable::Types::Stages))
 //#define ITEM_TABLE (DATATABLE_MGR.Get<StringTable>(DataTable::Types::Item))

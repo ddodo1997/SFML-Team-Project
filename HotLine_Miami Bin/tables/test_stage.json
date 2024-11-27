@@ -1,0 +1,45 @@
+{
+  "tileSizeX" : 16,
+  "tileSizeY" : 16,
+  "tileCountX" : 10,
+  "tileCountY" : 10,
+  "floor": {
+    "textureId": "graphics/Map/Tiles/tlFloorTiles.png",
+    "tiles": [
+      -1, 0, 1, 2, 3, 4, 5, 6, 7, 8,
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+      11, 11, 11, 11, 11, 11, 11, 11, 11, 11,
+      22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
+      33, 33, 33, 33, 33, 33, 33, 33, 33, 33,
+      44, 44, 44, 44, 44, 44, 44, 44, 44, 44,
+      7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+      23, 32, 23, 32, 23, 32, 23, 32, 23, 32,
+      -1, -1, -1, -1, -1, 5, 5, 5, 2, 2
+    ]
+  },
+  "decorations": {
+    "textureId": "graphics/Map/Object/",
+    "decos": [
+      {
+        "id": "deco_1",
+        "x": 100,
+        "y": 150,
+        "rotation": 180,
+        "type": "sprBeds_3",
+        "width": 64,
+        "height": 128
+      }, {
+        "id": "deco_2",
+        "x": 200,
+        "y": 300,
+        "rotation": 90,
+        "type": "sprBarricade2_0",
+        "width": 48,
+        "height": 48
+      }
+    ]
+  },
+  "walls": ["wall_1", "wall_2"],
+  "enemies": ["enemy_1", "enemy_2"]
+}
