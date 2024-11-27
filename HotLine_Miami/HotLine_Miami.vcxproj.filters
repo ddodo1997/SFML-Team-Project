@@ -65,6 +65,9 @@
       <Filter>Framework\Objects\Entity</Filter>
     </ClCompile>
     <ClCompile Include="SceneDev_K.cpp" />
+    <ClCompile Include="SceneDevS.cpp" />
+    <ClCompile Include="TileMap.cpp" />
+    <ClCompile Include="TileMapEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Framework\Animation\AnimationClip.h">
@@ -143,6 +146,9 @@
       <Filter>Framework\Objects\Entity</Filter>
     </ClInclude>
     <ClInclude Include="SceneDev_K.h" />
+    <ClInclude Include="SceneDevS.h" />
+    <ClInclude Include="TileMap.h" />
+    <ClInclude Include="TileMapEditor.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Framework">
