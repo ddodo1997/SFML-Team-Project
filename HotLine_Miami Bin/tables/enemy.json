@@ -1,0 +1,79 @@
+{
+  "enemies": [
+    {
+      "id": "enemy_NN",
+      "state": "Normal",
+      "weapontype": "None"
+    },
+    {
+      "id": "enemy_NB",
+      "state": "Normal",
+      "weapontype": "Bat"
+    },
+    {
+      "id": "enemy_NK",
+      "state": "Normal",
+      "weapontype": "Knife"
+    },
+    {
+      "id": "enemy_NM",
+      "state": "Normal",
+      "weapontype": "Machinegun"
+    },
+    {
+      "id": "enemy_NS",
+      "state": "Normal",
+      "weapontype": "Shotgun"
+    },
+    {
+      "id": "enemy_IN",
+      "state": "Idle",
+      "weapontype": "None"
+    },
+    {
+      "id": "enemy_IB",
+      "state": "Idle",
+      "weapontype": "Bat"
+    },
+    {
+      "id": "enemy_IK",
+      "state": "Idle",
+      "weapontype": "Knife"
+    },
+    {
+      "id": "enemy_IM",
+      "state": "Idle",
+      "weapontype": "Machinegun"
+    },
+    {
+      "id": "enemy_IS",
+      "state": "Idle",
+      "weapontype": "Shotgun"
+    },
+    {
+      "id": "enemy_PN",
+      "state": "Patrol",
+      "weapontype": "None"
+    },
+    {
+      "id": "enemy_PB",
+      "state": "Patrol",
+      "weapontype": "Bat"
+    },
+    {
+      "id": "enemy_PK",
+      "state": "Patrol",
+      "weapontype": "Knife"
+    },
+    {
+      "id": "enemy_PM",
+      "state": "Patrol",
+      "weapontype": "Machinegun"
+    },
+    {
+      "id": "enemy_PS",
+      "state": "Patrol",
+      "weapontype": "Shotgun"
+    }
+  ]
+}

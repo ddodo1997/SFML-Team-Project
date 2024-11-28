@@ -5,11 +5,10 @@ public:
 	enum class Types
 	{
 		String,
-		Stages,
-		Floors,
-		Decos,
 		Walls,
 		Enemies,
+		Decos,
+		Stages,
 	};
 	static const int TotalType = 6;
 

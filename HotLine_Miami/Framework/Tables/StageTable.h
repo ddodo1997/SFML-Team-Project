@@ -1,13 +1,15 @@
 #pragma once
 #include "DataTable.h"
-struct DataDecoration
+#include "EnemyTable.h"
+#include "DecorationTable.h"
+struct DataWall
 {
-    std::string id;
-    std::string type;
-    sf::Vector2f pos;
-    sf::Vector2f size;
-    int rotation;
+    std::string id = "";
+    sf::Vector2f start = { 0.f, 0.f };
+    sf::Vector2f end = { 0.f, 0.f };
+    std::vector<std::string> textureIds;
 };
+
 class StageTable : public DataTable
 {
 private:
@@ -15,12 +17,11 @@ private:
     sf::Vector2i tileCount;
 
     std::string tileTextureId;
-    std::string decoTextureId;
-
     std::vector<int> floorTiles;
-    std::vector<std::string> wallIds;
-    std::vector<std::string> enemyIds;
+
     std::unordered_map<std::string, DataDecoration> decoTable;
+    std::unordered_map<std::string, DataEnemy> enemyTable;
+    std::unordered_map<std::string, DataWall> wallTable;
 public:
     StageTable() : DataTable(DataTable::Types::Stages) { };
     ~StageTable() = default;
@@ -32,8 +33,8 @@ public:
     const sf::Vector2i& GetTileCount() const { return tileCount; }
     const std::string& GetTileTextureId() const { return tileTextureId; }
     const std::vector<int>& GetFloorTiles() const { return floorTiles; }
-    const std::vector<std::string>& GetWallIds() const { return wallIds; }
-    const std::vector<std::string>& GetEnemyIds() const { return enemyIds; }
     const std::unordered_map<std::string, DataDecoration>& GetDecoTable() const { return decoTable; }
+    const std::unordered_map<std::string, DataEnemy>& GetEnemyTable() const { return enemyTable; }
+    const std::unordered_map<std::string, DataWall>& GetWallTable() const { return wallTable; }
 };
 

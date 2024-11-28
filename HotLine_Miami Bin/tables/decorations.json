@@ -1,0 +1,143 @@
+{
+  "filePath": "graphics/Map/Object/",
+  "decorations": [
+    {
+      "id": "Desk",
+      "textureId": "sprAndersDesk_0.png",
+      "width": 53,
+      "height": 25
+    },
+    {
+      "id": "BarPoolTable",
+      "textureId": "sprBarPoolTable_0.png",
+      "width": 32,
+      "height": 68
+    },
+    {
+      "id": "BarRegister",
+      "textureId": "sprBarRegister_0.png",
+      "width": 224,
+      "height": 30
+    },
+    {
+      "id": "Barricade_1",
+      "textureId": "sprBarricade1_0.png",
+      "width": 60,
+      "height": 75
+    },
+    {
+      "id": "Barricade_2",
+      "textureId": "sprBarricade2_0.png",
+      "width": 80,
+      "height": 60
+    },
+    {
+      "id": "BarTable_1",
+      "textureId": "sprBarTable_0.png",
+      "width": 50,
+      "height": 23
+    },
+    {
+      "id": "BarTable_2",
+      "textureId": "sprBarTable_1.png",
+      "width": 50,
+      "height": 23
+    },
+    {
+      "id": "BarTable_3",
+      "textureId": "sprBarTable_3.png",
+      "width": 50,
+      "height": 23
+    },
+    {
+      "id": "Bed_1",
+      "textureId": "sprBeds_0.png",
+      "width": 50,
+      "height": 40
+    },
+    {
+      "id": "Bed_2",
+      "textureId": "sprBeds_2.png",
+      "width": 50,
+      "height": 40
+    },
+    {
+      "id": "Bed_3",
+      "textureId": "sprBeds_3.png",
+      "width": 50,
+      "height": 40
+    },
+    {
+      "id": "BigBed",
+      "textureId": "sprBigBed_0.png",
+      "width": 60,
+      "height": 57
+    },
+    {
+      "id": "PoliceTable",
+      "textureId": "sprBigPoliceTable_0.png",
+      "width": 80,
+      "height": 48
+    },
+    {
+      "id": "BigTable_1",
+      "textureId": "sprBigTable_0.png",
+      "width": 50,
+      "height": 23
+    },
+    {
+      "id": "BigTable_2",
+      "textureId": "sprBigTable_1.png",
+      "width": 50,
+      "height": 23
+    },
+    {
+      "id": "BigTable_3",
+      "textureId": "sprBigTable_2.png",
+      "width": 50,
+      "height": 23
+    },
+    {
+      "id": "BigTable_4",
+      "textureId": "sprBigTable_3.png",
+      "width": 50,
+      "height": 23
+    },
+    {
+      "id": "EmptyBathTub",
+      "textureId": "sprBlackTub_0.png",
+      "width": 64,
+      "height": 24
+    },
+    {
+      "id": "FillBathTub",
+      "textureId": "sprBlackTub_1.png",
+      "width": 64,
+      "height": 24
+    },
+    {
+      "id": "BossSofa",
+      "textureId": "sprBoss4Sofa_0.png",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "id": "BuffeTable",
+      "textureId": "sprBuffe_0.png",
+      "width": 80,
+      "height": 27
+    },
+    {
+      "id": "BuffePlates",
+      "textureId": "sprBuffePlates_0.png",
+      "width": 40,
+      "height": 32
+    },
+    {
+      "id": "ConferenceTable",
+      "textureId": "sprConferenceTable_0.png",
+      "width": 140,
+      "height": 60
+    }
+  ]
+}

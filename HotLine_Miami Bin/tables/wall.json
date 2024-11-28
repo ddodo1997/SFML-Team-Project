@@ -1,0 +1,65 @@
+{
+  "filePath": "graphics/Map/Wall/",
+  "walls": [
+    {
+      "id": "PorchWall_H",
+      "textureId": "sprPorchWallH_0.png",
+      "type": "Horizontal"
+    },
+    {
+      "id": "PorchWall_V",
+      "textureId": "sprPorchWallV_0.png",
+      "type": "Vertical"
+    },
+    {
+      "id": "BrickWall_H",
+      "textureId": "sprWallBrickH_0.png",
+      "type": "Horizontal"
+    },
+    {
+      "id": "BrickWall_V",
+      "textureId": "sprWallBrickV_0.png",
+      "type": "Vertical"
+    },
+    {
+      "id": "WindowWall_H_1",
+      "textureId": "sprWallsH_2.png",
+      "type": "Horizontal"
+    },
+    {
+      "id": "WindowWall_V_1",
+      "textureId": "sprWallsV_2.png",
+      "type": "Vertical"
+    },
+    {
+      "id": "WindowWall_H_2",
+      "textureId": "sprWallsH_3.png",
+      "type": "Horizontal"
+    },
+    {
+      "id": "WindowWall_V_2",
+      "textureId": "sprWallsV_3.png",
+      "type": "Vertical"
+    },
+    {
+      "id": "SoftWall_H",
+      "textureId": "sprWallSoftH_0.png",
+      "type": "Horizontal"
+    },
+    {
+      "id": "SoftWall_V",
+      "textureId": "sprWallSoftV_0.png",
+      "type": "Vertical"
+    },
+    {
+      "id": "WoodWall_H",
+      "textureId": "sprWoodWallH_0.png",
+      "type": "Horizontal"
+    },
+    {
+      "id": "WoodWall_V",
+      "textureId": "sprWoodWallV_0.png",
+      "type": "Vertical"
+    }
+  ]
+}

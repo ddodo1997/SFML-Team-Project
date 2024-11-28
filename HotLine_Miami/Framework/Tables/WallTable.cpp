@@ -4,7 +4,7 @@ DataWall WallTable::Undefined;
 bool WallTable::Load()
 {
 	Release();
-	std::ifstream inFile("tables/test_wall.json");
+	std::ifstream inFile("tables/wall.json");
 
 	if (!inFile)
 	{
@@ -15,15 +15,13 @@ bool WallTable::Load()
 	json data;
 	inFile >> data;
 
-	textureId = data["textureId"];
+	filePath = data["filePath"];
+
 	for (const auto& wall : data["walls"])
 	{
-		DataWall dataWall;
-		dataWall.id = wall["id"];
-		dataWall.pos = { wall["x"], wall["y"] };
-		dataWall.type = wall["type"];
-		dataWall.direction = wall["direction"];
-		table[dataWall.id] = dataWall;
+		std::string id = wall["id"];
+		std::string textureId = wall["textureId"];
+		table.insert({ id, textureId });
 	}
 
 	inFile.close();
@@ -35,13 +33,26 @@ void WallTable::Release()
 	table.clear();
 }
 
-const DataWall& WallTable::GetWall(const std::string& id) const
+const std::string& WallTable::GetWall(const std::string& id)
 {
 	auto find = table.find(id);
 	if (find == table.end())
 	{
-		return Undefined;
+		return "";
 	}
 
 	return find->second;
 }
+
+Wall::Types WallTable::StringToWallType(const std::string& type)
+{
+	auto it = stringToTypeMap.find(type);
+	if (it != stringToTypeMap.end())
+	{
+		return it->second;
+	}
+
+	return Wall::Types();
+}
+
+

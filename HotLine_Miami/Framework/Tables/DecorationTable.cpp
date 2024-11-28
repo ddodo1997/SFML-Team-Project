@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #include "DecorationTable.h"
-
+DataDecoration DecorationTable::Undefined;
 bool DecorationTable::Load()
 {
 	Release();
-	std::ifstream inFile("tables/test_deco.json");
+	std::ifstream inFile("tables/decorations.json");
 
 	if (!inFile)
 	{
@@ -15,16 +15,15 @@ bool DecorationTable::Load()
 	json data;
 	inFile >> data;
 
-	textureId = data["textureId"];
+	filePath = data["filePath"];
 	for (const auto& decoration : data["decorations"])
 	{
-		DataDecoration dataDeco;
-		dataDeco.id = decoration["id"];
-		dataDeco.position = { decoration["x"], decoration["y"] };
-		dataDeco.size = { decoration["width"], decoration["height"] };
-		dataDeco.rotation = decoration["rotation"];
-		dataDeco.type = decoration["type"];
-		table[dataDeco.id] = dataDeco;
+		DataDecoration decoData;
+		decoData.id = decoration["id"];
+		decoData.textureId = decoration["textureId"];
+		decoData.size = { decoration["width"], decoration["height"] };
+
+		table.insert({ decoData.id, decoData });
 	}
 
 	inFile.close();
@@ -34,4 +33,15 @@ bool DecorationTable::Load()
 void DecorationTable::Release()
 {
 	table.clear();
+}
+
+const DataDecoration& DecorationTable::GetDecoration(const std::string& id)
+{
+	auto find = table.find(id);
+	if (find == table.end())
+	{
+		return Undefined;
+	}
+
+	return find->second;
 }

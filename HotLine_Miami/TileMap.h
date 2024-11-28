@@ -32,7 +32,6 @@ public:
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 
-	void Set(const sf::Vector2i& count);
 	void Initialize(const sf::Vector2i& tileSize, const sf::Vector2i& tileCount, const std::vector<int>& floorTiles);
 	void UpdateTransform();
 	void SetTexture(sf::Texture* texture) { this->texture = texture; }

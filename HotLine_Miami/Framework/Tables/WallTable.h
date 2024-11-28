@@ -1,28 +1,27 @@
 #pragma once
 #include "DataTable.h"
-
-struct DataWall
-{
-	std::string id;
-	sf::Vector2f pos;
-	std::string type;
-	std::string direction;
-};
+#include "Wall.h"
 
 class WallTable : public DataTable
 {
 private:
-	std::unordered_map<std::string, DataWall> table;
-	std::string textureId;
+	std::unordered_map<std::string, std::string> table;
+	std::string filePath;
+
+	std::unordered_map<std::string, Wall::Types> stringToTypeMap = {
+		{"Horizontal", Wall::Types::Horizontal},
+		{"Vertical", Wall::Types::Vertical}
+	};
 public:
 	static DataWall Undefined;
-
 	WallTable() : DataTable(DataTable::Types::Walls) { };
 	~WallTable() = default;
 
 	bool Load() override;
 	void Release() override;
-	const DataWall& GetWall(const std::string& id) const;
-	std::string GetTextureId() const { return textureId; }
+
+	const std::string& GetWall(const std::string& id);
+	const std::string GetFilePath() { return filePath; }
+	Wall::Types StringToWallType(const std::string& type);
 };
 

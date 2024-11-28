@@ -6,7 +6,7 @@
   "floor": {
     "textureId": "graphics/Map/Tiles/tlFloorTiles.png",
     "tiles": [
-      -1, 0, 1, 2, 3, 4, 5, 6, 7, 8,
+      1, 0, 1, 2, 3, 4, 5, 6, 7, 8,
       1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
       2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
       11, 11, 11, 11, 11, 11, 11, 11, 11, 11,
@@ -19,27 +19,53 @@
     ]
   },
   "decorations": {
-    "textureId": "graphics/Map/Object/",
     "decos": [
       {
-        "id": "deco_1",
-        "x": 100,
-        "y": 150,
-        "rotation": 180,
-        "type": "sprBeds_3",
-        "width": 64,
-        "height": 128
+        "id": "BarTable_2",
+        "x": 0,
+        "y": 0,
+        "rotation": 0
       }, {
-        "id": "deco_2",
-        "x": 200,
-        "y": 300,
-        "rotation": 90,
-        "type": "sprBarricade2_0",
-        "width": 48,
-        "height": 48
+        "id": "BigBed",
+        "x": 20,
+        "y": 30,
+        "rotation": 90
       }
     ]
   },
-  "walls": ["wall_1", "wall_2"],
-  "enemies": ["enemy_1", "enemy_2"]
+  "wall": 
+  {
+    "filePath" : "graphics/Map/Wall/",
+  "walls": [
+    {
+      "id" : "test_H",
+      "start" : { "x" : 0, "y" : 0},
+      "end" : {"x" : 8, "y" : 0},
+      "ids" : ["sprWallsH_2.png", "sprPorchWallH_0.png", "sprWallsH_2.png", "sprWallsH_2.png"]
+    },
+    {
+      "id" : "test_V",
+      "start" : { "x" : 0, "y" : 0},
+      "end" : {"x" : 0, "y" : 8},
+      "ids" : ["sprWallsV_2.png", "sprPorchWallV_0.png", "sprWallsV_2.png", "sprWallsV_2.png"]
+    }
+  ]
+},
+  "enemy": 
+  {
+    "enemies": [
+    {
+      "id": "enemy_NN",
+      "x": 0,
+      "y": 0,
+      "waypoint": []
+    },
+    {
+      "id": "enemy_IN",
+      "x": 3,
+      "y": 2,
+      "waypoint": []
+    }
+  ]
+  }
 }

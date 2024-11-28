@@ -78,12 +78,12 @@
       <Filter>Framework\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="ViewMgr.cpp" />
-    <ClCompile Include="Framework\Tables\FloorTable.cpp" />
-    <ClCompile Include="Framework\Tables\WallTable.cpp" />
     <ClCompile Include="Framework\Tables\DecorationTable.cpp" />
     <ClCompile Include="Framework\Tables\EnemyTable.cpp" />
     <ClCompile Include="Framework\Tables\StageTable.cpp" />
     <ClCompile Include="Wall.cpp" />
+    <ClCompile Include="Decoration.cpp" />
+    <ClCompile Include="Framework\Tables\WallTable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Framework\Animation\AnimationClip.h">
@@ -175,12 +175,12 @@
       <Filter>Framework\Scenes</Filter>
     </ClInclude>
     <ClInclude Include="ViewMgr.h" />
-    <ClInclude Include="Framework\Tables\FloorTable.h" />
-    <ClInclude Include="Framework\Tables\WallTable.h" />
     <ClInclude Include="Framework\Tables\DecorationTable.h" />
     <ClInclude Include="Framework\Tables\EnemyTable.h" />
     <ClInclude Include="Framework\Tables\StageTable.h" />
     <ClInclude Include="Wall.h" />
+    <ClInclude Include="Decoration.h" />
+    <ClInclude Include="Framework\Tables\WallTable.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Framework">

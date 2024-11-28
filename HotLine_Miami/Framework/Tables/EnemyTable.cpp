@@ -4,7 +4,7 @@ DataEnemy EnemyTable::Undefined;
 bool EnemyTable::Load()
 {
 	Release();
-	std::ifstream inFile("tables/test_enemy.json");
+	std::ifstream inFile("tables/enemy.json");
 
 	if (!inFile)
 	{
@@ -19,13 +19,9 @@ bool EnemyTable::Load()
 	{
 		DataEnemy dataEnemy;
 		dataEnemy.id = enemy["id"];
-		dataEnemy.pos = { enemy["x"], enemy["y"] };
 		dataEnemy.weaponType = enemy["weapontype"];
-		dataEnemy.state = enemy["state"];
-		for (const auto& waypoint : enemy["waypoint"])
-		{
-			dataEnemy.wayPoints.push_back({ waypoint["x"], waypoint["y"] });
-		}
+		dataEnemy.state = StringToEnemyStatus(enemy["state"]);
+
 		table[dataEnemy.id] = dataEnemy;
 	}
 
@@ -47,4 +43,15 @@ const DataEnemy& EnemyTable::GetEnemy(const std::string& id) const
 	}
 
 	return find->second;
+}
+
+Enemy::Status EnemyTable::StringToEnemyStatus(const std::string& status)
+{
+	auto it = stringToStatusMap.find(status);
+	if (it != stringToStatusMap.end())
+	{
+		return it->second;
+	}
+
+	return Enemy::Status();
 }
