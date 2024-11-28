@@ -1,6 +1,8 @@
 #pragma once
+#include "Weapon.h"
 
 class SceneDevL;
+class Weapon;
 
 class Player : public GameObject
 {
@@ -12,7 +14,10 @@ public:
 	};
 
 protected:
-	// Weapon* weapon;
+	Weapon::WeaponStatus weaponStatus;
+
+	int remainingBullet;
+
 	SceneDevL* sceneDevL;
 
 	sf::Sprite body;
@@ -22,6 +27,8 @@ protected:
 	Animator animatorLeg;
 
 	sf::Vector2f direction;
+	sf::Vector2f look;
+
 	float speed = 100;
 	float onDieSpeed = 300;
 	float onDieEffectAccumTime = 0.6f;
@@ -61,10 +68,12 @@ public:
 	void OnHitByMachinegun(sf::Vector2f hitDir);
 	void OnHitByShotgun(sf::Vector2f hitDir);
 
-	// for test only
-	void OnHit(int weaponType, float hitDirRad);
-	void OnHitByBat(float hitDirRad);
-	void OnHitByKnife(float hitDirRad);
-	void OnHitByMachinegun(float hitDirRad);
-	void OnHitByShotgun(float hitDirRad);
+	void WeaponPickUp(Weapon::WeaponType weaponType, int remainingBullet);
+	void SetWeaponStatus();
+	void SetRemainingBullet(int remainingBullet);
+	int GetRemainingBullet();
+	
+	void Attack();
+	void ThrowWeapon(sf::Vector2f lookDir);
+	void DropWeapon(sf::Vector2f hitDir);
 };

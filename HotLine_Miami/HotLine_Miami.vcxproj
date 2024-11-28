@@ -149,7 +149,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Bat.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Framework\Animation\Animator.cpp" />
     <ClCompile Include="Framework\Animation\AnimationClip.cpp" />
@@ -173,23 +172,18 @@
     <ClCompile Include="Framework\Objects\Text\TextGo.cpp" />
     <ClCompile Include="Framework\Managers\SoundMgr.cpp" />
     <ClCompile Include="Framework\Tables\StringTable.cpp" />
-    <ClCompile Include="Knife.cpp" />
-    <ClCompile Include="Machinegun.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SceneDevL.cpp" />
     <ClCompile Include="SceneDev_K.cpp" />
     <ClCompile Include="SceneDevS.cpp" />
-    <ClCompile Include="Shotgun.cpp" />
     <ClCompile Include="TileMap.cpp" />
     <ClCompile Include="TileMapEditor.cpp" />
     <ClCompile Include="UiHudL.cpp" />
     <ClCompile Include="ViewMgr.cpp" />
     <ClCompile Include="Weapon.cpp" />
-    <ClCompile Include="WeaponMelee.cpp" />
-    <ClCompile Include="WeaponRanged.cpp" />
+    <ClCompile Include="WeaponTable.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Bat.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Framework\Animation\Animator.h" />
     <ClInclude Include="Framework\Animation\AnimationClip.h" />
@@ -215,20 +209,16 @@
     <ClInclude Include="Framework\Objects\Text\TextGo.h" />
     <ClInclude Include="Framework\Managers\SoundMgr.h" />
     <ClInclude Include="Framework\Tables\StringTable.h" />
-    <ClInclude Include="Knife.h" />
-    <ClInclude Include="Machinegun.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="SceneDevL.h" />
     <ClInclude Include="SceneDev_K.h" />
     <ClInclude Include="SceneDevS.h" />
-    <ClInclude Include="Shotgun.h" />
     <ClInclude Include="TileMap.h" />
     <ClInclude Include="TileMapEditor.h" />
     <ClInclude Include="UiHudL.h" />
     <ClInclude Include="ViewMgr.h" />
     <ClInclude Include="Weapon.h" />
-    <ClInclude Include="WeaponMelee.h" />
-    <ClInclude Include="WeaponRanged.h" />
+    <ClInclude Include="WeaponTable.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

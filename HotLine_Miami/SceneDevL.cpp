@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "TextGo.h"
 #include "UiHudL.h"
+#include "Weapon.h"
 
 SceneDevL::SceneDevL() : Scene(SceneIds::DevL)
 {
@@ -33,12 +34,43 @@ void SceneDevL::Enter()
 
 void SceneDevL::Exit()
 {
+	RemovePoolObjects();
 
 	Scene::Exit();
 }
 
+void SceneDevL::RemovePoolObjects()
+{
+	for (auto weapon : weapons)
+	{
+		RemoveGo(weapon);
+		weaponPool.Return(weapon);
+	}
+	weapons.clear();
+}
+
+void SceneDevL::ClearInactivePoolObjects()
+{
+	auto weapon = weapons.begin();
+	while (weapon != weapons.end())
+	{
+		if (!(*weapon)->IsActive())
+		{
+			weaponPool.Return(*weapon);
+			RemoveGo(*weapon);
+			weapon = weapons.erase(weapon);
+		}
+		else
+		{
+			weapon++;
+		}
+	}
+}
+
 void SceneDevL::Update(float dt)
 {
+	Scene::Update(dt);
+
 	if (InputMgr::GetKeyDown(sf::Keyboard::Numpad0))
 	{
 		player->OnHit(0, directionXY);
@@ -89,12 +121,29 @@ void SceneDevL::Update(float dt)
 
 	uiHud->UpdateHitDir(directionXY);
 
-
-	Scene::Update(dt);
+	ClearInactivePoolObjects();
 }
 
 void SceneDevL::Draw(sf::RenderWindow& window)
 {
 
+
 	Scene::Draw(window);
+}
+
+void SceneDevL::OnWeaponDrop(Weapon::WeaponType weaponType, int remainingBullet, sf::Vector2f dir)
+{
+	Weapon* weapon = weaponPool.Take();
+	weapons.push_back(weapon);
+
+	weapon->SetWeaponType(weaponType);
+	if (weapon->GetIsRanged())
+	{
+		weapon->SetRemainingBullet(remainingBullet);
+	}
+	else
+	{
+		weapon->SetRemainingBullet(0);
+	}
+	AddGo(weapon);
 }

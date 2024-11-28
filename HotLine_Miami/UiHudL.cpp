@@ -75,6 +75,19 @@ void UiHudL::Reset()
 	hitDirection.setScale(2.f, 2.f);
 	hitDirection.setPosition({ 38.f,230.f });
 	Utils::SetOrigin(hitDirection, Origins::ML);
+
+	lookDirectionText.setFont(FONT_MGR.Get("fonts/DS-DIGI.ttf"));
+	lookDirectionText.setCharacterSize(30.f);
+	lookDirectionText.setFillColor(sf::Color::White);
+	lookDirectionText.setString(std::to_string(InputMgr::GetMousePosition().y));
+	lookDirectionText.setPosition({ 30.f,330.f });
+	Utils::SetOrigin(lookDirectionText, Origins::TL);
+
+	lookDirection.setTexture(TEXTURE_MGR.Get("graphics/ETC/sprArrowColor.png"));
+	lookDirection.setTextureRect({ 0,0,16,16 });
+	lookDirection.setScale(2.f, 2.f);
+	lookDirection.setPosition({ 38.f,430.f });
+	Utils::SetOrigin(lookDirection, Origins::ML);
 }
 
 void UiHudL::Update(float dt)
@@ -92,12 +105,21 @@ void UiHudL::UpdateMPos(float dt)
 	Utils::SetOrigin(mPosY, Origins::TL);
 }
 
-void UiHudL::UpdateHitDir(sf::Vector2f dir)
+void UiHudL::UpdateHitDir(sf::Vector2f hitDir)
 {
-	hitDirectionText.setString(std::to_string(dir.x) + "\n" + std::to_string(dir.y));
+	hitDirectionText.setString(std::to_string(hitDir.x) + "\n" + std::to_string(hitDir.y));
 	Utils::SetOrigin(hitDirectionText, Origins::TL);
 
-	hitDirection.setRotation(Utils::Angle(dir)-90);
+	hitDirection.setRotation(Utils::Angle(hitDir)-90);
+	Utils::SetOrigin(hitDirection, Origins::MC);
+}
+
+void UiHudL::UpdateLookDir(sf::Vector2f lookDir)
+{
+	lookDirectionText.setString(std::to_string(lookDir.x) + "\n" + std::to_string(lookDir.y));
+	Utils::SetOrigin(hitDirectionText, Origins::TL);
+
+	lookDirection.setRotation(Utils::Angle(lookDir) - 90);
 	Utils::SetOrigin(hitDirection, Origins::MC);
 }
 
@@ -107,4 +129,6 @@ void UiHudL::Draw(sf::RenderWindow& window)
 	window.draw(mPosY);
 	window.draw(hitDirectionText);
 	window.draw(hitDirection);
+	window.draw(lookDirectionText);
+	window.draw(lookDirection);
 }

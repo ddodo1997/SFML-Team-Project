@@ -8,6 +8,7 @@ public:
 		Bricks,
 		Stages,
 		Item,
+		Weapon,
 	};
 	static const int TotalType = 4;
 

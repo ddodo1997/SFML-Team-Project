@@ -96,8 +96,8 @@ void Player::Update(float dt)
 	leg.setRotation(Utils::Angle(direction)); 
 
 	auto mPos = SCENE_MGR.GetCurrentScene()->ScreenToWorld(InputMgr::GetMousePosition());
-	auto bodyTowardsMPos = mPos - position;
-	body.setRotation(Utils::Angle(bodyTowardsMPos));
+	look = mPos - position;
+	body.setRotation(Utils::Angle(look));
 
 	Utils::SetOrigin(leg, Origins::MC);
 	Utils::SetOrigin(body, Origins::MC);
@@ -160,6 +160,8 @@ void Player::OnHit(int weaponType, sf::Vector2f hitDir)
 		break;
 	}
 	isAlive = false;
+	if (weaponStatus.weaponType != Weapon::WeaponType::None)
+		DropWeapon(hitDir);
 }
 
 void Player::OnHitByBat(sf::Vector2f hitDir)
@@ -214,70 +216,76 @@ void Player::OnHitByShotgun(sf::Vector2f hitDir)
 	Utils::SetOrigin(body, Origins::MC);
 }
 
-void Player::OnHit(int weaponType, float hitDirRad)
+void Player::WeaponPickUp(Weapon::WeaponType weaponType, int remainingBullet)
 {
-	switch (weaponType)
+	weaponStatus.weaponType = weaponType;
+	SetWeaponStatus();
+	if (weaponStatus.isRangedWeapon)
+		SetRemainingBullet(remainingBullet);
+	else
+		SetRemainingBullet(0);
+}
+
+void Player::SetWeaponStatus()
+{
+	switch (weaponStatus.weaponType)
 	{
-	case 0:
-		OnHitByBat(hitDirRad);
+	case Weapon::WeaponType::None:
+		weaponStatus.damage = 0;
+		weaponStatus.damageOnThrow = 0;
+		weaponStatus.isRangedWeapon = false;
+		weaponStatus.maxBullet = 0;
 		break;
-	case 1:
-		OnHitByKnife(hitDirRad);
+	case Weapon::WeaponType::Bat:
+		weaponStatus.damage = 1;
+		weaponStatus.damageOnThrow = 0;
+		weaponStatus.isRangedWeapon = false;
+		weaponStatus.maxBullet = 0;
 		break;
-	case 2:
-		OnHitByMachinegun(hitDirRad);
+	case Weapon::WeaponType::Knife:
+		weaponStatus.damage = 1;
+		weaponStatus.damageOnThrow = 1;
+		weaponStatus.isRangedWeapon = false;
+		weaponStatus.maxBullet = 0;
 		break;
-	case 3:
-		OnHitByShotgun(hitDirRad);
+	case Weapon::WeaponType::Machinegun:
+		weaponStatus.damage = 1;
+		weaponStatus.damageOnThrow = 0;
+		weaponStatus.isRangedWeapon = true;
+		weaponStatus.maxBullet = 24;
+		break;
+	case Weapon::WeaponType::Shotgun:
+		weaponStatus.damage = 1;
+		weaponStatus.damageOnThrow = 0;
+		weaponStatus.isRangedWeapon = true;
+		weaponStatus.maxBullet = 2;
 		break;
 	}
-	isAlive = false;
 }
 
-void Player::OnHitByBat(float hitDirRad)//sf::Vector2f
+void Player::SetRemainingBullet(int remainingBullet)
 {
-	std::string tempTexId;
-	int tempIndex = Utils::RandomRange(0, 4);
-	tempTexId = "graphics/player/Die/sprPBackBlunt2_" + std::to_string(tempIndex) + ".png";
-	animatorBody.Stop();
-	body.setTexture(TEXTURE_MGR.Get(tempTexId));
-	body.setTextureRect({ 0,0,60,60 });
-	body.setScale({ -1.f,1.f });
-	Utils::SetOrigin(body, Origins::MC);
+	this->remainingBullet = remainingBullet;
 }
 
-void Player::OnHitByKnife(float hitDirRad)
+int Player::GetRemainingBullet()
 {
-	std::string tempTexId;
-	int tempIndex = Utils::RandomRange(0, 2);
-	tempTexId = "graphics/player/Die/sprPBackCut2_" + std::to_string(tempIndex) + ".png";
-	animatorBody.Stop();
-	body.setTexture(TEXTURE_MGR.Get(tempTexId));
-	body.setTextureRect({ 0,0,60,60 });
-	body.setScale({ -1.f,1.f });
-	Utils::SetOrigin(body, Origins::MC);
+	return remainingBullet;
 }
 
-void Player::OnHitByMachinegun(float hitDirRad)
+void Player::Attack()
 {
-	std::string tempTexId;
-	int tempIndex = Utils::RandomRange(1, 4);
-	tempTexId = "graphics/player/Die/sprPBackMachinegun2_" + std::to_string(tempIndex) + ".png";
-	animatorBody.Stop();
-	body.setTexture(TEXTURE_MGR.Get(tempTexId));
-	body.setTextureRect({ 0,0,60,60 });
-	body.setScale({ -1.f,1.f });
-	Utils::SetOrigin(body, Origins::MC);
+	
 }
 
-void Player::OnHitByShotgun(float hitDirRad)
+void Player::ThrowWeapon(sf::Vector2f lookDir)
 {
-	std::string tempTexId;
-	int tempIndex = Utils::RandomRange(1, 5);
-	tempTexId = "graphics/player/Die/sprPBackShotgun2_" + std::to_string(tempIndex) + ".png";
-	animatorBody.Stop();
-	body.setTexture(TEXTURE_MGR.Get(tempTexId));
-	body.setTextureRect({ 0,0,60,60 });
-	body.setScale({ -1.f,1.f });
-	Utils::SetOrigin(body, Origins::MC);
+		
 }
+
+void Player::DropWeapon(sf::Vector2f hitDir)
+{
+
+}
+
+
