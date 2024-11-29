@@ -70,7 +70,7 @@ void SceneDevS::Update(float dt)
 	worldView.setSize(windowSize * zoomNoun);
 
 	sf::Vector2i mousePos = InputMgr::GetMousePosition();
-	if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
+	if (InputMgr::GetMouseButton(sf::Mouse::Left))
 	{
 		sf::Vector2f worldPos = ScreenToWorld(mousePos);
 		tileMap->PaintTile(worldPos, tileMapEditor->GetSelectedTileIndex());
@@ -78,6 +78,10 @@ void SceneDevS::Update(float dt)
 	if (InputMgr::GetKeyDown(sf::Keyboard::Delete))
 	{
 		tileMap->InitializeEmpty(STAGE_TABLE->GetTileSize(), { 40, 40 });
+	}
+	if (InputMgr::GetKeyDown(sf::Keyboard::Enter))
+	{
+		SaveMap();
 	}
 	Scene::Update(dt);
 }
@@ -146,3 +150,83 @@ void SceneDevS::SetStatusEnemies()
 		enemies[i++]->SetStatus(enemyPair.second.state);
 	}
 }
+
+void SceneDevS::SaveMap() const
+{
+	json mapData;
+
+	mapData["tileSizeX"] = tileMap->GetTileSize().x;
+	mapData["tileSizeY"] = tileMap->GetTileSize().y;
+
+	const sf::Vector2i& tileCount = tileMap->GetTileCount();
+	const std::vector<int>& floorTiles = tileMap->GetFloorTiles();
+
+	int minX = tileCount.x, minY = tileCount.y;
+	int maxX = -1, maxY = -1;
+
+
+	for (int y = 0; y < tileCount.y; y++)
+	{
+		for (int x = 0; x < tileCount.x; x++)
+		{
+			int tileIndex = y * tileCount.x + x;
+			if (floorTiles[tileIndex] != -1)  // 유효한 타일이 있는 경우
+			{
+				if (x < minX)
+				{
+					minX = x;
+				}
+				if (y < minY)
+				{
+					minY = y;
+				}
+				if (x > maxX)
+				{
+					maxX = x;
+				}
+				if (y > maxY)
+				{
+					maxY = y;
+				}
+			}
+		}
+	}
+
+	if (maxX == -1 || maxY == -1)
+	{
+		std::cout << "No tiles to save." << std::endl;
+		return;
+	}
+
+	mapData["tileCountX"] = maxX - minX + 1;
+	mapData["tileCountY"] = maxY - minY + 1;
+
+	mapData["floor"]["textureId"] = STAGE_TABLE->GetTileTextureId();
+
+	std::vector<int> resizedTiles((maxY - minY + 1) * (maxX - minX + 1), -1);
+
+	for (int y = minY; y <= maxY; ++y)
+	{
+		for (int x = minX; x <= maxX; ++x)
+		{
+			int oldIndex = y * tileCount.x + x;
+			int newIndex = (y - minY) * (maxX - minX + 1) + (x - minX);
+			resizedTiles[newIndex] = floorTiles[oldIndex];
+		}
+	}
+
+	mapData["floor"]["tiles"] = resizedTiles;
+
+	std::ofstream outFile("tables/Test_Save.json");
+	if (outFile.is_open())
+	{
+		outFile << mapData.dump(4);
+		outFile.close();
+		std::cout << "save success!!" << std::endl;
+	}
+	else
+	{
+		std::cerr << "save Failed.." << std::endl;
+	}
+}
+

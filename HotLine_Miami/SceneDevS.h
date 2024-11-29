@@ -44,5 +44,7 @@ public:
 	std::vector<Enemy*> GetEnemies() const { return enemies; }
 	std::vector<Decoration*> GetDecorations() const { return decorations; }
 	std::vector<Wall*> GetWalls() const { return walls; }
+
+	void SaveMap() const;
 };
 

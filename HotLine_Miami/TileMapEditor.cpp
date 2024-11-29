@@ -77,6 +77,11 @@ void TileMapEditor::Reset()
 	}
 	selectedTileSprite.setTexture(*texture);
 	selectedTileSprite.setScale(1.f, 1.f);
+
+	background.setSize(FRAMEWORK.GetWindowSizeF() * 0.4f);
+	background.setFillColor(sf::Color(150, 150, 150, 100));
+	background.setOutlineColor(sf::Color::White);
+	background.setOutlineThickness(1.f);
 }
 
 void TileMapEditor::Update(float dt)
@@ -98,8 +103,8 @@ void TileMapEditor::Draw(sf::RenderWindow& window)
 {
 	sf::RenderStates states;
 	states.texture = texture;
+	window.draw(background);
 	window.draw(tileSelector, states);
-
 	if (selectedTileIndex != -1)
 	{
 		window.draw(selectedTileSprite);

@@ -53,11 +53,6 @@ sf::FloatRect TileMap::GetGlobalBounds() const
 	return transform.transformRect(bounds);
 }
 
-sf::Vector2i TileMap::GetCellSize() const
-{
-	return tileSize;
-}
-
 void TileMap::Init()
 {
 	sortingLayer = SortingLayers::Background;
@@ -171,7 +166,7 @@ void TileMap::InitializeEmpty(const sf::Vector2i& tileSize, const sf::Vector2i& 
 			quad[2].texCoords = { 0.f, 0.f };
 			quad[3].texCoords = { 0.f, 0.f };
 
-			sf::Color gridColor = sf::Color (255, 255, 255, 255);
+			sf::Color gridColor = sf::Color::White;
 			quad[0].color = gridColor;
 			quad[1].color = gridColor;
 			quad[2].color = gridColor;
