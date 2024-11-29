@@ -4,11 +4,12 @@ class TileMap : public GameObject
 {
 protected:
 	sf::VertexArray va;
-	std::string tileMapTexId = "graphics/Map/Tiles/tlFloorTiles.png";
+	std::string tileMapTexId;
 	sf::Texture* texture = nullptr;
+	std::vector<int> floorTiles;
 
-	sf::Vector2i cellCount;
-	sf::Vector2f cellSize = { 16.f, 16.f };
+	sf::Vector2i tileSize;
+	sf::Vector2i tileCount;
 	sf::Transform transform;
 public:
 	TileMap(const std::string& name = "");
@@ -23,7 +24,7 @@ public:
 
 	sf::FloatRect GetLocalBounds() const override;
 	sf::FloatRect GetGlobalBounds() const override;
-	sf::Vector2f GetCellSize() const;
+	sf::Vector2i GetCellSize() const;
 
 	void Init() override;
 	void Release() override;
@@ -31,7 +32,7 @@ public:
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 
-	void Set(const sf::Vector2i& count);
-	void LoadMapJson(const std::string& filename);
+	void Initialize(const sf::Vector2i& tileSize, const sf::Vector2i& tileCount, const std::vector<int>& floorTiles);
 	void UpdateTransform();
+	void SetTexture(sf::Texture* texture) { this->texture = texture; }
 };

@@ -5,12 +5,14 @@ public:
 	enum class Types
 	{
 		String,
-		Bricks,
+		Walls,
+		Enemies,
+		Decos,
 		Stages,
 		Item,
 		Weapon,
 	};
-	static const int TotalType = 4;
+	static const int TotalType = 6;
 
 protected:
 	Types type;

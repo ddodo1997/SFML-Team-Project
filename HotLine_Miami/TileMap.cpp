@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "TileMap.h"
-
 #include <fstream>
 
 TileMap::TileMap(const std::string& name)
@@ -45,7 +44,7 @@ void TileMap::SetOrigin(const sf::Vector2f& newOrigin)
 
 sf::FloatRect TileMap::GetLocalBounds() const
 {
-	return { 0.f, 0.f, cellCount.x * cellSize.x, cellCount.y * cellSize.y };
+	return { 0.f, 0.f,  static_cast<float>(tileCount.x * tileSize.x), static_cast<float>(tileCount.y * tileSize.y) };
 }
 
 sf::FloatRect TileMap::GetGlobalBounds() const
@@ -54,9 +53,9 @@ sf::FloatRect TileMap::GetGlobalBounds() const
 	return transform.transformRect(bounds);
 }
 
-sf::Vector2f TileMap::GetCellSize() const
+sf::Vector2i TileMap::GetCellSize() const
 {
-	return cellSize;
+	return tileSize;
 }
 
 void TileMap::Init()
@@ -71,13 +70,9 @@ void TileMap::Release()
 
 void TileMap::Reset()
 {
-	texture = &TEXTURE_MGR.Get(tileMapTexId);
-
-	LoadMapJson("tables/maptable.json");
 	SetOrigin(originPreset);
 	SetScale({ 1.0f, 1.0f });
 	SetPosition({ 0.f, 0.f });
-	cellSize = { 16.f, 16.f };
 }
 
 void TileMap::Update(float dt)
@@ -94,68 +89,44 @@ void TileMap::Draw(sf::RenderWindow& window)
 	window.draw(va, states);
 }
 
-void TileMap::Set(const sf::Vector2i& count)
+void TileMap::Initialize(const sf::Vector2i& tileSize, const sf::Vector2i& tileCount, const std::vector<int>& floorTiles)
 {
-	cellCount = count;
-
+	this->tileSize = tileSize;
+	this->tileCount = tileCount;
+	this->floorTiles = floorTiles;
+	
 	va.clear();
 	va.setPrimitiveType(sf::Quads);
-	va.resize(count.x * count.y * 4);
-}
+	va.resize(tileCount.x * tileCount.y * 4);
 
-void TileMap::LoadMapJson(const std::string& filename)
-{
-	std::ifstream inFile(filename);
-	if (!inFile)
+	for (int y = 0; y < tileCount.y; ++y)
 	{
-		std::cerr << "JSON 파일을 열 수 없습니다: " << filename << std::endl;
-		return;
-	}
-
-	json js;
-	inFile >> js;
-
-	sf::Vector2i count = { js["width"], js["height"] };
-	Set(count);
-
-	texture = &TEXTURE_MGR.Get(tileMapTexId);
-	sf::Vector2f tilePosOffset[4] =
-	{
-		{0.f, 0.f},
-		{cellSize.x, 0.f},
-		{cellSize.x, cellSize.y},
-		{0.f, cellSize.y}
-	};
-	for (int i = 0; i < count.y; ++i)
-	{
-		for (int j = 0; j < count.x; ++j)
+		for (int x = 0; x < tileCount.x; ++x)
 		{
-			int tileIndex = js["tiles"][i * count.x + j];
-			
+			int tileIndex = floorTiles[y * tileCount.x + x];
+
 			if (tileIndex < 0)
 			{
 				continue;
 			}
-			int quadIndex = i * count.x + j;
-			sf::Vector2f quadPos(j * cellSize.x, i * cellSize.y);
 
-			int texX = (tileIndex % 51) * static_cast<int>(cellSize.x);
-			int texY = (tileIndex / 51) * static_cast<int>(cellSize.y);
+			int quadIndex = (y * tileCount.x + x) * 4;
 
-			sf::Vector2f texCoords[4] =
-			{
-				{static_cast<float>(texX), static_cast<float>(texY)},
-				{static_cast<float>(texX + cellSize.x), static_cast<float>(texY)},
-				{static_cast<float>(texX + cellSize.x), static_cast<float>(texY + cellSize.y)},
-				{static_cast<float>(texX), static_cast<float>(texY + cellSize.y)}
-			};
+			sf::Vertex* quad = &va[quadIndex];
 
-			for (int k = 0; k < 4; k++)
-			{
-				int vertexIndex = quadIndex * 4 + k;
-				va[vertexIndex].position = quadPos + tilePosOffset[k];
-				va[vertexIndex].texCoords = texCoords[k];
-			}
+			sf::Vector2f quadPos(x * tileSize.x, y * tileSize.y);
+			quad[0].position = quadPos;
+			quad[1].position = { quadPos.x + tileSize.x, quadPos.y };
+			quad[2].position = { quadPos.x + tileSize.x, quadPos.y + tileSize.y };
+			quad[3].position = { quadPos.x, quadPos.y + tileSize.y };
+			
+			int texX = (tileIndex % (texture->getSize().x / tileSize.x)) * tileSize.x;
+			int texY = (tileIndex / (texture->getSize().x / tileSize.x)) * tileSize.y;
+
+			quad[0].texCoords = { static_cast<float>(texX), static_cast<float>(texY) };
+			quad[1].texCoords = { static_cast<float>(texX + tileSize.x), static_cast<float>(texY) };
+			quad[2].texCoords = { static_cast<float>(texX + tileSize.x), static_cast<float>(texY + tileSize.y) };
+			quad[3].texCoords = { static_cast<float>(texX), static_cast<float>(texY + tileSize.y) };
 		}
 	}
 }
