@@ -22,11 +22,12 @@ void Weapon::Release()
 void Weapon::Reset()
 {
 	isPickupable = false;
-
 }
 
 void Weapon::Update(float dt)
 {
+	hitBox.UpdateTr(weaponSprite, weaponSprite.getLocalBounds());
+
 	if(onDropTimer > 0.f)
 		onDropTimer -= dt;
 	onDropTimer = Utils::Clamp(onDropTimer, 0.f, 3.f);
@@ -46,6 +47,7 @@ void Weapon::Update(float dt)
 void Weapon::Draw(sf::RenderWindow& window)
 {
 	window.draw(weaponSprite);
+	hitBox.Draw(window);
 }
 
 void Weapon::SetPosition(sf::Vector2f pos)

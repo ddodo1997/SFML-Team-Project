@@ -67,11 +67,15 @@ public:
 	void OnHitByKnife(sf::Vector2f hitDir);
 	void OnHitByMachinegun(sf::Vector2f hitDir);
 	void OnHitByShotgun(sf::Vector2f hitDir);
+	sf::FloatRect GetGlobalBounds() { return leg.getGlobalBounds(); }
+	sf::FloatRect GetLocalBounds() { return leg.getLocalBounds(); }
 
 	void WeaponPickUp(Weapon::WeaponType weaponType, int remainingBullet);
 	void SetWeaponStatus();
 	void SetRemainingBullet(int remainingBullet);
 	int GetRemainingBullet();
+
+	Weapon::WeaponStatus GetWeaponStatus() { return weaponStatus; }
 	
 	void Attack();
 	void ThrowWeapon(sf::Vector2f lookDir);
