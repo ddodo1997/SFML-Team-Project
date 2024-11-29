@@ -85,7 +85,17 @@ void Player::Reset()
 
 void Player::Update(float dt)
 {
-	attackTimer += dt;
+	if (attackTimer < weaponStatus.attackInterval)
+	{
+		attackTimer += dt;
+	}
+	else
+	{
+		if (attackTimer > weaponStatus.attackInterval)
+			isMoving = false;
+		attackTimer = Utils::Clamp(attackTimer, 0, weaponStatus.attackInterval);
+		isSwingging = false;
+	}
 
 	hitBox.UpdateTr(body, body.getLocalBounds());
 	attackHitBoxCheck.setPosition(body.getPosition());
@@ -126,20 +136,22 @@ void Player::Update(float dt)
 		{
 			animatorLeg.Play("animations/Player/pLegAni.json");
 			animatorLeg.SetSpeed(-1.f);
-			animatorBody.Play("animations/Player/pBodyAni_default.json");
+			if(!isSwingging)
+				animatorBody.Play("animations/Player/pBodyAni_default.json");
 			isMoving = true;
 		}
 	}
 	else
 	{
-		animatorBody.Play("animations/Player/pBodyAni_default.json");
+		if (!isSwingging)
+			animatorBody.Play("animations/Player/pBodyAni_default.json");
 		isMoving = false;
 	}
 
 
-	if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
+	if (InputMgr::GetMouseButton(sf::Mouse::Left))
 	{
-		if (attackTimer > weaponStatus.attackInterval)
+		if (attackTimer >= weaponStatus.attackInterval)
 		{
 			Attack();
 			attackTimer = 0;
@@ -183,21 +195,21 @@ void Player::Draw(sf::RenderWindow& window)
 	}
 }
 
-void Player::OnHit(int weaponType, sf::Vector2f hitDir)
+void Player::OnHit(Weapon::WeaponStatus weapon, sf::Vector2f hitDir)
 {
 	auto normDir = Utils::GetNormal(hitDir);
-	switch (weaponType)
+	switch (weapon.weaponType)
 	{
-	case 0:
+	case Weapon::WeaponType::Bat:
 		OnHitByBat(normDir);
 		break;
-	case 1:
+	case Weapon::WeaponType::Knife:
 		OnHitByKnife(normDir);
 		break;
-	case 2:
+	case Weapon::WeaponType::Machinegun:
 		OnHitByMachinegun(normDir);
 		break;
-	case 3:
+	case Weapon::WeaponType::Shotgun:
 		OnHitByShotgun(normDir);
 		break;
 	}
@@ -258,14 +270,9 @@ void Player::OnHitByShotgun(sf::Vector2f hitDir)
 	Utils::SetOrigin(body, Origins::MC);
 }
 
-void Player::WeaponPickUp(Weapon::WeaponType weaponType, int remainingBullet)
+void Player::WeaponPickUp(Weapon::WeaponStatus weapon)
 {
-	weaponStatus.weaponType = weaponType;
-	SetWeaponStatus();
-	if (weaponStatus.isRangedWeapon)
-		SetRemainingBullet(remainingBullet);
-	else
-		SetRemainingBullet(0);
+	weaponStatus = weapon;
 }
 
 void Player::SetWeaponStatus()
@@ -334,7 +341,7 @@ void Player::ThrowWeapon(sf::Vector2f lookDir)
 {
 	if (weaponStatus.weaponType == Weapon::WeaponType::None)
 		return;
-	sceneDevL->OnWeaponThrow(weaponStatus.weaponType, remainingBullet, lookDir, position);
+	sceneDevL->OnWeaponThrow(weaponStatus, lookDir, position);
 	weaponStatus.weaponType = Weapon::WeaponType::None;
 	SetWeaponStatus();
 }
@@ -343,15 +350,13 @@ void Player::DropWeapon(sf::Vector2f hitDir)
 {
 	if (weaponStatus.weaponType == Weapon::WeaponType::None)
 		return;
-	sceneDevL->OnWeaponDrop(weaponStatus.weaponType, remainingBullet, hitDir, position);
+	sceneDevL->OnWeaponDrop(weaponStatus, position);
 	weaponStatus.weaponType = Weapon::WeaponType::None;
 	SetWeaponStatus();
 }
 
 void Player::DropWeapon()
 {
-
-
 
 }
 
@@ -379,17 +384,47 @@ void Player::Attack()
 
 void Player::AttackDefault()
 {
-
+	animatorBody.Play("animations/Player/Attack/pAttackPunch.json");
+	isSwingging = true;
+	isFlipped = !isFlipped;
+	if (isFlipped)
+	{
+		body.setScale(1.f, -1.f);
+	}
+	else
+	{
+		body.setScale(1.f, 1.f);
+	}
 }
 
 void Player::AttackBat()
 {
-
+	animatorBody.Play("animations/Player/Attack/pAttackBat.json");
+	isSwingging = true;
+	isFlipped = !isFlipped;
+	if (isFlipped)
+	{
+		body.setScale(1.f, -1.f);
+	}
+	else
+	{
+		body.setScale(1.f, 1.f);
+	}
 }
 
 void Player::AttackKnife()
 {
-
+	animatorBody.Play("animations/Player/Attack/pAttackKnife.json");
+	isSwingging = true;
+	isFlipped = !isFlipped;
+	if (isFlipped)
+	{
+		body.setScale(1.f, -1.f);
+	}
+	else
+	{
+		body.setScale(1.f, 1.f);
+	}
 }
 
 void Player::AttackMachinegun()

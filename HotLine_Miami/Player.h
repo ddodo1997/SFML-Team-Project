@@ -41,7 +41,7 @@ protected:
 	sf::RectangleShape attackHitBoxCheck;
 
 	bool isFlipped = false;
-	bool isSwinging = false;
+	bool isSwingging = false;
 	
 	std::map<std::string, AnimationClip> aniClipMap;
 
@@ -70,7 +70,7 @@ public:
 
 	void Draw(sf::RenderWindow& window) override;
 
-	void OnHit(int weaponType, sf::Vector2f hitDir);
+	void OnHit(Weapon::WeaponStatus weapon, sf::Vector2f hitDir);
 
 	void OnHitByBat(sf::Vector2f hitDir);
 	void OnHitByKnife(sf::Vector2f hitDir);
@@ -79,7 +79,7 @@ public:
 	sf::FloatRect GetGlobalBounds() { return leg.getGlobalBounds(); }
 	sf::FloatRect GetLocalBounds() { return leg.getLocalBounds(); }
 
-	void WeaponPickUp(Weapon::WeaponType weaponType, int remainingBullet);
+	void WeaponPickUp(Weapon::WeaponStatus weapon);
 	void SetWeaponStatus();
 	void SetRemainingBullet(int remainingBullet);
 	int GetRemainingBullet();

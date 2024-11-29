@@ -64,6 +64,12 @@ void Weapon::SetRotation(float angle)
 	weaponSprite.setRotation(rotation);
 }
 
+void Weapon::SetStatus(WeaponStatus weapon)
+{
+	this->weaponStatus = weapon;
+	weaponSprite.setTexture(TEXTURE_MGR.Get(weaponStatus.textureId));
+}
+
 void Weapon::OnPickUp()
 {
 
@@ -104,14 +110,4 @@ bool Weapon::GetIsRanged()
 bool Weapon::GetIsPickupable()
 {
 	return isPickupable;
-}
-
-void Weapon::SetRemainingBullet(int bullet)
-{
-	remainingBullet = bullet;
-}
-
-int Weapon::GetRemainingBullet()
-{
-	return remainingBullet;
 }

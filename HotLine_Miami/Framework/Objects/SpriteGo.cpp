@@ -4,6 +4,7 @@
 SpriteGo::SpriteGo(const std::string& texId, const std::string& name)
 	: GameObject(name), textureId(texId)
 {
+
 }
 
 void SpriteGo::SetOrigin(Origins preset)

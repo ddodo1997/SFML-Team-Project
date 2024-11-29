@@ -37,13 +37,13 @@ public:
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 
-	void OnWeaponDrop(Weapon::WeaponType weaponType, int remainingBullet, sf::Vector2f dir, sf::Vector2f pos);
-	void OnWeaponThrow(Weapon::WeaponType weaponType, int remainingBullet, sf::Vector2f dir, sf::Vector2f pos);
-	
-	
+	void OnWeaponDrop(Weapon::WeaponStatus weapon, sf::Vector2f pos);
+	void OnWeaponThrow(Weapon::WeaponStatus weapon, sf::Vector2f dir, sf::Vector2f pos);
+		
 	void PlayerTryPickUpWeapon();
-	void PlayerPickUpWeapon(Weapon::WeaponType weaponType, int remainingBullet);
+	void PlayerPickUpWeapon(Weapon::WeaponStatus weapon);
+
 	// Test Code
-	void SpawnWeapon(Weapon::WeaponType weaponType, int remainingBullet, sf::Vector2f pos);
+	void SpawnWeapon(Weapon::WeaponType weaponType, sf::Vector2f pos);
 };
 

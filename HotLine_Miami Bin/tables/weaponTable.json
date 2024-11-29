@@ -1,13 +1,26 @@
 {
     "Weapons": [
       {
+        "WeaponType": -1,
+        "TextureId": "graphics/ETC/Weapon/sprWeapons_4.png",
+        "Damage": 0,
+        "DamageOnThrow": 0,
+        "isRangedWeapon" : false,
+        "MaxBullet": 0,
+        "AttackInterval": 0.5,
+        "HitBoxWidth": 22.0,
+        "HitBoxHeight": 30.0        
+      },
+      {
         "WeaponType": 0,
         "TextureId": "graphics/ETC/Weapon/sprWeapons_4.png",
         "Damage": 1,
         "DamageOnThrow": 0,
         "isRangedWeapon" : false,
         "MaxBullet": 0,
-        "AttackInterval": 0.5
+        "AttackInterval": 0.5,
+        "HitBoxWidth": 30.0,
+        "HitBoxHeight": 40.0        
       },
       {
         "WeaponType": 1,
@@ -16,7 +29,9 @@
         "DamageOnThrow": 1,
         "isRangedWeapon" : false,
         "MaxBullet": 0,
-        "AttackInterval": 0.5
+        "AttackInterval": 0.5,
+        "HitBoxWidth": 25.0,
+        "HitBoxHeight": 40.0  
       },
       {
         "WeaponType": 2,
@@ -25,7 +40,9 @@
         "DamageOnThrow": 0,
         "isRangedWeapon" : true,
         "MaxBullet": 24,
-        "AttackInterval": 0.1
+        "AttackInterval": 0.1,
+        "HitBoxWidth": 0.0,
+        "HitBoxHeight": 0.0  
       },
       {
         "WeaponType": 3,
@@ -34,7 +51,9 @@
         "DamageOnThrow": 0,
         "isRangedWeapon" : true,
         "MaxBullet": 6,
-        "AttackInterval": 0.5
+        "AttackInterval": 0.5,
+        "HitBoxWidth": 0.0,
+        "HitBoxHeight": 0.0  
       }
     ]
   }

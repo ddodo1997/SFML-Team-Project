@@ -24,7 +24,10 @@ bool WeaponTable::Load()
 		newWeapon.damageOnThrow = weapon["DamageOnThrow"];
 		newWeapon.isRangedWeapon = weapon["isRangedWeapon"];
 		newWeapon.maxBullet = weapon["MaxBullet"];
+		newWeapon.remainingBullet = newWeapon.maxBullet;
 		newWeapon.attackInterval = weapon["AttackInterval"];
+		newWeapon.hitBoxWidth = weapon["HitBoxWidth"];
+		newWeapon.hitBoxHeight = weapon["HitBoxHeight"];
 		table.insert({ (Weapon::WeaponType)newWeapon.weaponType, newWeapon});
 	}
 

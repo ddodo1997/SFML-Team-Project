@@ -21,7 +21,10 @@ public:
 		int					damageOnThrow = 0;
 		bool				isRangedWeapon = false;
 		int					maxBullet = 0;
+		int					remainingBullet = 0;
 		float				attackInterval = 0.f;
+		float				hitBoxWidth = 0.f;
+		float				hitBoxHeight = 0.f;
 	};
 	
 protected:
@@ -38,7 +41,6 @@ protected:
 	float			onDropTimer;
 	
 	// 개별 전달 필요
-	int				remainingBullet = 0;
 	bool			isPickupable = false;
 
 public:
@@ -60,9 +62,12 @@ public:
 	void SetPosition(sf::Vector2f pos);
 	void SetRotation(float angle);
 
+	WeaponStatus GetStatus() { return this->weaponStatus; }
+	void SetStatus(WeaponStatus weapon);
+
 	void OnPickUp();
 	void OnThrow(sf::Vector2f direction);
-	void OnDrop(sf::Vector2f direction);
+	void OnDrop(sf::Vector2f direction = {0.f,0.f});
 
 	void SetWeaponType(WeaponType type);
 	WeaponType GetWeaponType();
