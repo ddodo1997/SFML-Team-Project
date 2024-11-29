@@ -15,6 +15,7 @@ void Enemy::SetPosition(const sf::Vector2f& pos)
 	position = pos;
 	body.setPosition(position);
 	legs.setPosition(position);
+	viewAngle.setPosition(position);
 }
 
 void Enemy::SetRotation(float angle)
@@ -22,6 +23,7 @@ void Enemy::SetRotation(float angle)
 	rotation = angle;
 	body.setRotation(rotation);
 	legs.setRotation(rotation);
+	viewAngle.setRotation(rotation);
 }
 
 
@@ -30,6 +32,7 @@ void Enemy::SetScale(const sf::Vector2f& s)
 	scale = s;
 	body.setScale(scale);
 	legs.setScale(scale);
+	viewAngle.setScale(scale);
 }
 
 void Enemy::SetOrigin(Origins preset)
@@ -62,9 +65,16 @@ void Enemy::Release()
 
 void Enemy::Reset()
 {
+	player = dynamic_cast<Player*>(dynamic_cast<SceneDev_K*>(SCENE_MGR.GetCurrentScene())->GetPlayer());
 	animatorBody.SetTarget(&body);
 	animatorLegs.SetTarget(&legs);
+	viewAngle.setPointCount(3);
+	viewAngle.setPoint(0, { 0.f,0.f });
+	viewAngle.setPoint(1, { 100.f,-20.f });
+	viewAngle.setPoint(2, { 100.f,20.f });
+	viewAngle.setFillColor(sf::Color::Red);
 	SetOrigin(Origins::MC);
+	SetStatus(Status::Patrol);
 	SetPatterns();
 	hp = 1;
 }
@@ -116,7 +126,7 @@ void Enemy::Update(float dt)
 	}
 	if (InputMgr::GetKeyDown(sf::Keyboard::Num3))
 	{
-		SCENE_MGR.ChangeScene(SceneIds::Dev_K);
+		Reset();
 	}
 	//�þ߰��� �÷��̾�� �浹�� �˻��� ���̸� ����ĳ��Ʈ ����.
 
@@ -147,9 +157,6 @@ void Enemy::Update(float dt)
 		UpdateDie(dt);
 		break;
 	}
-
-	if (Utils::RayCast(position, direction, 300.f, dynamic_cast<Player*>(dynamic_cast<SceneDev_K*>(SCENE_MGR.GetCurrentScene())->GetPlayer())))
-		OnHit(1, { -1.f,1.f });
 
 	SetRotation(Utils::Angle(direction));
 	SetPosition(position + direction * speed * dt);
@@ -216,12 +223,23 @@ void Enemy::UpdatePatrol(float dt)
 
 void Enemy::UpdateAggro(float dt)
 {
-	//TODO : ��ã�� �˰�����. ������ �ҷ�!!
+	speed = 100.f;
+	//TODO : PathFinding Call Seol!!
+
+
+
+	if (Utils::RayCast(position, direction, 300.f, player)) 
+	{
+		if (Utils::Distance(position, player->GetPosition()) < 10.f)
+			Attack();
+		direction = Utils::GetNormal(player->GetPosition() - position);
+	}
 }
 
 void Enemy::UpdateSearchWeapon(float dt)
 {
-	//���� �ݰ� ����������� ���⸦ ã��, ã�Ҵٸ� ���⸦ �ֿ췯���� ã�� ���ߴٸ� �÷��̾�� ���� �Ÿ��� �����Ϸ� ��
+	// TODO : Searches for weapons within a certain radius.
+	// If not found, moves away from the player.
 }
 
 void Enemy::UpdateStun(float dt)
@@ -258,12 +276,18 @@ void Enemy::UpdateDie(float dt)
 	speed -= dt * 300;
 }
 
+void Enemy::FixedUpdate(float dt)
+{
+	if (viewAngle.getGlobalBounds().intersects(player->GetGlobalBounds()))
+		SetStatus(Status::Aggro);
+}
+
 void Enemy::SetStatus(Status stat)
 {
 	auto prevStatus = currentStatus;
 	currentStatus = stat;
 	animatorLegs.Play("animations/Enemy/enemy_legs.json");
-	legs.setColor(sf::Color::White);
+	isWalking = true;
 
 	switch (currentStatus)
 	{
@@ -282,7 +306,7 @@ void Enemy::SetStatus(Status stat)
 		break;
 	}
 	case Status::Patrol:
-		animatorBody.Play("animations/Enemy/enemy_none_walk.json");
+		animatorBody.Play("animations/Enemy/enemy_bat_walk.json");
 		SetOrigin(Origins::MC);
 		break;
 	case Status::Aggro:
@@ -293,18 +317,18 @@ void Enemy::SetStatus(Status stat)
 		break;
 	case Status::Stun:
 		animatorBody.Play("animations/Enemy/enemy_stun.json");
-		legs.setColor(sf::Color::Transparent);
 		SetOrigin(Origins::MC);
+		isWalking = false;
 		break;
 	case Status::GetUp:
 		animatorBody.Play("animations/Enemy/enemy_getup.json");
-		legs.setColor(sf::Color::Transparent);
 		SetOrigin(Origins::MC);
+		isWalking = false;
 		break;
 	case Status::Die:
 		animatorBody.Play("animations/Enemy/enemy_back_bashed.json");
-		legs.setColor(sf::Color::Transparent);
 		SetOrigin(Origins::MC);
+		isWalking = false;
 		break;
 	}
 }
@@ -327,11 +351,18 @@ void Enemy::clearWayPoints()
 
 void Enemy::Draw(sf::RenderWindow& window)
 {
-	window.draw(legs);
+	if(isWalking)
+		window.draw(legs);
 	window.draw(body);
 	for (auto point : patrol.wayPoints)
 		window.draw(point.point);
 	window.draw(patrol.originPoint);
+	hitBox.Draw(window);
+	window.draw(viewAngle);
+}
+
+void Enemy::PickupWeapon(Weapon* weapon)
+{
 }
 
 void Enemy::OnHit(int damage, sf::Vector2f direction)
@@ -361,4 +392,22 @@ void Enemy::OnDie(sf::Vector2f direction)
 	this->direction = Utils::GetNormal(direction);
 	SetRotation(Utils::Angle(this->direction));
 	speed = 150.f;
+}
+
+void Enemy::Attack()
+{
+	switch (weaponStatus.weaponType)
+	{
+	case Weapon::WeaponType::None:
+		SetStatus(Status::SearchWeapon);
+		break;
+	case Weapon::WeaponType::Bat:
+		break;
+	case Weapon::WeaponType::Knife:
+		break;
+	case Weapon::WeaponType::Machinegun:
+		break;
+	case Weapon::WeaponType::Shotgun:
+		break;
+	}
 }
