@@ -30,4 +30,5 @@ public:
 	bool IsInTileSelectArea(const sf::Vector2f& position) const;
 	void SetSelectTileIndex(int index);
 
+	int GetSelectedTileIndex() const { return selectedTileIndex; }
 };

@@ -6,7 +6,7 @@ std::list<int> InputMgr::heldKeys;
 std::list<int> InputMgr::upKeys;
 sf::Vector2i InputMgr::mousePosition;
 std::unordered_map<Axis, AxisInfo> InputMgr::axisInfoMap;
-
+float InputMgr::mouseWheelDelta = 0.0f;
 void InputMgr::Init()
 {
 	 // Horizontal
@@ -86,6 +86,8 @@ void InputMgr::UpdateEvent(const sf::Event& ev)
 		mousePosition.x = ev.mouseMove.x;
 		mousePosition.y = ev.mouseMove.y;
 		break;
+	case sf::Event::MouseWheelScrolled:
+		mouseWheelDelta = ev.mouseWheelScroll.delta;
 	}
 }
 

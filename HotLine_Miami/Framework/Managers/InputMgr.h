@@ -35,7 +35,7 @@ private:
 	static sf::Vector2i mousePosition;
 
 	static std::unordered_map<Axis, AxisInfo> axisInfoMap;
-
+	static float mouseWheelDelta;
 public:
 	static void Init();
 	static void Clear();
@@ -55,7 +55,7 @@ public:
 
 	static float GetAxisRaw(Axis axis);	// -1.0 0 1.0
 	static float GetAxis(Axis axis);	// -1.0 ~ 1.0
-
+	static float GetMouseWheelDelta() { return mouseWheelDelta; }
 private:
 	static bool Contains(const std::list<int>& list, int code);
 	static void Remove(std::list<int>& list, int code);
