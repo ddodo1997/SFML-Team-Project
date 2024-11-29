@@ -14,8 +14,12 @@ void SceneDevS::Init()
 {
 	tileMap = AddGo(new TileMap("Tile Map"));
 	tileMapEditor = AddGo(new TileMapEditor("Tile Map Editor"));
+	LoadDecorations();
+	LoadWalls();
+	LoadEnemies();
 
 	Scene::Init();
+
 }
 
 void SceneDevS::Enter()
@@ -23,9 +27,7 @@ void SceneDevS::Enter()
 	Scene::Enter();
 	tileMap->SetTexture(&TEXTURE_MGR.Get(STAGE_TABLE->GetTileTextureId()));
 	tileMap->Initialize(STAGE_TABLE->GetTileSize(), STAGE_TABLE->GetTileCount(), STAGE_TABLE->GetFloorTiles());
-	LoadDecorations();
-	LoadWalls();
-	LoadEnemies();
+	SetStatusEnemies();
 	worldView.setSize(windowSize * 0.5f);
 	worldView.setCenter(0, 0);
 	uiView.setSize(windowSize);
@@ -56,7 +58,7 @@ void SceneDevS::LoadWalls()
 		const DataWall& wallData = WallPair.second;
 
 		Wall* wall = new Wall("Wall");
-		wall->Reset();
+		//wall->Reset();
 		wall->DrawWall(wallData);
 		AddGo(wall);
 	}
@@ -69,11 +71,11 @@ void SceneDevS::LoadDecorations()
 	{
 		const DataDecoration& decoData = decoPair.second;
 
-		Decoration* deco = new Decoration(decoData.id);
-		deco->Reset();
+		Decoration* deco = new Decoration();
+		//deco->Reset();
 		deco->SetTexture(decoData.textureId);
-		deco->SetPosition(decoData.pos);
 		deco->SetRotation(decoData.rotation);
+		deco->SetPosition(decoData.pos);
 
 		AddGo(deco);
 	}
@@ -87,10 +89,20 @@ void SceneDevS::LoadEnemies()
 		const DataEnemy& enemyData = enemyPair.second;
 
 		Enemy* enemy = new Enemy(enemyData.id);
-		enemy->Reset();
-		enemy->SetStatus(enemyData.state);
-		enemy->SetPosition({ enemyData.pos.x * 16.f + 8.f,  enemyData.pos.y * 16.f + 8.f });
+		// enemy->SetStatus(enemyData.state);
+		enemy->SetPosition({ enemyData.pos.x * STAGE_TABLE->GetTileSize().x + 8.f,  enemyData.pos.y * STAGE_TABLE->GetTileSize().y + 8.f});
 
+		enemies.push_back(enemy);
 		AddGo(enemy);
+	}
+}
+
+void SceneDevS::SetStatusEnemies()
+{
+	int i = 0;
+	const auto& enemyTable = STAGE_TABLE->GetEnemyTable();
+	for (const auto& enemyPair : enemyTable)
+	{
+		enemies[i++]->SetStatus(enemyPair.second.state);
 	}
 }

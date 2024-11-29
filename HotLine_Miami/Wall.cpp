@@ -45,7 +45,7 @@ void Wall::SetOrigin(const sf::Vector2f& newOrigin)
 void Wall::Init()
 {
 	sortingLayer = SortingLayers::Foreground;
-	sortingOrder = 1;
+	sortingOrder = 2;
 }
 
 void Wall::Release()

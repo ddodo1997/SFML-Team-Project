@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Enemy.h"
 #include <SceneDev_K.h>
+#include "SceneDevS.h"
 #include "Player.h"
 
 Enemy::Enemy(const std::string& name)
@@ -52,7 +53,7 @@ void Enemy::SetOrigin(const sf::Vector2f& newOrigin)
 void Enemy::Init()
 {
 	sortingLayer = SortingLayers::Foreground;
-	sortingOrder = 0;
+	sortingOrder = 3;
 }
 
 void Enemy::Release()
@@ -147,8 +148,8 @@ void Enemy::Update(float dt)
 		UpdateDie(dt);
 		break;
 	}
-	if (Utils::RayCast(position, direction, 300.f, dynamic_cast<Player*>(dynamic_cast<SceneDev_K*>(SCENE_MGR.GetCurrentScene())->GetPlayer())))
-		OnHit(1, { -1.f,1.f });
+	/*if (Utils::RayCast(position, direction, 300.f, dynamic_cast<Player*>(dynamic_cast<SceneDevS*>(SCENE_MGR.GetCurrentScene())->GetPlayer())))
+		OnHit(1, { -1.f,1.f });*/
 	SetRotation(Utils::Angle(direction));
 	SetPosition(position + direction * speed * dt);
 }
