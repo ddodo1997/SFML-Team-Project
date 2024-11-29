@@ -67,6 +67,9 @@ public:
 	void SetWeaponType(WeaponType type);
 	WeaponType GetWeaponType();
 
+	const WeaponStatus& GetStatus() { return weaponStatus; }
+	void SetStatus(const WeaponStatus& status) { weaponStatus = status; }
+
 	bool GetIsRanged();
 	bool GetIsPickupable();
 

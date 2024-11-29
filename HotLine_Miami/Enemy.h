@@ -1,6 +1,7 @@
 #pragma once
 #include "Weapon.h"
 class Player;
+class SceneDev_K;
 class Enemy : public GameObject
 {
 public:
@@ -56,6 +57,7 @@ protected:
 	sf::ConvexShape viewAngle;
 
 	Player* player;
+	SceneDev_K* sceneGame;
 
 	Animator animatorBody;
 	Animator animatorLegs;
@@ -76,6 +78,8 @@ protected:
 
 	float stunTimer = 0.f;
 	float stunDelay = 2.f;
+
+	float attackTimer = 0.f;
 
 	bool isWalking = false;
 	bool isAttacking = false;
@@ -111,6 +115,7 @@ public:
 	void FixedUpdate(float dt) override;
 
 	void SetStatus(Status stat);
+	void SetWeapon(Weapon::WeaponType type);
 
 	void SetWayPoints(std::vector<sf::Vector2f> pos);
 	void clearWayPoints();
@@ -124,4 +129,6 @@ public:
 	bool isDie() const{ return currentStatus == Status::Die ? true : false; }
 
 	void Attack();
+
+
 };

@@ -1,7 +1,7 @@
 {
     "ID": "EnemyKnifeAttack",
     "LoopType": 0,
-    "FPS": 10,
+    "FPS": 30,
     "texId": "graphics/Enemy/Attack/eAttackKnife.png",
     "Frames":
     [

@@ -1,7 +1,7 @@
 {
     "ID": "EnemyShotGunAttack",
     "LoopType": 0,
-    "FPS": 10,
+    "FPS": 15,
     "texId": "graphics/Enemy/Attack/eAttackShotGun.png",
     "Frames":
     [

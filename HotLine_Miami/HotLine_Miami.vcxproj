@@ -149,6 +149,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Decoration.cpp" />
     <ClCompile Include="Framework\Tables\DecorationTable.cpp" />
     <ClCompile Include="Enemy.cpp" />
@@ -190,6 +191,7 @@
     <ClCompile Include="Framework\Tables\WallTable.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="Decoration.h" />
     <ClInclude Include="Framework\Tables\DecorationTable.h" />
     <ClInclude Include="Enemy.h" />
