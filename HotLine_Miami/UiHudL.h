@@ -5,7 +5,12 @@ class UiHudL : public GameObject
 protected:
 	sf::Text mPosX;
 	sf::Text mPosY;
-	
+
+	sf::Text hitDirectionText;	
+	sf::Sprite hitDirection;
+
+	sf::Text lookDirectionText;
+	sf::Sprite lookDirection;
 
 public:
 	UiHudL(const std::string& name = "");
@@ -23,5 +28,7 @@ public:
 	void Reset() override;
 	void Update(float dt) override;
 	void UpdateMPos(float dt);
+	void UpdateHitDir(sf::Vector2f hitDir);
+	void UpdateLookDir(sf::Vector2f lookDir);
 	void Draw(sf::RenderWindow& window) override;
 };

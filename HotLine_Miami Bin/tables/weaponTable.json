@@ -1,0 +1,36 @@
+{
+    "Weapons": [
+      {
+        "WeaponType": 0,
+        "TextureId": "graphics/ETC/Weapon/sprWeapons_4.png",
+        "Damage": 1,
+        "DamageOnThrow": 0,
+        "isRangedWeapon" : false,
+        "MaxBullet": 0
+      },
+      {
+        "WeaponType": 1,
+        "TextureId": "graphics/ETC/Weapon/sprWeapons_5.png",
+        "Damage": 1,
+        "DamageOnThrow": 1,
+        "isRangedWeapon" : false,
+        "MaxBullet": 0
+      },
+      {
+        "WeaponType": 2,
+        "TextureId": "graphics/ETC/Weapon/sprWeapons_0.png",
+        "Damage": 1,
+        "DamageOnThrow": 0,
+        "isRangedWeapon" : true,
+        "MaxBullet": 24
+      },
+      {
+        "WeaponType": 3,
+        "TextureId": "graphics/ETC/Weapon/sprWeapons_1.png",
+        "Damage": 1,
+        "DamageOnThrow": 0,
+        "isRangedWeapon" : true,
+        "MaxBullet": 6
+      }
+    ]
+  }

@@ -19,13 +19,14 @@ void ViewMgr::Reset()
 
 void ViewMgr::Update(float dt)
 {
-
+	
 }
 
 sf::Vector2f ViewMgr::ScreenToWorld(sf::Vector2i screenPos)
 {
 	return FRAMEWORK.GetWindow().mapPixelToCoords(screenPos, worldView);
 }
+
 
 sf::Vector2i ViewMgr::WorldToScreen(sf::Vector2f worldPos)
 {
@@ -40,5 +41,31 @@ sf::Vector2f ViewMgr::ScreenToUi(sf::Vector2i screenPos)
 sf::Vector2i ViewMgr::UiToScreen(sf::Vector2f worldPos)
 {
 	return FRAMEWORK.GetWindow().mapCoordsToPixel(worldPos, uiView);
+}
+
+void ViewMgr::SetWorldViewSize(sf::Vector2f size)
+{
+	worldView.setSize(size);
+}
+
+sf::Vector2f ViewMgr::GetWorldViewSize()
+{
+	return worldView.getSize();
+}
+
+void ViewMgr::SetWorldViewScale(sf::Vector2f scale)
+{
+	worldViewScale = scale;
+	worldView.setSize({ defaultFHDSize.x * worldViewScale.x, defaultFHDSize.y * worldViewScale.y });
+}
+
+void ViewMgr::SetUiViewSize(sf::Vector2f size)
+{
+	uiView.setSize(size);
+}
+
+sf::Vector2f ViewMgr::GetUiViewSize()
+{
+	return uiView.getSize();
 }
 

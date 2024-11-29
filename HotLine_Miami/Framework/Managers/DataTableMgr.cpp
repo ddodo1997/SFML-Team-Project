@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "DataTableMgr.h"
+
 DataTableMgr::~DataTableMgr()
 {
 	Release();
@@ -8,6 +9,7 @@ DataTableMgr::~DataTableMgr()
 void DataTableMgr::Init()
 {
 	Release();
+	tables.insert({ DataTable::Types::Weapon, new WeaponTable() });
 	//tables.insert({ DataTable::Types::String ,new StringTable() });
 	for (auto t : tables)
 	{

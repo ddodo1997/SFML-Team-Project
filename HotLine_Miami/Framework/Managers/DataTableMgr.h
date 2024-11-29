@@ -1,4 +1,5 @@
 #pragma once
+
 class DataTableMgr :
     public Singleton<DataTableMgr>
 {
@@ -33,4 +34,5 @@ inline T* DataTableMgr::Get(DataTable::Types t)
 
 #define DATATABLE_MGR (DataTableMgr::Instance())
 #define STRING_TABLE (DATATABLE_MGR.Get<StringTable>(DataTable::Types::String))
+#define WEAPON_TABLE (DATATABLE_MGR.Get<WeaponTable>(DataTable::Types::Weapon))
 //#define ITEM_TABLE (DATATABLE_MGR.Get<StringTable>(DataTable::Types::Item))

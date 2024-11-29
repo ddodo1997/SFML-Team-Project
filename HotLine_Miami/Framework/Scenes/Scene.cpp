@@ -77,6 +77,7 @@ void Scene::FixedUpdate(float dt)
 
 void Scene::OnPreDraw()
 {
+
 }
 
 void Scene::Draw(sf::RenderWindow& window)

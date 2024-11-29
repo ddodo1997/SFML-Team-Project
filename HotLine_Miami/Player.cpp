@@ -47,10 +47,8 @@ void Player::SetOrigin(const sf::Vector2f& newOrigin)
 
 void Player::Init()
 {
-	position = { 50,50 };
-	animatorBody.SetTarget(&body);
-	animatorLeg.SetTarget(&leg);
-	SetOrigin(Origins::MC);
+	sortingLayer = SortingLayers::Foreground;
+	sortingOrder = 0;
 
 	//aniClipMap.insert("", )
 }
@@ -62,38 +60,62 @@ void Player::Release()
 
 void Player::Reset()
 {
-
+	isAlive = true;
+	speed = 100.f;
+	onDieSpeed = 100.f;
+	onDieEffectAccumTime = 0.6f;
+	position = { 50,50 };
+	SetScale({ 1.f, 1.f });
+	animatorBody.SetTarget(&body);
+	animatorLeg.SetTarget(&leg);
+	SetOrigin(Origins::MC);
 }
 
 void Player::Update(float dt)
 {
+	hitBox.UpdateTr(body, body.getLocalBounds());
+
+	if (!isAlive)
+	{
+		isMoving = false;
+		UpdateOnDie(dt);
+		return;
+	}
+
 	animatorBody.Update(dt);
 	animatorLeg.Update(dt);
-
+		
 	direction.x = InputMgr::GetAxis(Axis::Horizontal);
 	direction.y = InputMgr::GetAxis(Axis::Vertical);
 	float mag = Utils::Magnitude(direction);
+
 	if (mag > 1.f)
 	{
 		Utils::Normalize(direction);
 	}
+	leg.setRotation(Utils::Angle(direction)); 
 
-	leg.setRotation(Utils::Angle(direction));
-	body.setRotation(Utils::Angle(Utils::GetNormal((sf::Vector2f)VIEW_MGR.ScreenToWorld(InputMgr::GetMousePosition())-position)));
+	auto mPos = SCENE_MGR.GetCurrentScene()->ScreenToWorld(InputMgr::GetMousePosition());
+	look = mPos - position;
+	body.setRotation(Utils::Angle(look));
+
 	Utils::SetOrigin(leg, Origins::MC);
 	Utils::SetOrigin(body, Origins::MC);
 
 
 	if (mag > 0)
 	{
-		if(!isMoving)
-		animatorLeg.Play("animations/pLegAni.json");
-		animatorBody.Play("animations/pBodyAni_default.json");
-		isMoving = true;
+		if (!isMoving)
+		{
+			animatorLeg.Play("animations/Player/pLegAni.json");
+			animatorLeg.SetSpeed(-1.f);
+			animatorBody.Play("animations/Player/pBodyAni_default.json");
+			isMoving = true;
+		}
 	}
 	else
 	{
-		animatorBody.Play("animations/pBodyAni_default.json");
+		animatorBody.Play("animations/Player/pBodyAni_default.json");
 		isMoving = false;
 	}
 
@@ -101,10 +123,171 @@ void Player::Update(float dt)
 	hitBox.UpdateTr(body, body.getLocalBounds());
 }
 
+void Player::UpdateOnDie(float dt)
+{
+	if(onDieEffectAccumTime > 0)
+		onDieEffectAccumTime -= dt;
+	onDieEffectAccumTime = Utils::Clamp(onDieEffectAccumTime, 0.f, 3.f);
+	
+	SetPosition(position + direction * onDieSpeed * onDieEffectAccumTime * dt);
+}
+
 void Player::Draw(sf::RenderWindow& window)
 {
-	if (isMoving)
+	if (!isAlive)
+	{
+
+	}
+	else if (isMoving)
 		window.draw(leg);
 	window.draw(body);
 	hitBox.Draw(window);
 }
+
+void Player::OnHit(int weaponType, sf::Vector2f hitDir)
+{
+	switch (weaponType)
+	{
+	case 0:
+		OnHitByBat(hitDir);
+		break;
+	case 1:
+		OnHitByKnife(hitDir);
+		break;
+	case 2:
+		OnHitByMachinegun(hitDir);
+		break;
+	case 3:
+		OnHitByShotgun(hitDir);
+		break;
+	}
+	isAlive = false;
+	if (weaponStatus.weaponType != Weapon::WeaponType::None)
+		DropWeapon(hitDir);
+}
+
+void Player::OnHitByBat(sf::Vector2f hitDir)
+{
+	std::string tempTexId;
+	int tempIndex = Utils::RandomRange(0, 4);
+	tempTexId = "graphics/player/Die/sprPBackBlunt2_" + std::to_string(tempIndex) + ".png";
+	animatorBody.Stop();
+	body.setTexture(TEXTURE_MGR.Get(tempTexId));
+	body.setTextureRect({ 0,0,60,60 });
+	SetRotation(Utils::Angle(hitDir));
+	direction = hitDir;
+	Utils::SetOrigin(body, Origins::MC);
+}
+
+void Player::OnHitByKnife(sf::Vector2f hitDir)
+{
+	std::string tempTexId;
+	int tempIndex = Utils::RandomRange(0, 2);
+	tempTexId = "graphics/player/Die/sprPBackCut2_" + std::to_string(tempIndex) + ".png";
+	animatorBody.Stop();
+	body.setTexture(TEXTURE_MGR.Get(tempTexId));
+	body.setTextureRect({ 0,0,60,60 });
+	SetRotation(Utils::Angle(hitDir));
+	direction = hitDir;
+	Utils::SetOrigin(body, Origins::MC);
+}
+
+void Player::OnHitByMachinegun(sf::Vector2f hitDir)
+{
+	std::string tempTexId;
+	int tempIndex = Utils::RandomRange(1, 4);
+	tempTexId = "graphics/player/Die/sprPBackMachinegun2_" + std::to_string(tempIndex) + ".png";
+	animatorBody.Stop();
+	body.setTexture(TEXTURE_MGR.Get(tempTexId));
+	body.setTextureRect({ 0,0,60,60 });
+	SetRotation(Utils::Angle(hitDir));
+	direction = hitDir;
+	Utils::SetOrigin(body, Origins::MC);
+}
+
+void Player::OnHitByShotgun(sf::Vector2f hitDir)
+{
+	std::string tempTexId;
+	int tempIndex = Utils::RandomRange(1, 5);
+	tempTexId = "graphics/player/Die/sprPBackShotgun2_" + std::to_string(tempIndex) + ".png";
+	animatorBody.Stop();
+	body.setTexture(TEXTURE_MGR.Get(tempTexId));
+	body.setTextureRect({ 0,0,60,60 });
+	SetRotation(Utils::Angle(hitDir));
+	direction = hitDir;
+	Utils::SetOrigin(body, Origins::MC);
+}
+
+void Player::WeaponPickUp(Weapon::WeaponType weaponType, int remainingBullet)
+{
+	weaponStatus.weaponType = weaponType;
+	SetWeaponStatus();
+	if (weaponStatus.isRangedWeapon)
+		SetRemainingBullet(remainingBullet);
+	else
+		SetRemainingBullet(0);
+}
+
+void Player::SetWeaponStatus()
+{
+	switch (weaponStatus.weaponType)
+	{
+	case Weapon::WeaponType::None:
+		weaponStatus.damage = 0;
+		weaponStatus.damageOnThrow = 0;
+		weaponStatus.isRangedWeapon = false;
+		weaponStatus.maxBullet = 0;
+		break;
+	case Weapon::WeaponType::Bat:
+		weaponStatus.damage = 1;
+		weaponStatus.damageOnThrow = 0;
+		weaponStatus.isRangedWeapon = false;
+		weaponStatus.maxBullet = 0;
+		break;
+	case Weapon::WeaponType::Knife:
+		weaponStatus.damage = 1;
+		weaponStatus.damageOnThrow = 1;
+		weaponStatus.isRangedWeapon = false;
+		weaponStatus.maxBullet = 0;
+		break;
+	case Weapon::WeaponType::Machinegun:
+		weaponStatus.damage = 1;
+		weaponStatus.damageOnThrow = 0;
+		weaponStatus.isRangedWeapon = true;
+		weaponStatus.maxBullet = 24;
+		break;
+	case Weapon::WeaponType::Shotgun:
+		weaponStatus.damage = 1;
+		weaponStatus.damageOnThrow = 0;
+		weaponStatus.isRangedWeapon = true;
+		weaponStatus.maxBullet = 2;
+		break;
+	}
+}
+
+void Player::SetRemainingBullet(int remainingBullet)
+{
+	this->remainingBullet = remainingBullet;
+}
+
+int Player::GetRemainingBullet()
+{
+	return remainingBullet;
+}
+
+void Player::Attack()
+{
+	
+}
+
+void Player::ThrowWeapon(sf::Vector2f lookDir)
+{
+		
+}
+
+void Player::DropWeapon(sf::Vector2f hitDir)
+{
+
+}
+
+

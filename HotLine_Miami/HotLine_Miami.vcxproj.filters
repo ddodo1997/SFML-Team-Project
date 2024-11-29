@@ -78,6 +78,8 @@
       <Filter>Framework\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="ViewMgr.cpp" />
+    <ClCompile Include="Weapon.cpp" />
+    <ClCompile Include="WeaponTable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Framework\Animation\AnimationClip.h">
@@ -169,6 +171,8 @@
       <Filter>Framework\Scenes</Filter>
     </ClInclude>
     <ClInclude Include="ViewMgr.h" />
+    <ClInclude Include="Weapon.h" />
+    <ClInclude Include="WeaponTable.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Framework">

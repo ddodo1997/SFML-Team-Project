@@ -180,6 +180,8 @@
     <ClCompile Include="TileMapEditor.cpp" />
     <ClCompile Include="UiHudL.cpp" />
     <ClCompile Include="ViewMgr.cpp" />
+    <ClCompile Include="Weapon.cpp" />
+    <ClCompile Include="WeaponTable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Enemy.h" />
@@ -215,6 +217,8 @@
     <ClInclude Include="TileMapEditor.h" />
     <ClInclude Include="UiHudL.h" />
     <ClInclude Include="ViewMgr.h" />
+    <ClInclude Include="Weapon.h" />
+    <ClInclude Include="WeaponTable.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
