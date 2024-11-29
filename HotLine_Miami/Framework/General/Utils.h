@@ -1,5 +1,5 @@
 #pragma once
-
+class GameObject;
 class Utils
 {
 private:
@@ -61,5 +61,8 @@ public:
 	static sf::Vector2f FindClosesPoint(const sf::FloatRect& srcBounds, const std::vector<sf::Vector2f>& targetPoints);
 	static sf::Vector2f GetCenter(const sf::FloatRect& rect);
 	static float GetRelativePosition(const sf::Vector2f& v1, const sf::Vector2f& v2, const sf::Vector2f& v3);
+
+	static sf::Vector2f GetTransratedPoint(const sf::Vector2f& origin, const sf::Vector2f& direction, float maxDistance);
+	static bool RayCast(const sf::Vector2f& origin, const sf::Vector2f& direction, float maxDistance, GameObject* target);
 };
 

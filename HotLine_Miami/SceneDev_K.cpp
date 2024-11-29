@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "SceneDev_K.h"
 #include "Enemy.h"
+#include "Player.h"
 SceneDev_K::SceneDev_K() :Scene(SceneIds::Dev_K)
 {
 }
@@ -8,6 +9,8 @@ SceneDev_K::SceneDev_K() :Scene(SceneIds::Dev_K)
 void SceneDev_K::Init()
 {
 	enemy = AddGo(new Enemy("enemy"));
+	player = AddGo(new Player("player"));
+
 	Scene::Init();
 }
 

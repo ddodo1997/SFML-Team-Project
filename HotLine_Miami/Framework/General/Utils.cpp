@@ -3,6 +3,7 @@
 #include "stdafx.h"
 #include "Utils.h"
 #include <cmath>
+#include <SceneDev_K.h>
 
 std::mt19937 Utils::generator;
 const float Utils::PI = acosf(-1.f);
@@ -346,4 +347,28 @@ float Utils::GetRelativePosition(const sf::Vector2f& v1, const sf::Vector2f& v2,
     }
 
     return 2.0f * projection / length - 1.0f;
+}
+
+sf::Vector2f Utils::GetTransratedPoint(const sf::Vector2f& origin, const sf::Vector2f& direction, float maxDistance)
+{
+    return origin + GetNormal(direction) * maxDistance;
+}
+
+bool Utils::RayCast(const sf::Vector2f& origin, const sf::Vector2f& direction, float maxDistance, GameObject* target)
+{
+    bool result = false;
+    sf::RectangleShape ray;
+    ray.setPosition(origin);
+    ray.setSize({Utils::Distance(origin,GetTransratedPoint(origin,direction,maxDistance)), 0.1f});
+    ray.setRotation(Angle(direction));
+    SetOrigin(ray, Origins::ML);
+
+    if (CheckCollision(ray, target->GetHitBox().rect))
+    {
+        // for(auto& wall : 현재 맵 테이블)
+        // 모든 벽을 돌며 체크.. 현재 포지션과 방향을 기반으로 뒤쪽의 벽들은 무시
+        // 
+        //
+    }
+    return result;
 }

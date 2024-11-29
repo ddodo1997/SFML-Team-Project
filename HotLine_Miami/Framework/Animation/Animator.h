@@ -52,6 +52,8 @@ public:
 
 	void Play(const std::string& clipId, bool clearQueue = true);
 	void Play(AnimationClip* clip, bool clearQueue = true);
+
+	void RePlay() { isPlaying = true; }
 	void PlayQueue(const std::string& clipId);
 
 	//void Pause(bool pause);
