@@ -101,6 +101,8 @@ public:
 	void clearWayPoints();
 	void Draw(sf::RenderWindow& window) override;
 
+
 	void OnHit(int damage, sf::Vector2f direction);
+	void DropWeapon();
 	void OnDie(sf::Vector2f direction);
 };

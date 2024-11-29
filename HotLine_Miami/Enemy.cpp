@@ -349,6 +349,11 @@ void Enemy::OnHit(int damage, sf::Vector2f direction)
 	speed = 150.f;
 }
 
+void Enemy::DropWeapon()
+{
+
+}
+
 void Enemy::OnDie(sf::Vector2f direction)
 {
 	SetStatus(Status::Die);
