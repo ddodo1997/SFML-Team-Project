@@ -93,26 +93,44 @@ void SceneDevL::Update(float dt)
 	}
 	if (InputMgr::GetKey(sf::Keyboard::Numpad7))
 	{
-		directionX -= 0.001;
+		directionX -= 1.f;
 	}
 	if (InputMgr::GetKey(sf::Keyboard::Numpad8))
 	{
-		directionX += 0.001;
+		directionX += 1.f;
 	}
 	if (InputMgr::GetKey(sf::Keyboard::Numpad4))
 	{
-		directionY -= 0.001;
+		directionY -= 1.f;
 	}
 	if (InputMgr::GetKey(sf::Keyboard::Numpad5))
 	{
-		directionY += 0.001;
+		directionY += 1.f;
+	}
+	float randPosX = Utils::RandomRange(100.f, 300.f);
+	float randPosY = Utils::RandomRange(50.f, 150.f);
+	if (InputMgr::GetKeyDown(sf::Keyboard::Num1))
+	{
+		SpawnWeapon(Weapon::WeaponType::Bat, 0, sf::Vector2f(randPosX, randPosY));
+	}
+	if (InputMgr::GetKeyDown(sf::Keyboard::Num2))
+	{
+		SpawnWeapon(Weapon::WeaponType::Knife, 0, sf::Vector2f(randPosX, randPosY));
+	}
+	if (InputMgr::GetKeyDown(sf::Keyboard::Num3))
+	{
+		SpawnWeapon(Weapon::WeaponType::Machinegun, 24, sf::Vector2f(randPosX, randPosY));
+	}
+	if (InputMgr::GetKeyDown(sf::Keyboard::Num4))
+	{
+		SpawnWeapon(Weapon::WeaponType::Shotgun, 2, sf::Vector2f(randPosX, randPosY));
 	}
 
-	if (std::fabs(directionX) > 1)
+	if (std::fabs(directionX) > 1000.f)
 	{
 		directionX = 0;
 	}
-	if (std::fabs(directionY) > 1)
+	if (std::fabs(directionY) > 1000.f)
 	{
 		directionY = 0;
 	}
@@ -120,6 +138,9 @@ void SceneDevL::Update(float dt)
 	directionXY = { directionX, directionY };
 
 	uiHud->UpdateHitDir(directionXY);
+
+	worldView.setCenter(player->GetPosition());
+	FRAMEWORK.GetWindow().setView(worldView);
 
 	ClearInactivePoolObjects();
 }
@@ -131,12 +152,52 @@ void SceneDevL::Draw(sf::RenderWindow& window)
 	Scene::Draw(window);
 }
 
-void SceneDevL::OnWeaponDrop(Weapon::WeaponType weaponType, int remainingBullet, sf::Vector2f dir)
+void SceneDevL::OnWeaponDrop(Weapon::WeaponType weaponType, int remainingBullet, sf::Vector2f dir, sf::Vector2f pos)
+{
+	Weapon* weapon = weaponPool.Take();
+	weapons.push_back(weapon);
+	
+	weapon->SetWeaponType(weaponType);
+	weapon->SetPosition(pos);
+	weapon->SetActive(true);
+	if (weapon->GetIsRanged())
+	{
+		weapon->SetRemainingBullet(remainingBullet);
+	}
+	else
+	{
+		weapon->SetRemainingBullet(0);
+	}
+	weapon->OnDrop(dir);
+	AddGo(weapon);
+}
+
+void SceneDevL::PlayerTryPickUpWeapon()
+{
+	for (auto weapon : weapons)
+	{
+		if (player->GetHitBox().rect.getGlobalBounds().intersects(weapon->GetHitBox().rect.getGlobalBounds()))
+		{
+			PlayerPickUpWeapon(weapon->GetWeaponType(), weapon->GetRemainingBullet());
+			weapon->SetActive(false);
+			return;			
+		}
+	}
+}
+
+void SceneDevL::PlayerPickUpWeapon(Weapon::WeaponType weaponType, int remainingBullet)
+{
+	player->WeaponPickUp(weaponType, remainingBullet);
+}
+
+void SceneDevL::SpawnWeapon(Weapon::WeaponType weaponType, int remainingBullet, sf::Vector2f pos)
 {
 	Weapon* weapon = weaponPool.Take();
 	weapons.push_back(weapon);
 
 	weapon->SetWeaponType(weaponType);
+	weapon->SetPosition(pos);
+	weapon->SetActive(true);
 	if (weapon->GetIsRanged())
 	{
 		weapon->SetRemainingBullet(remainingBullet);

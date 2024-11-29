@@ -6,7 +6,6 @@ class Player;
 class UiHudL;
 class Weapon;
 
-
 class SceneDevL :public Scene
 {
 protected:
@@ -38,6 +37,11 @@ public:
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 
-	void OnWeaponDrop(Weapon::WeaponType weaponType, int remainingBullet, sf::Vector2f dir);
+	void OnWeaponDrop(Weapon::WeaponType weaponType, int remainingBullet, sf::Vector2f dir, sf::Vector2f pos);
+	
+	void PlayerTryPickUpWeapon();
+	void PlayerPickUpWeapon(Weapon::WeaponType weaponType, int remainingBullet);
+	// Test Code
+	void SpawnWeapon(Weapon::WeaponType weaponType, int remainingBullet, sf::Vector2f pos);
 };
 

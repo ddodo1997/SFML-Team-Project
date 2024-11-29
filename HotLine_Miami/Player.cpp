@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Player.h"
+#include "SceneDevL.h"
 
 Player::Player(const std::string& name)
 	: GameObject(name)
@@ -45,10 +46,15 @@ void Player::SetOrigin(const sf::Vector2f& newOrigin)
 	leg.setOrigin(origin);
 }
 
+void Player::SetScene(SceneDevL* sceneDevL)
+{
+	this->sceneDevL = sceneDevL;
+}
+
 void Player::Init()
 {
 	sortingLayer = SortingLayers::Foreground;
-	sortingOrder = 0;
+	sortingOrder = 1;
 
 	//aniClipMap.insert("", )
 }
@@ -119,6 +125,15 @@ void Player::Update(float dt)
 		isMoving = false;
 	}
 
+
+	if (InputMgr::GetMouseButtonDown(sf::Mouse::Right))
+	{
+		if (sceneDevL == nullptr)
+			SetScene((SceneDevL*)SCENE_MGR.GetCurrentScene());
+		sceneDevL->PlayerTryPickUpWeapon();
+	}
+
+
 	SetPosition(position + direction * speed * dt);
 	hitBox.UpdateTr(body, body.getLocalBounds());
 }
@@ -146,24 +161,25 @@ void Player::Draw(sf::RenderWindow& window)
 
 void Player::OnHit(int weaponType, sf::Vector2f hitDir)
 {
+	auto normDir = Utils::GetNormal(hitDir);
 	switch (weaponType)
 	{
 	case 0:
-		OnHitByBat(hitDir);
+		OnHitByBat(normDir);
 		break;
 	case 1:
-		OnHitByKnife(hitDir);
+		OnHitByKnife(normDir);
 		break;
 	case 2:
-		OnHitByMachinegun(hitDir);
+		OnHitByMachinegun(normDir);
 		break;
 	case 3:
-		OnHitByShotgun(hitDir);
+		OnHitByShotgun(normDir);
 		break;
 	}
 	isAlive = false;
 	if (weaponStatus.weaponType != Weapon::WeaponType::None)
-		DropWeapon(hitDir);
+		DropWeapon(normDir);
 }
 
 void Player::OnHitByBat(sf::Vector2f hitDir)
@@ -287,6 +303,14 @@ void Player::ThrowWeapon(sf::Vector2f lookDir)
 
 void Player::DropWeapon(sf::Vector2f hitDir)
 {
+
+
+}
+
+void Player::DropWeapon()
+{
+
+
 
 }
 
