@@ -37,6 +37,11 @@ void SceneDev_K::Exit()
 void SceneDev_K::Update(float dt)
 {
 	Scene::Update(dt);
+
+	if (InputMgr::GetKeyDown(sf::Keyboard::Num4))
+	{
+		Variables::isDrawHitBox = !Variables::isDrawHitBox;
+	}
 }
 
 void SceneDev_K::Draw(sf::RenderWindow& window)

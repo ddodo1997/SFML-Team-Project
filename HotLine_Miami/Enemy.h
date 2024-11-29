@@ -25,7 +25,7 @@ public:
 		{
 			sf::Vector2f position;
 			sf::CircleShape point;
-			//float nextAngle;
+
 			WayPoint(sf::Vector2f position) {
 				this->position = position;
 				point.setPosition(this->position);
@@ -69,6 +69,7 @@ protected:
 	Normal normal;
 	Idle idle;
 	Patrol patrol;
+
 	Weapon::WeaponStatus weaponStatus;
 
 	int hp = 1;
@@ -107,8 +108,6 @@ public:
 	void UpdateGetUp(float dt);
 	void UpdateDie(float dt);
 
-	void UpdateViewAngle();
-
 	void FixedUpdate(float dt) override;
 
 	void SetStatus(Status stat);
@@ -118,9 +117,11 @@ public:
 	void Draw(sf::RenderWindow& window) override;
 
 	void PickupWeapon(Weapon* weapon);
-	void OnHit(int damage, sf::Vector2f direction);
+	void OnHit(Weapon::WeaponStatus weaponStatus, sf::Vector2f direction);
 	void DropWeapon();
 	void OnDie(sf::Vector2f direction);
+
+	bool isDie() const{ return currentStatus == Status::Die ? true : false; }
 
 	void Attack();
 };

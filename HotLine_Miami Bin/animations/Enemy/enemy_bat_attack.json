@@ -1,0 +1,15 @@
+{
+    "ID": "EnemyBatAttack",
+    "LoopType": 0,
+    "FPS": 10,
+    "texId": "graphics/Enemy/Attack/eAttackBat.png",
+    "Frames":
+    [
+        [0,0,60,60],
+        [60,0,60,60],
+        [120,0,60,60],
+        [0,60,60,60],
+        [60,60,60,60],
+        [120,60,60,60]
+    ]
+}

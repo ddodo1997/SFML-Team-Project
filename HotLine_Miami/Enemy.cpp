@@ -65,17 +65,18 @@ void Enemy::Release()
 
 void Enemy::Reset()
 {
-	player = dynamic_cast<Player*>(dynamic_cast<SceneDev_K*>(SCENE_MGR.GetCurrentScene())->GetPlayer());
+	player = dynamic_cast<SceneDev_K*>(SCENE_MGR.GetCurrentScene())->GetPlayer();
 	animatorBody.SetTarget(&body);
 	animatorLegs.SetTarget(&legs);
 	viewAngle.setPointCount(3);
 	viewAngle.setPoint(0, { 0.f,0.f });
-	viewAngle.setPoint(1, { 100.f,-20.f });
-	viewAngle.setPoint(2, { 100.f,20.f });
+	viewAngle.setPoint(1, { 200.f,-30.f });
+	viewAngle.setPoint(2, { 200.f,30.f });
 	viewAngle.setFillColor(sf::Color::Red);
 	SetOrigin(Origins::MC);
-	SetStatus(Status::Patrol);
+	SetStatus(Status::Normal);
 	SetPatterns();
+	weaponStatus.weaponType = Weapon::WeaponType::Bat;
 	hp = 1;
 }
 
@@ -88,7 +89,7 @@ void Enemy::SetPatterns()
 
 	idle.lookAwayTimer = 0.f;
 
-	Patrol::WayPoint waypo(sf::Vector2f(-50.f,-50.f));
+	Patrol::WayPoint waypo(sf::Vector2f(-50.f, -50.f));
 	waypo.point.setRadius(0.5f);
 	waypo.point.setFillColor(sf::Color::Green);
 	patrol.wayPointCnt = 4;
@@ -113,16 +114,16 @@ void Enemy::SetPatterns()
 
 void Enemy::Update(float dt)
 {
-	hitBox.UpdateTr(body, body.getLocalBounds());
+	hitBox.UpdateTr(legs, legs.getLocalBounds());
 	animatorBody.Update(dt);
 	animatorLegs.Update(dt);
 	if (InputMgr::GetKeyDown(sf::Keyboard::Num1))
 	{
-		OnHit(1, { -1.f,0.f });
+		OnHit(weaponStatus, { -1.f,0.f });
 	}
 	if (InputMgr::GetKeyDown(sf::Keyboard::Num2))
 	{
-		OnHit(0, { -1.f,0.f });
+		OnHit(weaponStatus, { -1.f,0.f });
 	}
 	if (InputMgr::GetKeyDown(sf::Keyboard::Num3))
 	{
@@ -164,7 +165,6 @@ void Enemy::Update(float dt)
 
 void Enemy::UpdateNormal(float dt)
 {
-
 	if (normal.isMoving)
 	{
 		normal.movingTimer += dt;
@@ -178,7 +178,24 @@ void Enemy::UpdateNormal(float dt)
 		{
 			normal.isMoving = false;
 			direction = { 0.f,0.f };
-			animatorBody.Play("animations/Enemy/enemy_none_stand.json");
+			switch (weaponStatus.weaponType)
+			{
+			case Weapon::WeaponType::None:
+				animatorBody.Play("animations/Enemy/enemy_none_stand.json");
+				break;
+			case Weapon::WeaponType::Bat:
+				animatorBody.Play("animations/Enemy/enemy_bat_search.json");
+				break;
+			case Weapon::WeaponType::Knife:
+				animatorBody.Play("animations/Enemy/enemy_knife_search.json");
+				break;
+			case Weapon::WeaponType::Machinegun:
+				animatorBody.Play("animations/Enemy/enemy_m16_search.json");
+				break;
+			case Weapon::WeaponType::Shotgun:
+				animatorBody.Play("animations/Enemy/enemy_shotgun_search.json");
+				break;
+			}
 			animatorLegs.Stop();
 			SetOrigin(Origins::MC);
 		}
@@ -193,7 +210,24 @@ void Enemy::UpdateNormal(float dt)
 			normal.movingCnt = Utils::RandomRange(3, 7);
 			normal.movingDelay = Utils::RandomRange(1.f, 3.f);
 			direction = Utils::GetNormal(Utils::RandomOnUnitCircle());
-			animatorBody.Play("animations/Enemy/enemy_none_walk.json");
+			switch (weaponStatus.weaponType)
+			{
+			case Weapon::WeaponType::None:
+				animatorBody.Play("animations/Enemy/enemy_none_walk.json");
+				break;
+			case Weapon::WeaponType::Bat:
+				animatorBody.Play("animations/Enemy/enemy_bat_walk.json");
+				break;
+			case Weapon::WeaponType::Knife:
+				animatorBody.Play("animations/Enemy/enemy_knife_walk.json");
+				break;
+			case Weapon::WeaponType::Machinegun:
+				animatorBody.Play("animations/Enemy/enemy_m16_walk.json");
+				break;
+			case Weapon::WeaponType::Shotgun:
+				animatorBody.Play("animations/Enemy/enemy_shotgun_walk.json");
+				break;
+			}
 			animatorLegs.RePlay();
 			SetOrigin(Origins::MC);
 		}
@@ -224,15 +258,19 @@ void Enemy::UpdatePatrol(float dt)
 void Enemy::UpdateAggro(float dt)
 {
 	speed = 100.f;
-	//TODO : PathFinding Call Seol!!
-
-
-
-	if (Utils::RayCast(position, direction, 300.f, player)) 
+	direction = Utils::GetNormal(player->GetPosition() - position);
+	switch (weaponStatus.weaponType)
 	{
+	case Weapon::WeaponType::Bat:
+	case Weapon::WeaponType::Knife:
 		if (Utils::Distance(position, player->GetPosition()) < 10.f)
 			Attack();
-		direction = Utils::GetNormal(player->GetPosition() - position);
+		break;
+	case Weapon::WeaponType::Machinegun:
+	case Weapon::WeaponType::Shotgun:
+		speed = 0.f;
+		Attack();
+		break;
 	}
 }
 
@@ -278,7 +316,7 @@ void Enemy::UpdateDie(float dt)
 
 void Enemy::FixedUpdate(float dt)
 {
-	if (viewAngle.getGlobalBounds().intersects(player->GetGlobalBounds()))
+	if (viewAngle.getGlobalBounds().intersects(player->GetHitBox().rect.getGlobalBounds()))
 		SetStatus(Status::Aggro);
 }
 
@@ -292,13 +330,47 @@ void Enemy::SetStatus(Status stat)
 	switch (currentStatus)
 	{
 	case Status::Normal:
-		animatorBody.Play("animations/Enemy/enemy_none_stand.json"); 
+		switch (weaponStatus.weaponType)
+		{
+		case Weapon::WeaponType::None:
+			animatorBody.Play("animations/Enemy/enemy_none_walk.json");
+			break;
+		case Weapon::WeaponType::Bat:
+			animatorBody.Play("animations/Enemy/enemy_bat_walk.json");
+			break;
+		case Weapon::WeaponType::Knife:
+			animatorBody.Play("animations/Enemy/enemy_knife_walk.json");
+			break;
+		case Weapon::WeaponType::Machinegun:
+			animatorBody.Play("animations/Enemy/enemy_m16_walk.json");
+			break;
+		case Weapon::WeaponType::Shotgun:
+			animatorBody.Play("animations/Enemy/enemy_shotgun_walk.json");
+			break;
+		}
 		animatorLegs.Stop();
 		SetOrigin(Origins::MC);
 		break;
 	case Status::Idle:
 	{
-		animatorBody.Play("animations/Enemy/enemy_none_stand.json");
+		switch (weaponStatus.weaponType)
+		{
+		case Weapon::WeaponType::None:
+			animatorBody.Play("animations/Enemy/enemy_none_walk.json");
+			break;
+		case Weapon::WeaponType::Bat:
+			animatorBody.Play("animations/Enemy/enemy_bat_walk.json");
+			break;
+		case Weapon::WeaponType::Knife:
+			animatorBody.Play("animations/Enemy/enemy_knife_walk.json");
+			break;
+		case Weapon::WeaponType::Machinegun:
+			animatorBody.Play("animations/Enemy/enemy_m16_walk.json");
+			break;
+		case Weapon::WeaponType::Shotgun:
+			animatorBody.Play("animations/Enemy/enemy_shotgun_walk.json");
+			break;
+		}
 		animatorLegs.Stop();
 		SetOrigin(Origins::MC);
 		idle.lookAwayDelay = Utils::RandomRange(2.f, 5.f);
@@ -306,10 +378,45 @@ void Enemy::SetStatus(Status stat)
 		break;
 	}
 	case Status::Patrol:
-		animatorBody.Play("animations/Enemy/enemy_bat_walk.json");
+		switch (weaponStatus.weaponType)
+		{
+		case Weapon::WeaponType::None:
+			animatorBody.Play("animations/Enemy/enemy_none_walk.json");
+			break;
+		case Weapon::WeaponType::Bat:
+			animatorBody.Play("animations/Enemy/enemy_bat_walk.json");
+			break;
+		case Weapon::WeaponType::Knife:
+			animatorBody.Play("animations/Enemy/enemy_knife_walk.json");
+			break;
+		case Weapon::WeaponType::Machinegun:
+			animatorBody.Play("animations/Enemy/enemy_m16_walk.json");
+			break;
+		case Weapon::WeaponType::Shotgun:
+			animatorBody.Play("animations/Enemy/enemy_shotgun_walk.json");
+			break;
+		}
 		SetOrigin(Origins::MC);
 		break;
 	case Status::Aggro:
+		switch (weaponStatus.weaponType)
+		{
+		case Weapon::WeaponType::None:
+			animatorBody.Play("animations/Enemy/enemy_none_walk.json");
+			break;
+		case Weapon::WeaponType::Bat:
+			animatorBody.Play("animations/Enemy/enemy_bat_walk.json");
+			break;
+		case Weapon::WeaponType::Knife:
+			animatorBody.Play("animations/Enemy/enemy_knife_walk.json");
+			break;
+		case Weapon::WeaponType::Machinegun:
+			animatorBody.Play("animations/Enemy/enemy_m16_walk.json");
+			break;
+		case Weapon::WeaponType::Shotgun:
+			animatorBody.Play("animations/Enemy/enemy_shotgun_walk.json");
+			break;
+		}
 		break;
 	case Status::SearchWeapon:
 		animatorBody.Play("animations/Enemy/enemy_none_walk.json");
@@ -338,6 +445,8 @@ void Enemy::SetWayPoints(std::vector<sf::Vector2f> pos)
 	for (auto& vec2f : pos)
 	{
 		Patrol::WayPoint temp(vec2f);
+		temp.point.setRadius(0.1f);
+		temp.point.setFillColor(sf::Color::Transparent);
 		patrol.wayPoints.push_back(temp);
 	}
 	patrol.wayPointCnt = patrol.wayPoints.size();
@@ -351,25 +460,25 @@ void Enemy::clearWayPoints()
 
 void Enemy::Draw(sf::RenderWindow& window)
 {
-	if(isWalking)
+	if (isWalking)
 		window.draw(legs);
 	window.draw(body);
 	for (auto point : patrol.wayPoints)
 		window.draw(point.point);
 	window.draw(patrol.originPoint);
 	hitBox.Draw(window);
-	window.draw(viewAngle);
 }
 
 void Enemy::PickupWeapon(Weapon* weapon)
 {
+
 }
 
-void Enemy::OnHit(int damage, sf::Vector2f direction)
+void Enemy::OnHit(Weapon::WeaponStatus weaponStatus, sf::Vector2f direction)
 {
 	//���� ���
 
-	hp -= damage;
+	hp -= weaponStatus.damage;
 	if (hp <= 0)
 	{
 		OnDie(direction);
@@ -398,16 +507,18 @@ void Enemy::Attack()
 {
 	switch (weaponStatus.weaponType)
 	{
-	case Weapon::WeaponType::None:
-		SetStatus(Status::SearchWeapon);
-		break;
 	case Weapon::WeaponType::Bat:
+		animatorBody.Play("animations/Enemy/enemy_bat_attack.json");
 		break;
 	case Weapon::WeaponType::Knife:
+		animatorBody.Play("animations/Enemy/enemy_knife_attack.json");
 		break;
 	case Weapon::WeaponType::Machinegun:
+		animatorBody.Play("animations/Enemy/enemy_m16_attack.json");
 		break;
 	case Weapon::WeaponType::Shotgun:
+		animatorBody.Play("animations/Enemy/enemy_shotgun_attack.json");
 		break;
 	}
+	player->OnHit((int)weaponStatus.weaponType, direction);
 }
