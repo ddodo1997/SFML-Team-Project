@@ -125,6 +125,10 @@ void SceneDevL::Update(float dt)
 	{
 		SpawnWeapon(Weapon::WeaponType::Shotgun, 2, sf::Vector2f(randPosX, randPosY));
 	}
+	if (InputMgr::GetKeyDown(sf::Keyboard::F9))
+	{
+		Variables::isDrawHitBox = !Variables::isDrawHitBox;
+	}
 
 	if (std::fabs(directionX) > 1000.f)
 	{
@@ -138,6 +142,7 @@ void SceneDevL::Update(float dt)
 	directionXY = { directionX, directionY };
 
 	uiHud->UpdateHitDir(directionXY);
+	uiHud->UpdateWeaponStatus(player->GetWeaponStatus(), player->GetRemainingBullet());
 
 	worldView.setCenter(player->GetPosition());
 	FRAMEWORK.GetWindow().setView(worldView);
@@ -180,7 +185,7 @@ void SceneDevL::PlayerTryPickUpWeapon()
 		{
 			PlayerPickUpWeapon(weapon->GetWeaponType(), weapon->GetRemainingBullet());
 			weapon->SetActive(false);
-			return;			
+			return;
 		}
 	}
 }

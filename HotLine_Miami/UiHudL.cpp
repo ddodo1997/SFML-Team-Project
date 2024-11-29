@@ -88,12 +88,20 @@ void UiHudL::Reset()
 	lookDirection.setScale(2.f, 2.f);
 	lookDirection.setPosition({ 38.f,430.f });
 	Utils::SetOrigin(lookDirection, Origins::ML);
+
+	currentWeaponStatus.setFont(FONT_MGR.Get("fonts/DS-DIGI.ttf"));
+	currentWeaponStatus.setCharacterSize(30.f);
+	currentWeaponStatus.setFillColor(sf::Color::White);
+	currentWeaponStatus.setString(std::to_string(InputMgr::GetMousePosition().y));
+	currentWeaponStatus.setPosition({ 30.f,530.f });
+	Utils::SetOrigin(currentWeaponStatus, Origins::TL);
 }
 
 void UiHudL::Update(float dt)
 {
 	UpdateMPos(dt);
-		
+
+
 }
 
 void UiHudL::UpdateMPos(float dt)
@@ -123,6 +131,35 @@ void UiHudL::UpdateLookDir(sf::Vector2f lookDir)
 	Utils::SetOrigin(hitDirection, Origins::MC);
 }
 
+void UiHudL::UpdateWeaponStatus(Weapon::WeaponStatus weaponStatus, int remainingBullet)
+{
+	weaponTypeIndex = (int)weaponStatus.weaponType;
+	std::string weaponId;
+	if ((int)weaponStatus.weaponType == -1)
+	{
+		weaponId = "None";
+	}
+	if ((int)weaponStatus.weaponType == 0)
+	{
+		weaponId = "Bat";
+	}
+	if ((int)weaponStatus.weaponType == 1)
+	{
+		weaponId = "Knife";
+	}
+	if ((int)weaponStatus.weaponType == 2)
+	{
+		weaponId = "Machinegun";
+	}
+	if ((int)weaponStatus.weaponType == 3)
+	{
+		weaponId = "Shotgun";
+	}
+	currentWeaponStatus.setString("Weapon ID: " + weaponId + "\nBullets : " + std::to_string(remainingBullet)
+		+ " \" " + std::to_string(weaponStatus.maxBullet));
+	Utils::SetOrigin(currentWeaponStatus, Origins::TL);
+}
+
 void UiHudL::Draw(sf::RenderWindow& window)
 {
 	window.draw(mPosX);
@@ -131,4 +168,9 @@ void UiHudL::Draw(sf::RenderWindow& window)
 	window.draw(hitDirection);
 	window.draw(lookDirectionText);
 	window.draw(lookDirection);
+	window.draw(currentWeaponStatus);
+	if (weaponTypeIndex != -1)
+	{
+		window.draw(currentWeaponStatus);
+	}
 }

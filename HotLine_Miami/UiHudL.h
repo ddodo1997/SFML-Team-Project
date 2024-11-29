@@ -12,6 +12,10 @@ protected:
 	sf::Text lookDirectionText;
 	sf::Sprite lookDirection;
 
+	sf::Text currentWeaponStatus;
+
+	int weaponTypeIndex = -1;
+
 public:
 	UiHudL(const std::string& name = "");
 	~UiHudL() = default;
@@ -30,5 +34,6 @@ public:
 	void UpdateMPos(float dt);
 	void UpdateHitDir(sf::Vector2f hitDir);
 	void UpdateLookDir(sf::Vector2f lookDir);
+	void UpdateWeaponStatus(Weapon::WeaponStatus weaponStatus, int remainingBullet);
 	void Draw(sf::RenderWindow& window) override;
 };

@@ -133,7 +133,6 @@ void Player::Update(float dt)
 		sceneDevL->PlayerTryPickUpWeapon();
 	}
 
-
 	SetPosition(position + direction * speed * dt);
 	hitBox.UpdateTr(body, body.getLocalBounds());
 }

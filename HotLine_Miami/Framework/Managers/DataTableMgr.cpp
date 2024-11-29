@@ -4,6 +4,7 @@
 #include "DecorationTable.h"
 #include "WallTable.h"
 #include "StageTable.h"
+
 DataTableMgr::~DataTableMgr()
 {
 	Release();
