@@ -89,6 +89,7 @@ void Enemy::SetPatterns()
 
 	idle.lookAwayTimer = 0.f;
 
+<<<<<<< HEAD
 	Patrol::WayPoint waypo(sf::Vector2f(-50.f, -50.f));
 	waypo.point.setRadius(0.5f);
 	waypo.point.setFillColor(sf::Color::Green);
@@ -107,6 +108,8 @@ void Enemy::SetPatterns()
 	waypo.point.setPosition(waypo.position);
 	patrol.wayPoints.push_back(waypo);
 
+=======
+>>>>>>> origin/Dev_S
 	patrol.originPoint.setRadius(0.1f);
 	Utils::SetOrigin(patrol.originPoint, Origins::MC);
 	patrol.originPoint.setFillColor(sf::Color::Blue);
@@ -159,6 +162,12 @@ void Enemy::Update(float dt)
 		break;
 	}
 
+<<<<<<< HEAD
+=======
+	/*if (Utils::RayCast(position, direction, 300.f, dynamic_cast<Player*>(dynamic_cast<SceneDev_K*>(SCENE_MGR.GetCurrentScene())->GetPlayer())))
+		OnHit(1, { -1.f,1.f });*/
+
+>>>>>>> origin/Dev_S
 	SetRotation(Utils::Angle(direction));
 	SetPosition(position + direction * speed * dt);
 }
@@ -247,7 +256,7 @@ void Enemy::UpdateIdle(float dt)
 void Enemy::UpdatePatrol(float dt)
 {
 	patrol.originPoint.setPosition(position);
-	static int wayPointCnt = 0;
+	static int wayPointCnt = 1;
 	wayPointCnt %= patrol.wayPointCnt;
 	if (!patrol.originPoint.getGlobalBounds().intersects(patrol.wayPoints[wayPointCnt].point.getGlobalBounds()))
 		direction = Utils::GetNormal(patrol.wayPoints[wayPointCnt].position - position);
@@ -445,8 +454,12 @@ void Enemy::SetWayPoints(std::vector<sf::Vector2f> pos)
 	for (auto& vec2f : pos)
 	{
 		Patrol::WayPoint temp(vec2f);
+<<<<<<< HEAD
 		temp.point.setRadius(0.1f);
 		temp.point.setFillColor(sf::Color::Transparent);
+=======
+		temp.point.setRadius(0.5f);
+>>>>>>> origin/Dev_S
 		patrol.wayPoints.push_back(temp);
 	}
 	patrol.wayPointCnt = patrol.wayPoints.size();

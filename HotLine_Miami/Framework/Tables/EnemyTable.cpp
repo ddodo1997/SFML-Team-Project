@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "EnemyTable.h"
-DataEnemy EnemyTable::Undefined;
+DataEnemyType EnemyTable::Undefined;
 bool EnemyTable::Load()
 {
 	Release();
@@ -17,12 +17,12 @@ bool EnemyTable::Load()
 
 	for (const auto& enemy : data["enemies"])
 	{
-		DataEnemy dataEnemy;
-		dataEnemy.id = enemy["id"];
-		dataEnemy.weaponType = enemy["weapontype"];
-		dataEnemy.state = StringToEnemyStatus(enemy["state"]);
+		DataEnemyType dataEnemyType;
+		dataEnemyType.id = enemy["id"];
+		dataEnemyType.weaponType = enemy["weapontype"];
+		dataEnemyType.state = StringToEnemyStatus(enemy["state"]);
 
-		table[dataEnemy.id] = dataEnemy;
+		table[dataEnemyType.id] = dataEnemyType;
 	}
 
 	inFile.close();
@@ -34,7 +34,7 @@ void EnemyTable::Release()
 	table.clear();
 }
 
-const DataEnemy& EnemyTable::GetEnemy(const std::string& id) const
+const DataEnemyType& EnemyTable::GetEnemyType(const std::string& id) const
 {
 	auto find = table.find(id);
 	if (find == table.end())

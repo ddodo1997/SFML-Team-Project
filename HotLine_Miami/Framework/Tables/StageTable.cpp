@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "StageTable.h"
-
+#include "WallTable.h"
 bool StageTable::Load()
 {
 	Release();
@@ -42,14 +42,14 @@ bool StageTable::Load()
 		enemyData.id = enemy["id"];
 		enemyData.pos = { enemy["x"], enemy["y"] };
 
-		const auto& enemyInfo = ENEMY_TABLE->GetEnemy(enemyData.id);
+		const auto& enemyTypeInfo = ENEMY_TABLE->GetEnemyType(enemy["state"]);
 
-		enemyData.state = enemyInfo.state;
-		enemyData.weaponType = enemyInfo.weaponType;
+		enemyData.state = enemyTypeInfo.state;
+		enemyData.weaponType = enemyTypeInfo.weaponType;
 
 		for (const auto& waypoint : enemy["waypoint"])
 		{
-			enemyData.waypoints.emplace_back(waypoint["x"], waypoint["y"]);
+			enemyData.waypoints.emplace_back((waypoint["x"] * GetTileSize().x) + GetTileSize().x * 0.5f, (waypoint["y"] * GetTileSize().y) + GetTileSize().y * 0.5f);
 		}
 
 		enemyTable.insert({ enemyData.id, enemyData });
@@ -61,7 +61,11 @@ bool StageTable::Load()
 		wallData.id = wall["id"];
 		wallData.start = { wall["start"]["x"], wall["start"]["y"] };
 		wallData.end = { wall["end"]["x"], wall["end"]["y"] };
-		wallData.textureIds = wall["ids"].get<std::vector<std::string>>();
+		for (const auto& textureId : wall["ids"].get<std::vector<std::string>>())
+		{
+			std::string wallTexId = WALL_TABLE->GetWall(textureId);
+			wallData.textureIds.push_back(wallTexId);
+		}
 		wallTable.insert({ wallData.id, wallData });
 	}
 
