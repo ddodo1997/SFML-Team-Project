@@ -98,6 +98,7 @@ void Player::Update(float dt)
 	}
 
 	SetPosition(position + direction * speed * dt);
+	hitBox.UpdateTr(body, body.getLocalBounds());
 }
 
 void Player::Draw(sf::RenderWindow& window)
@@ -105,4 +106,5 @@ void Player::Draw(sf::RenderWindow& window)
 	if (isMoving)
 		window.draw(leg);
 	window.draw(body);
+	hitBox.Draw(window);
 }

@@ -1,21 +1,26 @@
 #include "stdafx.h"
 #include "Enemy.h"
+#include <SceneDev_K.h>
+#include "Player.h"
 
 Enemy::Enemy(const std::string& name)
 	: GameObject(name)
 {
+
 }
 
 void Enemy::SetPosition(const sf::Vector2f& pos)
 {
 	position = pos;
 	body.setPosition(position);
+	legs.setPosition(position);
 }
 
 void Enemy::SetRotation(float angle)
 {
 	rotation = angle;
 	body.setRotation(rotation);
+	legs.setRotation(rotation);
 }
 
 
@@ -23,6 +28,7 @@ void Enemy::SetScale(const sf::Vector2f& s)
 {
 	scale = s;
 	body.setScale(scale);
+	legs.setScale(scale);
 }
 
 void Enemy::SetOrigin(Origins preset)
@@ -31,6 +37,7 @@ void Enemy::SetOrigin(Origins preset)
 	if (originPreset != Origins::Custom)
 	{
 		origin = Utils::SetOrigin(body, originPreset);
+		Utils::SetOrigin(legs, originPreset);
 	}
 }
 
@@ -39,6 +46,7 @@ void Enemy::SetOrigin(const sf::Vector2f& newOrigin)
 	originPreset = Origins::Custom;
 	origin = newOrigin;
 	body.setOrigin(origin);
+	legs.setOrigin(origin);
 }
 
 void Enemy::Init()
@@ -53,9 +61,12 @@ void Enemy::Release()
 
 void Enemy::Reset()
 {
-	animator.SetTarget(&body);
+	animatorBody.SetTarget(&body);
+	animatorLegs.SetTarget(&legs);
 	SetOrigin(Origins::MC);
-	SetStatus(Status::Normal);
+	SetStatus(Status::Patrol);
+	SetPatterns();
+	hp = 1;
 }
 
 void Enemy::SetPatterns()
@@ -66,11 +77,35 @@ void Enemy::SetPatterns()
 	normal.movingCnt = 0;
 
 	idle.lookAwayTimer = 0.f;
+
+	Patrol::WayPoint waypo(sf::Vector2f(-50.f,-50.f));
+	waypo.point.setRadius(0.5f);
+	waypo.point.setFillColor(sf::Color::Green);
+	patrol.wayPointCnt = 4;
+	patrol.wayPoints.push_back(waypo);
+
+	waypo.position = { 50.f,-50.f };
+	waypo.point.setPosition(waypo.position);
+	patrol.wayPoints.push_back(waypo);
+
+	waypo.position = { 50.f,50.f };
+	waypo.point.setPosition(waypo.position);
+	patrol.wayPoints.push_back(waypo);
+
+	waypo.position = { -50.f,50.f };
+	waypo.point.setPosition(waypo.position);
+	patrol.wayPoints.push_back(waypo);
+
+	patrol.originPoint.setRadius(0.1f);
+	Utils::SetOrigin(patrol.originPoint, Origins::MC);
+	patrol.originPoint.setFillColor(sf::Color::Blue);
 }
 
 void Enemy::Update(float dt)
 {
-	animator.Update(dt);
+	hitBox.UpdateTr(body, body.getLocalBounds());
+	animatorBody.Update(dt);
+	animatorLegs.Update(dt);
 	if (InputMgr::GetKeyDown(sf::Keyboard::Num1))
 	{
 		OnHit(1, { -1.f,0.f });
@@ -79,6 +114,11 @@ void Enemy::Update(float dt)
 	{
 		OnHit(0, { -1.f,0.f });
 	}
+	if (InputMgr::GetKeyDown(sf::Keyboard::Num3))
+	{
+		SCENE_MGR.ChangeScene(SceneIds::Dev_K);
+	}
+	//시야각과 플레이어간의 충돌을 검사해 참이면 레이캐스트 실행.
 
 	switch (currentStatus)
 	{
@@ -100,10 +140,15 @@ void Enemy::Update(float dt)
 	case Status::Stun:
 		UpdateStun(dt);
 		break;
+	case Status::GetUp:
+		UpdateGetUp(dt);
+		break;
 	case Status::Die:
 		UpdateDie(dt);
 		break;
 	}
+	if (Utils::RayCast(position, direction, 300.f, dynamic_cast<Player*>(dynamic_cast<SceneDev_K*>(SCENE_MGR.GetCurrentScene())->GetPlayer())))
+		OnHit(1, { -1.f,1.f });
 	SetRotation(Utils::Angle(direction));
 	SetPosition(position + direction * speed * dt);
 }
@@ -124,11 +169,12 @@ void Enemy::UpdateNormal(float dt)
 		{
 			normal.isMoving = false;
 			direction = { 0.f,0.f };
-			animator.Play("animations/Enemy/enemy_none_stand.json");
+			animatorBody.Play("animations/Enemy/enemy_none_stand.json");
+			animatorLegs.Stop();
 			SetOrigin(Origins::MC);
 		}
 	}
-	else 
+	else
 	{
 		normal.moveTimer += dt;
 		if (normal.moveDelay <= normal.moveTimer)
@@ -138,7 +184,8 @@ void Enemy::UpdateNormal(float dt)
 			normal.movingCnt = Utils::RandomRange(3, 7);
 			normal.movingDelay = Utils::RandomRange(1.f, 3.f);
 			direction = Utils::GetNormal(Utils::RandomOnUnitCircle());
-			animator.Play("animations/Enemy/enemy_none_walk.json");
+			animatorBody.Play("animations/Enemy/enemy_none_walk.json");
+			animatorLegs.RePlay();
 			SetOrigin(Origins::MC);
 		}
 	}
@@ -156,12 +203,18 @@ void Enemy::UpdateIdle(float dt)
 
 void Enemy::UpdatePatrol(float dt)
 {
+	patrol.originPoint.setPosition(position);
+	static int wayPointCnt = 0;
+	wayPointCnt %= patrol.wayPointCnt;
+	if (!patrol.originPoint.getGlobalBounds().intersects(patrol.wayPoints[wayPointCnt].point.getGlobalBounds()))
+		direction = Utils::GetNormal(patrol.wayPoints[wayPointCnt].position - position);
+	else
+		wayPointCnt++;
 }
 
 void Enemy::UpdateAggro(float dt)
 {
-	//TODO : 길찾기 알고리즘. 설현기 나와!!
-	//TODO : 레이캐스트. 김승욱 나와!!
+	//TODO : 길찾기 알고리즘. 설현기 불러!!
 }
 
 void Enemy::UpdateSearchWeapon(float dt)
@@ -171,9 +224,13 @@ void Enemy::UpdateSearchWeapon(float dt)
 
 void Enemy::UpdateStun(float dt)
 {
-	if (speed >= 0.f)
+	if (speed > 0.f)
 	{
 		speed -= dt * 300;
+	}
+	else
+	{
+		speed = 0.f;
 	}
 	stunTimer += dt;
 	if (stunTimer >= stunDelay)
@@ -185,61 +242,97 @@ void Enemy::UpdateStun(float dt)
 
 void Enemy::UpdateGetUp(float dt)
 {
-	if (animator.GetCurrentClipId() != "EnemyGetUp")
+	if (animatorBody.GetCurrentClipId() != "EnemyGetUp")
 		SetStatus(Status::SearchWeapon);
 }
 
 void Enemy::UpdateDie(float dt)
 {
-	if (speed >= 0.f)
-		speed -= dt * 300;
+	if (speed <= 0.f)
+	{
+		speed = 0.f;
+		return;
+	}
+	speed -= dt * 300;
 }
 
 void Enemy::SetStatus(Status stat)
 {
 	auto prevStatus = currentStatus;
 	currentStatus = stat;
+	animatorLegs.Play("animations/Enemy/enemy_legs.json");
+	legs.setColor(sf::Color::White);
 
 	switch (currentStatus)
 	{
 	case Status::Normal:
-		animator.Play("animations/Enemy/enemy_none_stand.json");
+		animatorBody.Play("animations/Enemy/enemy_none_stand.json"); 
+		animatorLegs.Stop();
 		SetOrigin(Origins::MC);
 		break;
 	case Status::Idle:
 	{
-		animator.Play("animations/Enemy/enemy_none_stand.json");
+		animatorBody.Play("animations/Enemy/enemy_none_stand.json");
+		animatorLegs.Stop();
 		SetOrigin(Origins::MC);
 		idle.lookAwayDelay = Utils::RandomRange(2.f, 5.f);
 		speed = 0.f;
 		break;
 	}
 	case Status::Patrol:
+		animatorBody.Play("animations/Enemy/enemy_none_walk.json");
+		SetOrigin(Origins::MC);
 		break;
 	case Status::Aggro:
 		break;
 	case Status::SearchWeapon:
-		animator.Play("animations/Enemy/enemy_none_walk.json");
+		animatorBody.Play("animations/Enemy/enemy_none_walk.json");
 		SetOrigin(Origins::MC);
 		break;
 	case Status::Stun:
-		animator.Play("animations/Enemy/enemy_stun.json");
+		animatorBody.Play("animations/Enemy/enemy_stun.json");
+		legs.setColor(sf::Color::Transparent);
 		SetOrigin(Origins::MC);
 		break;
 	case Status::GetUp:
-		animator.Play("animations/Enemy/enemy_getup.json");
+		animatorBody.Play("animations/Enemy/enemy_getup.json");
+		legs.setColor(sf::Color::Transparent);
 		SetOrigin(Origins::MC);
 		break;
 	case Status::Die:
-		animator.Play("animations/Enemy/enemy_back_bashed.json");
+		animatorBody.Play("animations/Enemy/enemy_back_bashed.json");
+		legs.setColor(sf::Color::Transparent);
 		SetOrigin(Origins::MC);
 		break;
 	}
 }
 
+void Enemy::SetWayPoints(std::vector<sf::Vector2f> pos, std::vector<sf::Vector2f> directions, int cnt)
+{
+	//patrol.wayPointCnt = cnt;
+	//for(int i = 0 ; i < patrol.wayPointCnt ; i++)
+	//	patrol.wayPoints.push_back({pos[i],directions[i]});
+}
+
+void Enemy::SetWayPoints(const std::string& path)
+{
+	//
+	// 
+	//
+}
+
+void Enemy::clearWayPoints()
+{
+	patrol.wayPoints.clear();
+}
+
 void Enemy::Draw(sf::RenderWindow& window)
 {
+	window.draw(legs);
 	window.draw(body);
+	for (auto point : patrol.wayPoints)
+		window.draw(point.point);
+	window.draw(patrol.originPoint);
 }
 
 void Enemy::OnHit(int damage, sf::Vector2f direction)

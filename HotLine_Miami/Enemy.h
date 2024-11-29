@@ -20,7 +20,20 @@ public:
 	};
 	struct Patrol
 	{
-
+		struct WayPoint
+		{
+			sf::Vector2f position;
+			sf::CircleShape point;
+			//float nextAngle;
+			WayPoint(sf::Vector2f position) {
+				this->position = position;
+				point.setPosition(this->position);
+				Utils::SetOrigin(point, Origins::MC);
+			}
+		};
+		std::vector<WayPoint> wayPoints;
+		sf::CircleShape originPoint;
+		int wayPointCnt;
 	};
 	enum class Status
 	{
@@ -35,8 +48,10 @@ public:
 	};
 protected:
 	sf::Sprite body;
+	sf::Sprite legs;
 
-	Animator animator;
+	Animator animatorBody;
+	Animator animatorLegs;
 
 	sf::Vector2f direction = { 0.f,0.f };
 
@@ -80,6 +95,9 @@ public:
 
 	void SetStatus(Status stat);
 
+	void SetWayPoints(std::vector<sf::Vector2f> pos, std::vector<sf::Vector2f> directions, int cnt);
+	void SetWayPoints(const std::string& path);
+	void clearWayPoints();
 	void Draw(sf::RenderWindow& window) override;
 
 	void OnHit(int damage, sf::Vector2f direction);

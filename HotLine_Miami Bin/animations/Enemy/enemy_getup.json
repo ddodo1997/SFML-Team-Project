@@ -1,7 +1,7 @@
 {
     "ID": "EnemyGetUp",
     "LoopType": 0,
-    "FPS": 10,
+    "FPS": 15,
     "texId": "graphics/Enemy/Stunning/eGetUp.png",
     "Frames":
     [

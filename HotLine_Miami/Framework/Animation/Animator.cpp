@@ -88,7 +88,7 @@ void Animator::Update(float dt)
 				currentFrame = totalFrame - 1;
 				break;
 			case AnimationLoopTypes::PingPong:
-				currentFrame = 0;
+				currentFrame = 1;
 				isReverse = false;
 				break;
 			}
