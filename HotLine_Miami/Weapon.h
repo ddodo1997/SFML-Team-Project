@@ -1,9 +1,14 @@
 #pragma once
 #include "GameObject.h"
 
+class Enemy;
+class SceneDevL;
+
 class Weapon : public GameObject
 {
 public: 
+	static int		indexCounter;
+
 	enum class WeaponType
 	{
 		None = -1,
@@ -28,13 +33,12 @@ public:
 	};
 	
 protected:
-	WeaponStatus	weaponStatus;
-	
+	WeaponStatus	weaponStatus;	
 	sf::Sprite		weaponSprite;
-
 	sf::Vector2f	direction;
 
-	float			speedOnThrow = 250.f;
+	
+	float			speedOnThrow = 200.f;
 	float			onThrowTimer;
 
 	float			speedOnDrop = 200.f;
@@ -42,6 +46,10 @@ protected:
 	
 	// 개별 전달 필요
 	bool			isPickupable = false;
+
+	SceneDevL*		scenePointer;
+
+	int				indexNo;
 
 public:
 	Weapon(std::string name = "");
@@ -56,11 +64,14 @@ public:
 
 	void Update(float dt) override;
 	void LateUpdate(float dt)  override {}
-	void FixedUpdate(float dt) override {}
+	void FixedUpdate(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 
 	void SetPosition(sf::Vector2f pos);
 	void SetRotation(float angle);
+	void SetOrigin(Origins origin) override;
+	void SetOrigin(const sf::Vector2f& newOrigin) override;
+	void SetScale(const sf::Vector2f& scale) override;
 
 	WeaponStatus GetStatus() { return this->weaponStatus; }
 	void SetStatus(WeaponStatus weapon);
@@ -69,15 +80,12 @@ public:
 	void OnThrow(sf::Vector2f direction);
 	void OnDrop(sf::Vector2f direction = {0.f,0.f});
 
+	// 구조체 Get, Set 함수
 	void SetWeaponType(WeaponType type);
 	WeaponType GetWeaponType();
 
 	bool GetIsRanged();
 	bool GetIsPickupable();
-
-	void SetRemainingBullet(int bullet);
-	int GetRemainingBullet();
-
 	// Test Code
 };
 

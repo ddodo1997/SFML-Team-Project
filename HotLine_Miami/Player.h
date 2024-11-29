@@ -3,6 +3,7 @@
 
 class SceneDevL;
 class Weapon;
+class Enemy;
 
 class Player : public GameObject
 {
@@ -66,6 +67,7 @@ public:
 	void Release() override;
 	void Reset() override;
 	void Update(float dt) override;
+	void FixedUpdate(float dt) override;
 	void UpdateOnDie(float dt);
 
 	void Draw(sf::RenderWindow& window) override;
@@ -87,7 +89,7 @@ public:
 	Weapon::WeaponStatus GetWeaponStatus() { return weaponStatus; }
 	
 	void ThrowWeapon(sf::Vector2f lookDir);
-	void DropWeapon(sf::Vector2f hitDir);
+	void DropWeapon(sf::Vector2f hitDir = {0.f,0.f});
 	void DropWeapon();
 
 	void Attack();

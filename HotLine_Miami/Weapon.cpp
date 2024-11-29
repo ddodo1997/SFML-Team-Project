@@ -1,5 +1,10 @@
 #include "stdafx.h"
 #include "Weapon.h"
+#include "Enemy.h"
+#include "SceneDevL.h"
+#include <chrono>
+
+int Weapon::indexCounter = 0;
 
 Weapon::Weapon(std::string name)
 	: GameObject(name)
@@ -7,6 +12,15 @@ Weapon::Weapon(std::string name)
 	sortingLayer = SortingLayers::Foreground;
 	sortingOrder = 0;
 	Utils::SetOrigin(weaponSprite, Origins::MC);
+
+	indexNo = indexCounter++;
+
+	// 인덱스 부여 관련함수 미완성, 현재 std::stoi에서 범위초과로 런타임 에러 발생
+	//auto timer = std::chrono::system_clock::now();
+	//auto t = timer.time_since_epoch();
+	//int tempIndex = std::chrono::duration_cast<std::chrono::milliseconds>(t).count();
+	//std::string tempStr = std::to_string(tempIndex) + std::to_string(indexCounter++);
+	//indexNo = std::stoi(tempStr);
 }
 
 void Weapon::Init()
@@ -39,11 +53,30 @@ void Weapon::Update(float dt)
 		isPickupable = true;
 
 	float rotationMultiplierOnDrop = 5.f;
-	float rotationMultiplierOnThrow = 5.f;
+	float rotationMultiplierOnThrow = 6.f;
 
 	SetRotation(rotation + speedOnDrop * onDropTimer * dt * rotationMultiplierOnDrop + speedOnThrow * onThrowTimer * dt * rotationMultiplierOnThrow);
 	SetPosition(position + speedOnDrop * onDropTimer * direction * dt + speedOnThrow * onThrowTimer * direction * dt);
 	Utils::SetOrigin(weaponSprite, Origins::MC);
+}
+
+void Weapon::FixedUpdate(float dt)
+{
+	// 플레이어에게 던져진 무기의 경우 아래 코드로 적들과 충돌처리	
+	
+	//if (!(onThrowTimer > 0.f))
+	//{
+	//	return;
+	//}
+	//scenePointer = (SceneDevL*)SCENE_MGR.GetCurrentScene();
+	//auto eList = scenePointer->GetEnemyList();
+	//for (auto enemy : eList)
+	//{
+	//	if (weaponSprite.getGlobalBounds().intersects(enemy->GetGlobalBounds()))
+	//	{
+	//		enemy->OnHit(weaponStatus.damageOnThrow, direction);
+	//	}
+	//}
 }
 
 void Weapon::Draw(sf::RenderWindow& window)
@@ -64,10 +97,36 @@ void Weapon::SetRotation(float angle)
 	weaponSprite.setRotation(rotation);
 }
 
+void Weapon::SetOrigin(Origins origin)
+{
+	originPreset = origin;
+	if(origin != Origins::Custom)
+		this->origin = Utils::SetOrigin(weaponSprite, originPreset);
+}
+
+void Weapon::SetOrigin(const sf::Vector2f& newOrigin)
+{
+	originPreset = Origins::Custom;
+	this->origin = newOrigin;
+	weaponSprite.setOrigin(origin);
+}
+
+void Weapon::SetScale(const sf::Vector2f& scale)
+{
+	this->scale = scale;
+	weaponSprite.setScale(scale);
+}
+
+/// <summary>
+/// WeaponStatus Set 함과 동시에 setTexture.
+/// </summary>
+/// <param name="weapon"></param>
 void Weapon::SetStatus(WeaponStatus weapon)
 {
 	this->weaponStatus = weapon;
 	weaponSprite.setTexture(TEXTURE_MGR.Get(weaponStatus.textureId));
+	SetScale({ 1.f, 1.f });
+	SetOrigin(Origins::MC);
 }
 
 void Weapon::OnPickUp()

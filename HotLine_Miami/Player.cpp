@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Player.h"
 #include "SceneDevL.h"
+#include "Enemy.h"
 
 Player::Player(const std::string& name)
 	: GameObject(name)
@@ -129,7 +130,6 @@ void Player::Update(float dt)
 	Utils::SetOrigin(leg, Origins::MC);
 	Utils::SetOrigin(body, Origins::MC);
 
-
 	if (mag > 0)
 	{
 		if (!isMoving)
@@ -168,6 +168,21 @@ void Player::Update(float dt)
 
 	SetPosition(position + direction * speed * dt);
 	hitBox.UpdateTr(body, body.getLocalBounds());
+}
+
+void Player::FixedUpdate(float dt)
+{
+	//if (isSwingging)
+	//{
+	//	auto enemies = sceneDevL->GetEnemyList();
+	//	for (auto enemy : enemies)
+	//	{
+	//		if (attackHitBoxCheck.getGlobalBounds().intersects(enemy->GetGlobalBounds()))
+	//		{
+	//			enemy->OnHit(weaponStatus.damage,look);
+	//		}
+	//	}
+	//}
 }
 
 void Player::UpdateOnDie(float dt)
@@ -273,58 +288,32 @@ void Player::OnHitByShotgun(sf::Vector2f hitDir)
 void Player::WeaponPickUp(Weapon::WeaponStatus weapon)
 {
 	weaponStatus = weapon;
+	attackHitBoxCheck.setSize({ weaponStatus.hitBoxWidth, weaponStatus.hitBoxHeight });
 }
 
 void Player::SetWeaponStatus()
 {
+	Weapon::WeaponType tempWeaponType;
 	switch (weaponStatus.weaponType)
 	{
 	case Weapon::WeaponType::None:
-		weaponStatus.damage = 0;
-		weaponStatus.damageOnThrow = 0;
-		weaponStatus.isRangedWeapon = false;
-		weaponStatus.maxBullet = 0;
-		weaponStatus.attackInterval = 0.5f;
-		attackHitBox = { 0.f, 0.f, 25.f, 30.f };
-		attackHitBoxCheck.setSize(attackHitBox.getSize());
+		tempWeaponType = Weapon::WeaponType::None;
 		break;
 	case Weapon::WeaponType::Bat:
-		weaponStatus.damage = 1;
-		weaponStatus.damageOnThrow = 0;
-		weaponStatus.isRangedWeapon = false;
-		weaponStatus.maxBullet = 0;
-		weaponStatus.attackInterval = 0.5f;
-		attackHitBox = { 0.f, 0.f, 40.f, 40.f };
-		attackHitBoxCheck.setSize(attackHitBox.getSize());
+		tempWeaponType = Weapon::WeaponType::Bat;
 		break;
 	case Weapon::WeaponType::Knife:
-		weaponStatus.damage = 1;
-		weaponStatus.damageOnThrow = 1;
-		weaponStatus.isRangedWeapon = false;
-		weaponStatus.maxBullet = 0;
-		weaponStatus.attackInterval = 0.5f;
-		attackHitBox = { 0.f, 0.f, 30.f, 40.f };
-		attackHitBoxCheck.setSize(attackHitBox.getSize());
+		tempWeaponType = Weapon::WeaponType::Knife;
 		break;
 	case Weapon::WeaponType::Machinegun:
-		weaponStatus.damage = 1;
-		weaponStatus.damageOnThrow = 0;
-		weaponStatus.isRangedWeapon = true;
-		weaponStatus.maxBullet = 24;
-		weaponStatus.attackInterval = 0.1f;
-		attackHitBox = { 0.f, 0.f, 0.f, 0.f };
-		attackHitBoxCheck.setSize(attackHitBox.getSize());
+		tempWeaponType = Weapon::WeaponType::Machinegun;
 		break;
 	case Weapon::WeaponType::Shotgun:
-		weaponStatus.damage = 1;
-		weaponStatus.damageOnThrow = 0;
-		weaponStatus.isRangedWeapon = true;
-		weaponStatus.maxBullet = 2;
-		weaponStatus.attackInterval = 0.5f;
-		attackHitBox = { 0.f, 0.f, 0.f, 0.f };
-		attackHitBoxCheck.setSize(attackHitBox.getSize());
+		tempWeaponType = Weapon::WeaponType::Shotgun;
 		break;
 	}
+	weaponStatus = WEAPON_TABLE->Get(tempWeaponType);
+	attackHitBoxCheck.setSize({ weaponStatus.hitBoxWidth, weaponStatus.hitBoxHeight });
 }
 
 void Player::SetRemainingBullet(int remainingBullet)
@@ -345,6 +334,7 @@ void Player::ThrowWeapon(sf::Vector2f lookDir)
 	weaponStatus.weaponType = Weapon::WeaponType::None;
 	SetWeaponStatus();
 }
+
 
 void Player::DropWeapon(sf::Vector2f hitDir)
 {

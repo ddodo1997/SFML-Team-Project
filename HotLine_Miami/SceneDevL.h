@@ -1,10 +1,12 @@
 #pragma once
 #include "Scene.h"
 #include "Weapon.h"
+#include "Enemy.h"
 
 class Player;
 class UiHudL;
 class Weapon;
+class Enemy;
 
 class SceneDevL :public Scene
 {
@@ -20,6 +22,9 @@ protected:
 
 	std::list<Weapon*> weapons;
 	ObjectPool<Weapon> weaponPool;
+
+	std::list<Enemy*> enemies;
+	ObjectPool<Enemy> enemyPool;
 
 public:
 	SceneDevL();
@@ -45,5 +50,7 @@ public:
 
 	// Test Code
 	void SpawnWeapon(Weapon::WeaponType weaponType, sf::Vector2f pos);
+
+	std::list<Enemy*>& GetEnemyList() { return enemies; }
 };
 

@@ -1,7 +1,7 @@
 {
     "ID": "pAttackKnife",
     "LoopType": 0,
-    "FPS": 18,
+    "FPS": 36,
     "texId": "graphics/player/Attack/pAttackKnife_1Line.png",
     "Frames":
     [

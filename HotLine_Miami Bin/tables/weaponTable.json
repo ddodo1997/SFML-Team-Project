@@ -29,7 +29,7 @@
         "DamageOnThrow": 1,
         "isRangedWeapon" : false,
         "MaxBullet": 0,
-        "AttackInterval": 0.5,
+        "AttackInterval": 0.25,
         "HitBoxWidth": 25.0,
         "HitBoxHeight": 40.0  
       },
