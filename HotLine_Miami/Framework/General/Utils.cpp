@@ -173,6 +173,24 @@ float Utils::Angle(const sf::Vector2f& vec)
     return RadianToDegree(AngleRadian(vec));
 }
 
+sf::Vector2f Utils::DegreeToNormal(float degree)
+{    
+    float rad = DegreeToRadian(degree);
+    return GetNormal(sf::Vector2f(std::cos(rad), std::sin(rad)));
+}
+
+sf::Vector2f Utils::RadianToNormal(float radian)
+{
+    return GetNormal(sf::Vector2f(std::cos(radian), std::sin(radian)));
+}
+
+sf::Vector2f Utils::AngleSpread(sf::Vector2f dir, float degree)
+{
+    float originalAngle = Angle(dir);
+    float randAngle = originalAngle + RandomRange(-1.f * degree, degree);    
+    return DegreeToNormal(randAngle);
+}
+
 float Utils::Dot(const sf::Vector2f& a, const sf::Vector2f& b)
 {
     return a.x * b.x + a.y * b.y;

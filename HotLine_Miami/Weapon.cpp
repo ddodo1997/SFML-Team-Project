@@ -38,10 +38,12 @@ void Weapon::Update(float dt)
 	if (onThrowTimer <= 0.f && onDropTimer <= 0.f)
 		isPickupable = true;
 
-	float rotationMultiplierForTest = 1000.f;
+	float rotationMultiplierOnDrop = 5.f;
+	float rotationMultiplierOnThrow = 5.f;
 
-	SetRotation(rotation + speedOnDrop * onDropTimer * dt * rotationMultiplierForTest);
+	SetRotation(rotation + speedOnDrop * onDropTimer * dt * rotationMultiplierOnDrop + speedOnThrow * onThrowTimer * dt * rotationMultiplierOnThrow);
 	SetPosition(position + speedOnDrop * onDropTimer * direction * dt + speedOnThrow * onThrowTimer * direction * dt);
+	Utils::SetOrigin(weaponSprite, Origins::MC);
 }
 
 void Weapon::Draw(sf::RenderWindow& window)
@@ -71,8 +73,8 @@ void Weapon::OnThrow(sf::Vector2f direction)
 {
 	onDropTimer = 0.f;
 	//onThrowTimer = Utils::RandomRange(0.5f, 1.5f);
-	onThrowTimer = 1.f;
-	this->direction = Utils::GetNormal(direction);
+	onThrowTimer = 2.f;
+	this->direction = Utils::AngleSpread(direction, 10);
 }
 
 void Weapon::OnDrop(sf::Vector2f direction)
@@ -111,5 +113,5 @@ void Weapon::SetRemainingBullet(int bullet)
 
 int Weapon::GetRemainingBullet()
 {
-	return 0;
+	return remainingBullet;
 }

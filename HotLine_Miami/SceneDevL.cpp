@@ -153,7 +153,6 @@ void SceneDevL::Update(float dt)
 void SceneDevL::Draw(sf::RenderWindow& window)
 {
 
-
 	Scene::Draw(window);
 }
 
@@ -174,6 +173,26 @@ void SceneDevL::OnWeaponDrop(Weapon::WeaponType weaponType, int remainingBullet,
 		weapon->SetRemainingBullet(0);
 	}
 	weapon->OnDrop(dir);
+	AddGo(weapon);
+}
+
+void SceneDevL::OnWeaponThrow(Weapon::WeaponType weaponType, int remainingBullet, sf::Vector2f dir, sf::Vector2f pos)
+{
+	Weapon* weapon = weaponPool.Take();
+	weapons.push_back(weapon);
+
+	weapon->SetWeaponType(weaponType);
+	weapon->SetPosition(pos);
+	weapon->SetActive(true);
+	if (weapon->GetIsRanged())
+	{
+		weapon->SetRemainingBullet(remainingBullet);
+	}
+	else
+	{
+		weapon->SetRemainingBullet(0);
+	}
+	weapon->OnThrow(dir);
 	AddGo(weapon);
 }
 

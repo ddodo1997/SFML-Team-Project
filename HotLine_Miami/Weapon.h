@@ -30,10 +30,10 @@ protected:
 
 	sf::Vector2f	direction;
 
-	float			speedOnThrow = 600.f;
+	float			speedOnThrow = 250.f;
 	float			onThrowTimer;
 
-	float			speedOnDrop = 600.f;
+	float			speedOnDrop = 200.f;
 	float			onDropTimer;
 	
 	// 개별 전달 필요

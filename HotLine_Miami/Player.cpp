@@ -130,6 +130,7 @@ void Player::Update(float dt)
 	{
 		if (sceneDevL == nullptr)
 			SetScene((SceneDevL*)SCENE_MGR.GetCurrentScene());
+		ThrowWeapon(look);
 		sceneDevL->PlayerTryPickUpWeapon();
 	}
 
@@ -297,13 +298,16 @@ void Player::Attack()
 
 void Player::ThrowWeapon(sf::Vector2f lookDir)
 {
-		
+	if (weaponStatus.weaponType == Weapon::WeaponType::None)
+		return;
+	sceneDevL->OnWeaponThrow(weaponStatus.weaponType, remainingBullet, lookDir, position);
 }
 
 void Player::DropWeapon(sf::Vector2f hitDir)
 {
-
-
+	if (weaponStatus.weaponType == Weapon::WeaponType::None)
+		return;
+	sceneDevL->OnWeaponDrop(weaponStatus.weaponType, remainingBullet, hitDir, position);
 }
 
 void Player::DropWeapon()
