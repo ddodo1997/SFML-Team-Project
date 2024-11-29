@@ -24,16 +24,21 @@ public:
 	};
 	
 protected:
-	sf::Sprite		weaponSprite;
-
-	// Set, Get WeaponType시 함께 설정 -> weaponStatus로 변경
 	WeaponStatus	weaponStatus;
 	
+	sf::Sprite		weaponSprite;
+
+	sf::Vector2f	direction;
 
 	float			speedOnThrow = 600.f;
+	float			onThrowTimer;
 
+	float			speedOnDrop = 600.f;
+	float			onDropTimer;
+	
 	// 개별 전달 필요
 	int				remainingBullet = 0;
+	bool			isPickupable = false;
 
 public:
 	Weapon(std::string name = "");
@@ -51,6 +56,9 @@ public:
 	void FixedUpdate(float dt) override {}
 	void Draw(sf::RenderWindow& window) override;
 
+	void SetPosition(sf::Vector2f pos);
+	void SetRotation(float angle);
+
 	void OnPickUp();
 	void OnThrow(sf::Vector2f direction);
 	void OnDrop(sf::Vector2f direction);
@@ -59,8 +67,11 @@ public:
 	WeaponType GetWeaponType();
 
 	bool GetIsRanged();
+	bool GetIsPickupable();
 
 	void SetRemainingBullet(int bullet);
 	int GetRemainingBullet();
+
+	// Test Code
 };
 

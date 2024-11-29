@@ -76,4 +76,5 @@ public:
 	void Attack();
 	void ThrowWeapon(sf::Vector2f lookDir);
 	void DropWeapon(sf::Vector2f hitDir);
+	void DropWeapon();
 };
