@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Enemy.h"
 #include <SceneDev_K.h>
+#include "SceneDevS.h"
 #include "Player.h"
 
 Enemy::Enemy(const std::string& name)
@@ -52,7 +53,7 @@ void Enemy::SetOrigin(const sf::Vector2f& newOrigin)
 void Enemy::Init()
 {
 	sortingLayer = SortingLayers::Foreground;
-	sortingOrder = 0;
+	sortingOrder = 3;
 }
 
 void Enemy::Release()
@@ -117,7 +118,7 @@ void Enemy::Update(float dt)
 	{
 		SCENE_MGR.ChangeScene(SceneIds::Dev_K);
 	}
-	//½Ã¾ß°¢°ú ÇÃ·¹ÀÌ¾î°£ÀÇ Ãæµ¹À» °Ë»çÇØ ÂüÀÌ¸é ·¹ÀÌÄ³½ºÆ® ½ÇÇà.
+	//ï¿½Ã¾ß°ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾î°£ï¿½ï¿½ ï¿½æµ¹ï¿½ï¿½ ï¿½Ë»ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½Ä³ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½.
 
 	switch (currentStatus)
 	{
@@ -215,12 +216,12 @@ void Enemy::UpdatePatrol(float dt)
 
 void Enemy::UpdateAggro(float dt)
 {
-	//TODO : ±æÃ£±â ¾Ë°í¸®Áò. ¼³Çö±â ºÒ·¯!!
+	//TODO : ï¿½ï¿½Ã£ï¿½ï¿½ ï¿½Ë°ï¿½ï¿½ï¿½ï¿½ï¿½. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½!!
 }
 
 void Enemy::UpdateSearchWeapon(float dt)
 {
-	//ÁÖÀ§ ¹Ý°æ ¾î´ÀÁ¤µµ¿¡¼­ ¹«±â¸¦ Ã£°í, Ã£¾Ò´Ù¸é ¹«±â¸¦ ÁÖ¿ì·¯°¡¸ç Ã£Áö ¸øÇß´Ù¸é ÇÃ·¹ÀÌ¾î¿Í ÀÏÁ¤ °Å¸®¸¦ À¯ÁöÇÏ·Á ÇÔ
+	//ï¿½ï¿½ï¿½ï¿½ ï¿½Ý°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½â¸¦ Ã£ï¿½ï¿½, Ã£ï¿½Ò´Ù¸ï¿½ ï¿½ï¿½ï¿½â¸¦ ï¿½Ö¿ì·¯ï¿½ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ï¿½ß´Ù¸ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Å¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï·ï¿½ ï¿½ï¿½
 }
 
 void Enemy::UpdateStun(float dt)
@@ -335,7 +336,7 @@ void Enemy::Draw(sf::RenderWindow& window)
 
 void Enemy::OnHit(int damage, sf::Vector2f direction)
 {
-	//¿þÆÝ µå¶ø
+	//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 
 	hp -= damage;
 	if (hp <= 0)

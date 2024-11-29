@@ -49,7 +49,7 @@ void Decoration::SetTexture(const std::string& textureId)
 void Decoration::Init()
 {
 	sortingLayer = SortingLayers::Foreground;
-	sortingOrder = 2;
+	sortingOrder = 1;
 }
 
 void Decoration::Release()
@@ -59,8 +59,6 @@ void Decoration::Release()
 void Decoration::Reset()
 {
 	SetOrigin(Origins::MC);
-	SetPosition({ 0.f, 0.f });
-	SetRotation(0.f);
 	SetScale({ 1.f, 1.f });
 }
 

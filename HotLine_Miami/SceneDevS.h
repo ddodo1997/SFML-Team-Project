@@ -5,11 +5,16 @@
 using json = nlohmann::json;
 class TileMap;
 class TileMapEditor;
+class Player;
+class Enemy;
 class SceneDevS : public Scene
 {
 protected:
+	Player* player;
 	TileMap* tileMap;
 	TileMapEditor* tileMapEditor;
+
+	std::vector<Enemy*> enemies;
 public:
 	SceneDevS();
 	~SceneDevS() = default;
@@ -24,5 +29,9 @@ public:
 	void LoadWalls();
 	void LoadDecorations();
 	void LoadEnemies();
+
+	void SetStatusEnemies();
+	Player* GetPlayer() { return player; }
+
 };
 
