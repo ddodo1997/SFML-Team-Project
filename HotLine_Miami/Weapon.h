@@ -21,6 +21,7 @@ public:
 		int					damageOnThrow = 0;
 		bool				isRangedWeapon = false;
 		int					maxBullet = 0;
+		float				attackInterval = 0.f;
 	};
 	
 protected:

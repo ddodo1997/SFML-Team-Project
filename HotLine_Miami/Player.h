@@ -17,6 +17,7 @@ protected:
 	Weapon::WeaponStatus weaponStatus;
 
 	int remainingBullet;
+	float attackTimer;
 
 	SceneDevL* sceneDevL;
 
@@ -35,7 +36,13 @@ protected:
 
 	bool isMoving = false;
 	bool isAlive = true;
+	
+	sf::FloatRect attackHitBox;
+	sf::RectangleShape attackHitBoxCheck;
 
+	bool isFlipped = false;
+	bool isSwinging = false;
+	
 	std::map<std::string, AnimationClip> aniClipMap;
 
 	std::string dieSpriteDirectory = "graphics/player/Die/";
@@ -52,6 +59,8 @@ public:
 	void SetOrigin(const sf::Vector2f& newOrigin) override;
 
 	void SetScene(SceneDevL* sceneDevL);
+	
+	bool IsDead() { return !isAlive; }
 
 	void Init() override;
 	void Release() override;
@@ -77,8 +86,15 @@ public:
 
 	Weapon::WeaponStatus GetWeaponStatus() { return weaponStatus; }
 	
-	void Attack();
 	void ThrowWeapon(sf::Vector2f lookDir);
 	void DropWeapon(sf::Vector2f hitDir);
 	void DropWeapon();
+
+	void Attack();
+
+	void AttackDefault();
+	void AttackBat();
+	void AttackKnife();
+	void AttackMachinegun();
+	void AttackShotgun();
 };

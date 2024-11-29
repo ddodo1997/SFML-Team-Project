@@ -156,7 +156,7 @@ void UiHudL::UpdateWeaponStatus(Weapon::WeaponStatus weaponStatus, int remaining
 		weaponId = "Shotgun";
 	}
 	currentWeaponStatus.setString("Weapon ID: " + weaponId + "\nBullets : " + std::to_string(remainingBullet)
-		+ " \" " + std::to_string(weaponStatus.maxBullet));
+		+ " \/ " + std::to_string(weaponStatus.maxBullet));
 	Utils::SetOrigin(currentWeaponStatus, Origins::TL);
 }
 

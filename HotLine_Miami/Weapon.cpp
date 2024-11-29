@@ -72,17 +72,17 @@ void Weapon::OnPickUp()
 void Weapon::OnThrow(sf::Vector2f direction)
 {
 	onDropTimer = 0.f;
-	//onThrowTimer = Utils::RandomRange(0.5f, 1.5f);
 	onThrowTimer = 2.f;
+	onThrowTimer = Utils::RandomRange(1.9f, 2.1f);
 	this->direction = Utils::AngleSpread(direction, 10);
 }
 
 void Weapon::OnDrop(sf::Vector2f direction)
 {
 	onThrowTimer = 0.f;
-	//onDropTimer = Utils::RandomRange(0.5f, 1.5f);
 	onDropTimer = 1.f;
-	this->direction = Utils::GetNormal(direction);
+	onDropTimer = Utils::RandomRange(0.2f, 1.0f);
+	this->direction = Utils::DegreeToNormal(Utils::RandomRange(0,360));
 }
 
 void Weapon::SetWeaponType(WeaponType type)
