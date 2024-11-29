@@ -89,8 +89,8 @@ public:
 	void SetOrigin(Origins preset) override;
 	void SetOrigin(const sf::Vector2f& newOrigin) override;
 
-	sf::FloatRect GetLocalBounds()const { legs.getLocalBounds(); }
-	sf::FloatRect GetGlobalBounds()const { legs.getGlobalBounds(); }
+	sf::FloatRect GetLocalBounds()const { return legs.getLocalBounds(); }
+	sf::FloatRect GetGlobalBounds()const { return legs.getGlobalBounds(); }
 
 	void Init() override;
 	void Release() override;
