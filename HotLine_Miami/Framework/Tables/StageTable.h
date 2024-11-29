@@ -9,7 +9,14 @@ struct DataWall
     sf::Vector2f end = { 0.f, 0.f };
     std::vector<std::string> textureIds;
 };
-
+struct DataEnemy
+{
+    std::string id = "";
+    sf::Vector2f pos = { 0.f, 0.f };
+    std::string weaponType = "";
+    Enemy::Status state = Enemy::Status::Normal;
+    std::vector<sf::Vector2f> waypoints;
+};
 class StageTable : public DataTable
 {
 private:

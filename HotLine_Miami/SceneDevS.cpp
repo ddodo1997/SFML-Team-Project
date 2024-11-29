@@ -28,7 +28,7 @@ void SceneDevS::Enter()
 	tileMap->SetTexture(&TEXTURE_MGR.Get(STAGE_TABLE->GetTileTextureId()));
 	tileMap->Initialize(STAGE_TABLE->GetTileSize(), STAGE_TABLE->GetTileCount(), STAGE_TABLE->GetFloorTiles());
 	SetStatusEnemies();
-	worldView.setSize(windowSize * 0.5f);
+	worldView.setSize(windowSize * 1.f);
 	worldView.setCenter(0, 0);
 	uiView.setSize(windowSize);
 	uiView.setCenter(windowSize * 0.5f);
@@ -90,7 +90,8 @@ void SceneDevS::LoadEnemies()
 
 		Enemy* enemy = new Enemy(enemyData.id);
 		// enemy->SetStatus(enemyData.state);
-		enemy->SetPosition({ enemyData.pos.x * STAGE_TABLE->GetTileSize().x + 8.f,  enemyData.pos.y * STAGE_TABLE->GetTileSize().y + 8.f});
+		enemy->SetPosition({ (enemyData.pos.x * STAGE_TABLE->GetTileSize().x) + 8.f,  (enemyData.pos.y * STAGE_TABLE->GetTileSize().y) + 8.f});
+		enemy->SetWayPoints(enemyData.waypoints);
 
 		enemies.push_back(enemy);
 		AddGo(enemy);

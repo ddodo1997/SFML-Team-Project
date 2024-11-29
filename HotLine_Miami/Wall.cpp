@@ -42,6 +42,20 @@ void Wall::SetOrigin(const sf::Vector2f& newOrigin)
 	// UpdateTransform();
 }
 
+sf::FloatRect Wall::GetLocalBounds() const
+{
+	float width = (data.start.x == data.end.x) ? textures[0]->getSize().x : length;
+	float height = (data.start.x == data.end.x) ? length : textures[0]->getSize().y;
+
+	return { 0.f, 0.f, width, height };
+}
+
+sf::FloatRect Wall::GetGlobalBounds() const
+{
+	sf::FloatRect localBounds = GetLocalBounds();
+	return transform.transformRect(localBounds);
+}
+
 void Wall::Init()
 {
 	sortingLayer = SortingLayers::Foreground;
@@ -54,8 +68,6 @@ void Wall::Release()
 
 void Wall::Reset()
 {
-	SetOrigin(Origins::TL);
-	SetPosition({ 0.f, 0.f });
 	SetScale({ 1.f, 1.f });
 }
 
@@ -72,6 +84,7 @@ void Wall::Draw(sf::RenderWindow& window)
 		sf::RenderStates states;
 		const sf::Texture* currentTexture = textures[(i / 4) % textures.size()];
 		states.texture = currentTexture;
+		states.transform = transform;
 		window.draw(&va[i], 4, sf::Quads, states);
 	}
 }
@@ -83,24 +96,28 @@ void Wall::SetTexture(const std::string& id)
 void Wall::DrawWall(const DataWall& dataWall)
 {
 	data = dataWall;
-	position = data.start;
-	length = (data.start.x == data.end.x) ? abs(data.end.y - data.start.y) * 16.f : abs(data.end.x - data.start.x) * 16.f;
-	if (data.start.x == data.end.x)
-	{
-		SetOrigin(Origins::TC);
-	}
-	else
-	{
-		SetOrigin(Origins::ML);
-	}
+	position = {data.start.x * STAGE_TABLE->GetTileSize().x * 0.5f, data.start.y * STAGE_TABLE->GetTileSize().y * 0.5f };
 
 	textures.clear();
 	for (const auto& textureId : data.textureIds)
 	{
 		textures.push_back(&TEXTURE_MGR.Get(WALL_TABLE->GetFilePath() + textureId));
-	}
+	}	
 
 	if (textures.empty()) return;
+
+	if (data.start.x == data.end.x)
+	{
+		length = abs(data.end.y - data.start.y) * STAGE_TABLE->GetTileSize().y;
+		SetOrigin(Origins::TC);
+	}
+	else
+	{
+		length = abs(data.end.x - data.start.x) * STAGE_TABLE->GetTileSize().x;
+		SetOrigin(Origins::ML);
+	}
+
+	UpdateTransform();
 
 	sf::Vector2f texSize(textures[0]->getSize().x, textures[0]->getSize().y);
 	int quadCount = (data.start.x == data.end.x) ? static_cast<int>(length / texSize.y) : static_cast<int>(length / texSize.x);
