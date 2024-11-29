@@ -46,6 +46,8 @@ public:
 		GetUp,
 		Die
 	};
+
+
 protected:
 	sf::Sprite body;
 	sf::Sprite legs;
@@ -95,8 +97,7 @@ public:
 
 	void SetStatus(Status stat);
 
-	void SetWayPoints(std::vector<sf::Vector2f> pos, std::vector<sf::Vector2f> directions, int cnt);
-	void SetWayPoints(const std::string& path);
+	void SetWayPoints(std::vector<sf::Vector2f> pos);
 	void clearWayPoints();
 	void Draw(sf::RenderWindow& window) override;
 

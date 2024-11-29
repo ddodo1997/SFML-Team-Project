@@ -64,7 +64,6 @@ void Enemy::Reset()
 	animatorBody.SetTarget(&body);
 	animatorLegs.SetTarget(&legs);
 	SetOrigin(Origins::MC);
-	SetStatus(Status::Patrol);
 	SetPatterns();
 	hp = 1;
 }
@@ -147,8 +146,10 @@ void Enemy::Update(float dt)
 		UpdateDie(dt);
 		break;
 	}
+
 	if (Utils::RayCast(position, direction, 300.f, dynamic_cast<Player*>(dynamic_cast<SceneDev_K*>(SCENE_MGR.GetCurrentScene())->GetPlayer())))
 		OnHit(1, { -1.f,1.f });
+
 	SetRotation(Utils::Angle(direction));
 	SetPosition(position + direction * speed * dt);
 }
@@ -307,23 +308,20 @@ void Enemy::SetStatus(Status stat)
 	}
 }
 
-void Enemy::SetWayPoints(std::vector<sf::Vector2f> pos, std::vector<sf::Vector2f> directions, int cnt)
+void Enemy::SetWayPoints(std::vector<sf::Vector2f> pos)
 {
-	//patrol.wayPointCnt = cnt;
-	//for(int i = 0 ; i < patrol.wayPointCnt ; i++)
-	//	patrol.wayPoints.push_back({pos[i],directions[i]});
-}
-
-void Enemy::SetWayPoints(const std::string& path)
-{
-	//
-	// 
-	//
+	for (auto& vec2f : pos)
+	{
+		Patrol::WayPoint temp(vec2f);
+		patrol.wayPoints.push_back(temp);
+	}
+	patrol.wayPointCnt = patrol.wayPoints.size();
 }
 
 void Enemy::clearWayPoints()
 {
 	patrol.wayPoints.clear();
+	patrol.wayPointCnt = patrol.wayPoints.size();
 }
 
 void Enemy::Draw(sf::RenderWindow& window)
