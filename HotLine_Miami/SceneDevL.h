@@ -38,6 +38,8 @@ public:
 	void Draw(sf::RenderWindow& window) override;
 
 	void OnWeaponDrop(Weapon::WeaponType weaponType, int remainingBullet, sf::Vector2f dir, sf::Vector2f pos);
+	void OnWeaponThrow(Weapon::WeaponType weaponType, int remainingBullet, sf::Vector2f dir, sf::Vector2f pos);
+	
 	
 	void PlayerTryPickUpWeapon();
 	void PlayerPickUpWeapon(Weapon::WeaponType weaponType, int remainingBullet);

@@ -75,11 +75,22 @@ void Player::Reset()
 	animatorBody.SetTarget(&body);
 	animatorLeg.SetTarget(&leg);
 	SetOrigin(Origins::MC);
+
+	SetWeaponStatus();
+	attackHitBoxCheck.setFillColor(sf::Color::Transparent);
+	attackHitBoxCheck.setOutlineColor(sf::Color::Green);
+	attackHitBoxCheck.setOutlineThickness(1.f);
+	Utils::SetOrigin(attackHitBoxCheck, Origins::ML);
 }
 
 void Player::Update(float dt)
 {
+	attackTimer += dt;
+
 	hitBox.UpdateTr(body, body.getLocalBounds());
+	attackHitBoxCheck.setPosition(body.getPosition());
+	attackHitBoxCheck.setRotation(body.getRotation());
+	Utils::SetOrigin(attackHitBoxCheck, Origins::ML);
 
 	if (!isAlive)
 	{
@@ -126,10 +137,20 @@ void Player::Update(float dt)
 	}
 
 
+	if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
+	{
+		if (attackTimer > weaponStatus.attackInterval)
+		{
+			Attack();
+			attackTimer = 0;
+		}
+	}
 	if (InputMgr::GetMouseButtonDown(sf::Mouse::Right))
 	{
 		if (sceneDevL == nullptr)
 			SetScene((SceneDevL*)SCENE_MGR.GetCurrentScene());
+		ThrowWeapon(look);
+		weaponStatus.weaponType = Weapon::WeaponType::None;
 		sceneDevL->PlayerTryPickUpWeapon();
 	}
 
@@ -156,6 +177,10 @@ void Player::Draw(sf::RenderWindow& window)
 		window.draw(leg);
 	window.draw(body);
 	hitBox.Draw(window);
+	if (Variables::isDrawHitBox)
+	{
+		window.draw(attackHitBoxCheck);
+	}
 }
 
 void Player::OnHit(int weaponType, sf::Vector2f hitDir)
@@ -252,30 +277,45 @@ void Player::SetWeaponStatus()
 		weaponStatus.damageOnThrow = 0;
 		weaponStatus.isRangedWeapon = false;
 		weaponStatus.maxBullet = 0;
+		weaponStatus.attackInterval = 0.5f;
+		attackHitBox = { 0.f, 0.f, 25.f, 30.f };
+		attackHitBoxCheck.setSize(attackHitBox.getSize());
 		break;
 	case Weapon::WeaponType::Bat:
 		weaponStatus.damage = 1;
 		weaponStatus.damageOnThrow = 0;
 		weaponStatus.isRangedWeapon = false;
 		weaponStatus.maxBullet = 0;
+		weaponStatus.attackInterval = 0.5f;
+		attackHitBox = { 0.f, 0.f, 40.f, 40.f };
+		attackHitBoxCheck.setSize(attackHitBox.getSize());
 		break;
 	case Weapon::WeaponType::Knife:
 		weaponStatus.damage = 1;
 		weaponStatus.damageOnThrow = 1;
 		weaponStatus.isRangedWeapon = false;
 		weaponStatus.maxBullet = 0;
+		weaponStatus.attackInterval = 0.5f;
+		attackHitBox = { 0.f, 0.f, 30.f, 40.f };
+		attackHitBoxCheck.setSize(attackHitBox.getSize());
 		break;
 	case Weapon::WeaponType::Machinegun:
 		weaponStatus.damage = 1;
 		weaponStatus.damageOnThrow = 0;
 		weaponStatus.isRangedWeapon = true;
 		weaponStatus.maxBullet = 24;
+		weaponStatus.attackInterval = 0.1f;
+		attackHitBox = { 0.f, 0.f, 0.f, 0.f };
+		attackHitBoxCheck.setSize(attackHitBox.getSize());
 		break;
 	case Weapon::WeaponType::Shotgun:
 		weaponStatus.damage = 1;
 		weaponStatus.damageOnThrow = 0;
 		weaponStatus.isRangedWeapon = true;
 		weaponStatus.maxBullet = 2;
+		weaponStatus.attackInterval = 0.5f;
+		attackHitBox = { 0.f, 0.f, 0.f, 0.f };
+		attackHitBoxCheck.setSize(attackHitBox.getSize());
 		break;
 	}
 }
@@ -290,20 +330,22 @@ int Player::GetRemainingBullet()
 	return remainingBullet;
 }
 
-void Player::Attack()
-{
-	
-}
-
 void Player::ThrowWeapon(sf::Vector2f lookDir)
 {
-		
+	if (weaponStatus.weaponType == Weapon::WeaponType::None)
+		return;
+	sceneDevL->OnWeaponThrow(weaponStatus.weaponType, remainingBullet, lookDir, position);
+	weaponStatus.weaponType = Weapon::WeaponType::None;
+	SetWeaponStatus();
 }
 
 void Player::DropWeapon(sf::Vector2f hitDir)
 {
-
-
+	if (weaponStatus.weaponType == Weapon::WeaponType::None)
+		return;
+	sceneDevL->OnWeaponDrop(weaponStatus.weaponType, remainingBullet, hitDir, position);
+	weaponStatus.weaponType = Weapon::WeaponType::None;
+	SetWeaponStatus();
 }
 
 void Player::DropWeapon()
@@ -313,4 +355,49 @@ void Player::DropWeapon()
 
 }
 
+void Player::Attack()
+{
+	switch (weaponStatus.weaponType)
+	{
+	case Weapon::WeaponType::None:
+		AttackDefault();
+		break;
+	case Weapon::WeaponType::Bat:
+		AttackBat();
+		break;
+	case Weapon::WeaponType::Knife:
+		AttackKnife();
+		break;
+	case Weapon::WeaponType::Machinegun:
+		AttackMachinegun();
+		break;
+	case Weapon::WeaponType::Shotgun:
+		AttackShotgun();
+		break;
+	}
+}
 
+void Player::AttackDefault()
+{
+
+}
+
+void Player::AttackBat()
+{
+
+}
+
+void Player::AttackKnife()
+{
+
+}
+
+void Player::AttackMachinegun()
+{
+
+}
+
+void Player::AttackShotgun()
+{
+
+}

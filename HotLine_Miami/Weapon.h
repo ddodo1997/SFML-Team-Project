@@ -21,6 +21,7 @@ public:
 		int					damageOnThrow = 0;
 		bool				isRangedWeapon = false;
 		int					maxBullet = 0;
+		float				attackInterval = 0.f;
 	};
 	
 protected:
@@ -30,10 +31,10 @@ protected:
 
 	sf::Vector2f	direction;
 
-	float			speedOnThrow = 600.f;
+	float			speedOnThrow = 250.f;
 	float			onThrowTimer;
 
-	float			speedOnDrop = 600.f;
+	float			speedOnDrop = 200.f;
 	float			onDropTimer;
 	
 	// 개별 전달 필요

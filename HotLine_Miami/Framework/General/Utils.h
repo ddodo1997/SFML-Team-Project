@@ -43,6 +43,10 @@ public:
 
 	static float AngleRadian(const sf::Vector2f& vec);
 	static float Angle(const sf::Vector2f& vec);
+	static sf::Vector2f DegreeToNormal(float degree);
+	static sf::Vector2f RadianToNormal(float degree);
+
+	static sf::Vector2f AngleSpread(sf::Vector2f dir, float degree = 0);
 
 	static float Dot(const sf::Vector2f& a, const sf::Vector2f& b);
 
