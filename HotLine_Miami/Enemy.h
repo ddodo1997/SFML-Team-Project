@@ -1,7 +1,10 @@
 #pragma once
 #include "Weapon.h"
+
 class Player;
 class SceneDev_K;
+class SceneDevL;
+
 class Enemy : public GameObject
 {
 public:
@@ -57,7 +60,9 @@ protected:
 	sf::ConvexShape viewAngle;
 
 	Player* player;
-	SceneDev_K* sceneGame;
+
+	// 각자 테스트 신에 맞추어 Scene형 변환
+	SceneDevL* sceneGame;
 
 	Animator animatorBody;
 	Animator animatorLegs;

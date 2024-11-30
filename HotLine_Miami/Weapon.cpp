@@ -64,19 +64,19 @@ void Weapon::FixedUpdate(float dt)
 {
 	// 플레이어에게 던져진 무기의 경우 아래 코드로 적들과 충돌처리	
 	
-	//if (!(onThrowTimer > 0.f))
-	//{
-	//	return;
-	//}
-	//scenePointer = (SceneDevL*)SCENE_MGR.GetCurrentScene();
-	//auto eList = scenePointer->GetEnemyList();
-	//for (auto enemy : eList)
-	//{
-	//	if (weaponSprite.getGlobalBounds().intersects(enemy->GetGlobalBounds()))
-	//	{
-	//		enemy->OnHit(weaponStatus.damageOnThrow, direction);
-	//	}
-	//}
+	if (!(onThrowTimer > 0.f))
+	{
+		return;
+	}
+	scenePointer = (SceneDevL*)SCENE_MGR.GetCurrentScene();
+	auto eList = scenePointer->GetEnemyVector();
+	for (auto enemy : eList)
+	{
+		if (weaponSprite.getGlobalBounds().intersects(enemy->GetGlobalBounds()))
+		{
+			enemy->OnHit(weaponStatus, direction);
+		}
+	}
 }
 
 void Weapon::Draw(sf::RenderWindow& window)
@@ -121,9 +121,9 @@ void Weapon::SetScale(const sf::Vector2f& scale)
 /// WeaponStatus Set 함과 동시에 setTexture.
 /// </summary>
 /// <param name="weapon"></param>
-void Weapon::SetStatus(WeaponStatus weapon)
+void Weapon::SetStatus(const WeaponStatus& status)
 {
-	this->weaponStatus = weapon;
+	this->weaponStatus = status;
 	weaponSprite.setTexture(TEXTURE_MGR.Get(weaponStatus.textureId));
 	SetScale({ 1.f, 1.f });
 	SetOrigin(Origins::MC);

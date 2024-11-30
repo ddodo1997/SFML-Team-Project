@@ -2,8 +2,11 @@
 #include "Enemy.h"
 #include <SceneDev_K.h>
 #include "SceneDevS.h"
+#include "SceneDevL.h"
 #include "Player.h"
 #include "Bullet.h"
+
+
 Enemy::Enemy(const std::string& name)
 	: GameObject(name)
 {
@@ -65,7 +68,9 @@ void Enemy::Release()
 
 void Enemy::Reset()
 {
-	sceneGame = dynamic_cast<SceneDev_K*>(SCENE_MGR.GetCurrentScene());
+	// 각자 테스트할 Scene에 맞추어 Scene 추가
+	sceneGame = dynamic_cast<SceneDevL*>(SCENE_MGR.GetCurrentScene());
+
 	player = sceneGame->GetPlayer();
 	animatorBody.SetTarget(&body);
 	animatorLegs.SetTarget(&legs);

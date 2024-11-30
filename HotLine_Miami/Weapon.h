@@ -73,8 +73,8 @@ public:
 	void SetOrigin(const sf::Vector2f& newOrigin) override;
 	void SetScale(const sf::Vector2f& scale) override;
 
-	WeaponStatus GetStatus() { return this->weaponStatus; }
-	void SetStatus(WeaponStatus weapon);
+	const WeaponStatus& GetStatus() { return weaponStatus; }
+	void SetStatus(const WeaponStatus& status);
 
 	void OnPickUp();
 	void OnThrow(sf::Vector2f direction);
@@ -84,8 +84,6 @@ public:
 	void SetWeaponType(WeaponType type);
 	WeaponType GetWeaponType();
 
-	const WeaponStatus& GetStatus() { return weaponStatus; }
-	void SetStatus(const WeaponStatus& status) { weaponStatus = status; }
 
 	bool GetIsRanged();
 	bool GetIsPickupable();

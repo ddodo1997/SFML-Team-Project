@@ -4,7 +4,7 @@
 #include "Player.h"
 #include "TextGo.h"
 #include "UiHudL.h"
-#include "Weapon.h"
+
 
 SceneDevL::SceneDevL() : Scene(SceneIds::DevL)
 {
@@ -13,8 +13,10 @@ SceneDevL::SceneDevL() : Scene(SceneIds::DevL)
 
 void SceneDevL::Init()
 {
+	FRAMEWORK.GetWindow().setFramerateLimit(120);
 	player = AddGo(new Player());
 	uiHud = AddGo(new UiHudL());
+	enemies.push_back(AddGo(new Enemy()));
 
 	Scene::Init();
 }
@@ -47,6 +49,14 @@ void SceneDevL::RemovePoolObjects()
 		weaponPool.Return(weapon);
 	}
 	weapons.clear();
+
+	for (auto bullet : bullets)
+	{
+		RemoveGo(bullet);
+		bulletPool.Return(bullet);
+	}
+	bullets.clear();
+
 }
 
 void SceneDevL::ClearInactivePoolObjects()
@@ -63,6 +73,20 @@ void SceneDevL::ClearInactivePoolObjects()
 		else
 		{
 			weapon++;
+		}
+	}
+	auto bullet = bullets.begin();
+	while (bullet != bullets.end())
+	{
+		if (!(*bullet)->IsActive())
+		{
+			bulletPool.Return(*bullet);
+			RemoveGo(*bullet);
+			bullet = bullets.erase(bullet);
+		}
+		else
+		{
+			bullet++;
 		}
 	}
 }
@@ -111,21 +135,21 @@ void SceneDevL::Update(float dt)
 	{
 		directionY += 1.f;
 	}
-	float randPosX = Utils::RandomRange(100.f, 300.f);
-	float randPosY = Utils::RandomRange(50.f, 150.f);
-	if (InputMgr::GetKeyDown(sf::Keyboard::Num1))
+	float randPosX = Utils::RandomRange(20.f, 200.f);
+	float randPosY = Utils::RandomRange(10.f, 80.f);
+	if (InputMgr::GetKeyDown(sf::Keyboard::F1))
 	{
 		SpawnWeapon(Weapon::WeaponType::Bat, sf::Vector2f(randPosX, randPosY));
 	}
-	if (InputMgr::GetKeyDown(sf::Keyboard::Num2))
+	if (InputMgr::GetKeyDown(sf::Keyboard::F2))
 	{
 		SpawnWeapon(Weapon::WeaponType::Knife, sf::Vector2f(randPosX, randPosY));
 	}
-	if (InputMgr::GetKeyDown(sf::Keyboard::Num3))
+	if (InputMgr::GetKeyDown(sf::Keyboard::F3))
 	{
 		SpawnWeapon(Weapon::WeaponType::Machinegun, sf::Vector2f(randPosX, randPosY));
 	}
-	if (InputMgr::GetKeyDown(sf::Keyboard::Num4))
+	if (InputMgr::GetKeyDown(sf::Keyboard::F4))
 	{
 		SpawnWeapon(Weapon::WeaponType::Shotgun, sf::Vector2f(randPosX, randPosY));
 	}
@@ -211,4 +235,18 @@ void SceneDevL::SpawnWeapon(Weapon::WeaponType weaponType, sf::Vector2f pos)
 	weapon->SetPosition(pos);
 	weapon->SetActive(true);
 	AddGo(weapon);
+}
+
+Bullet* SceneDevL::SpawnBullet()
+{
+	Bullet* bullet = bulletPool.Take();
+	bullets.push_back(bullet);
+	return AddGo(bullet);
+}
+
+void SceneDevL::ReturnBullet(Bullet* val)
+{
+	RemoveGo(val);
+	bulletPool.Return(val);
+	bullets.remove(val);
 }

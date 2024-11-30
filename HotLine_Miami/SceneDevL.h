@@ -2,17 +2,20 @@
 #include "Scene.h"
 #include "Weapon.h"
 #include "Enemy.h"
+#include "Bullet.h"
 
 class Player;
 class UiHudL;
 class Weapon;
 class Enemy;
+class Bullet;
 
 class SceneDevL :public Scene
 {
 protected:
 	Player* player;
 	UiHudL* uiHud;
+	std::vector<Enemy*> enemies;
 
 	float directionDegree;
 
@@ -23,8 +26,11 @@ protected:
 	std::list<Weapon*> weapons;
 	ObjectPool<Weapon> weaponPool;
 
-	std::list<Enemy*> enemies;
-	ObjectPool<Enemy> enemyPool;
+	//std::list<Enemy*> enemies;
+	//ObjectPool<Enemy> enemyPool;
+
+	ObjectPool<Bullet> bulletPool;
+	std::list<Bullet*> bullets;
 
 public:
 	SceneDevL();
@@ -51,6 +57,10 @@ public:
 	// Test Code
 	void SpawnWeapon(Weapon::WeaponType weaponType, sf::Vector2f pos);
 
-	std::list<Enemy*>& GetEnemyList() { return enemies; }
+	std::vector<Enemy*>& GetEnemyVector() { return enemies; }
+	Player* GetPlayer() { return player; }
+
+	Bullet* SpawnBullet();
+	void ReturnBullet(Bullet* val);
 };
 

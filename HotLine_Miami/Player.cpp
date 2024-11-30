@@ -76,6 +76,7 @@ void Player::Reset()
 	animatorBody.SetTarget(&body);
 	animatorLeg.SetTarget(&leg);
 	SetOrigin(Origins::MC);
+	sceneDevL = (SceneDevL*)SCENE_MGR.GetCurrentScene();
 
 	SetWeaponStatus();
 	attackHitBoxCheck.setFillColor(sf::Color::Transparent);
@@ -172,17 +173,20 @@ void Player::Update(float dt)
 
 void Player::FixedUpdate(float dt)
 {
-	//if (isSwingging)
-	//{
-	//	auto enemies = sceneDevL->GetEnemyList();
-	//	for (auto enemy : enemies)
-	//	{
-	//		if (attackHitBoxCheck.getGlobalBounds().intersects(enemy->GetGlobalBounds()))
-	//		{
-	//			enemy->OnHit(weaponStatus.damage,look);
-	//		}
-	//	}
-	//}
+	if (isSwingging)
+	{
+		std::vector<Enemy*>& enemies = sceneDevL->GetEnemyVector();
+		for (auto enemy : enemies)
+		{
+			if (enemy != nullptr)
+			{
+				if (attackHitBoxCheck.getGlobalBounds().intersects(enemy->GetGlobalBounds()))
+				{
+					enemy->OnHit(weaponStatus, look);
+				}
+			}
+		}
+	}
 }
 
 void Player::UpdateOnDie(float dt)

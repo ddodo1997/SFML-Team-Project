@@ -3,6 +3,8 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "SceneDev_K.h"
+#include "SceneDevL.h"
+
 Bullet::Bullet(const std::string& name)
 	: GameObject(name)
 {
@@ -93,10 +95,10 @@ void Bullet::FixedUpdatePlayer(float dt)
 
 void Bullet::FixedUpdateEnemies(float dt)
 {
-	auto player = dynamic_cast<SceneDev_K*>(SCENE_MGR.GetCurrentScene())->GetPlayer();
+	auto player = dynamic_cast<SceneDevL*>(SCENE_MGR.GetCurrentScene())->GetPlayer();
 	if (player->GetGlobalBounds().intersects(body.getGlobalBounds()))
 	{
-		player->OnHit((int)weaponStatus.weaponType, direction);
+		player->OnHit(weaponStatus, direction);
 		if(!player->IsDead())
 			dynamic_cast<SceneDev_K*>(SCENE_MGR.GetCurrentScene())->ReturnBullet(this);
 	}
