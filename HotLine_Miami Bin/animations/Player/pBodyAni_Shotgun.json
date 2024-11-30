@@ -1,0 +1,17 @@
+{
+    "ID": "pBodyWalk_Shotgun",
+    "LoopType": 1,
+    "FPS": 8,
+    "texId": "graphics/player/Walk/pWalkShotgun_1Line.png",
+    "Frames":
+    [
+        [0,0,44,32],
+        [44,0,44,32],
+        [88,0,44,32],
+        [132,0,44,32],
+        [176,0,44,32],
+        [220,0,44,32],
+        [264,0,44,32],
+        [308,0,44,32]
+    ]
+}

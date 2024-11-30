@@ -9,6 +9,9 @@ class UiHudL;
 class Weapon;
 class Enemy;
 class Bullet;
+class TileMap;
+class Decoration;
+class Wall;
 
 class SceneDevL :public Scene
 {

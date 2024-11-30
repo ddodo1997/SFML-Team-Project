@@ -137,15 +137,21 @@ void Player::Update(float dt)
 		{
 			animatorLeg.Play("animations/Player/pLegAni.json");
 			animatorLeg.SetSpeed(-1.f);
-			if(!isSwingging)
-				animatorBody.Play("animations/Player/pBodyAni_default.json");
+			if (!isSwingging)
+			{
+				UpdateBodyAnimationMoving();
+				//animatorBody.Play("animations/Player/pBodyAni_default.json");
+			}
 			isMoving = true;
 		}
 	}
 	else
 	{
 		if (!isSwingging)
-			animatorBody.Play("animations/Player/pBodyAni_default.json");
+		{
+			UpdateBodyAnimationMoving();
+			//animatorBody.Play("animations/Player/pBodyAni_default.json");
+		}
 		isMoving = false;
 	}
 
@@ -169,6 +175,54 @@ void Player::Update(float dt)
 
 	SetPosition(position + direction * speed * dt);
 	hitBox.UpdateTr(body, body.getLocalBounds());
+}
+
+void Player::UpdateBodyAnimationMoving()
+{
+	switch (weaponStatus.weaponType)
+	{
+	case Weapon::WeaponType::None:
+		animatorBody.Play("animations/Player/pBodyAni_default.json");
+		if (isFlipped)
+		{
+			body.setScale(1.f, -1.f);
+		}
+		else
+		{
+			body.setScale(1.f, 1.f);
+		}
+		break;
+	case Weapon::WeaponType::Bat:
+		animatorBody.Play("animations/Player/pBodyAni_Bat.json");
+		if (isFlipped)
+		{
+			body.setScale(1.f, -1.f);
+		}
+		else
+		{
+			body.setScale(1.f, 1.f);
+		}
+		break;
+	case Weapon::WeaponType::Knife:
+		animatorBody.Play("animations/Player/pBodyAni_Knife.json");
+		if (isFlipped)
+		{
+			body.setScale(1.f, -1.f);
+		}
+		else
+		{
+			body.setScale(1.f, 1.f);
+		}
+		break;
+	case Weapon::WeaponType::Machinegun:
+		animatorBody.Play("animations/Player/pBodyAni_Machinegun.json"); 
+		body.setScale(1.f, 1.f);
+		break;
+	case Weapon::WeaponType::Shotgun:
+		animatorBody.Play("animations/Player/pBodyAni_Shotgun.json");
+		body.setScale(1.f, 1.f);
+		break;
+	}
 }
 
 void Player::FixedUpdate(float dt)

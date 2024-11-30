@@ -67,6 +67,7 @@ public:
 	void Release() override;
 	void Reset() override;
 	void Update(float dt) override;
+	void UpdateBodyAnimationMoving();
 	void FixedUpdate(float dt) override;
 	void UpdateOnDie(float dt);
 

@@ -4,7 +4,9 @@
 #include "Player.h"
 #include "TextGo.h"
 #include "UiHudL.h"
-
+#include "TileMap.h"
+#include "Decoration.h"
+#include "Wall.h"
 
 SceneDevL::SceneDevL() : Scene(SceneIds::DevL)
 {
