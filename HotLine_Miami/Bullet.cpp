@@ -84,11 +84,14 @@ void Bullet::FixedUpdate(float dt)
 
 void Bullet::FixedUpdatePlayer(float dt)
 {
-	auto enemy = dynamic_cast<SceneDev_K*>(SCENE_MGR.GetCurrentScene())->GetEnemy();
-	if (enemy->GetGlobalBounds().intersects(body.getGlobalBounds()))
+	auto enemies = dynamic_cast<SceneDevL*>(SCENE_MGR.GetCurrentScene())->GetEnemyVector();
+	for (auto enemy : enemies)
 	{
-		enemy->OnHit(weaponStatus, direction);
-		dynamic_cast<SceneDev_K*>(SCENE_MGR.GetCurrentScene())->ReturnBullet(this);
+		if (enemy->GetGlobalBounds().intersects(body.getGlobalBounds()))
+		{
+			enemy->OnHit(weaponStatus, direction);
+			dynamic_cast<SceneDevL*>(SCENE_MGR.GetCurrentScene())->ReturnBullet(this);
+		}
 	}
 
 }

@@ -150,6 +150,12 @@ void Weapon::OnDrop(sf::Vector2f direction)
 	this->direction = Utils::DegreeToNormal(Utils::RandomRange(0,360));
 }
 
+void Weapon::OnHitWall()
+{
+	onThrowTimer *= 0.3f;
+	onDropTimer *= 0.3f;
+}
+
 void Weapon::SetWeaponType(WeaponType type)
 {
 	weaponStatus = WEAPON_TABLE->Get(type);

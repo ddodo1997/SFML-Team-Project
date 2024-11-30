@@ -35,6 +35,10 @@ protected:
 	ObjectPool<Bullet> bulletPool;
 	std::list<Bullet*> bullets;
 
+	TileMap* tileMap;
+	std::vector<Decoration*> decorations;
+	std::vector<Wall*> walls;
+
 public:
 	SceneDevL();
 	~SceneDevL() = default;

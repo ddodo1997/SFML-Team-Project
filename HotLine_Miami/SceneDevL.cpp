@@ -16,6 +16,8 @@ SceneDevL::SceneDevL() : Scene(SceneIds::DevL)
 void SceneDevL::Init()
 {
 	FRAMEWORK.GetWindow().setFramerateLimit(120);
+	//tileMap->SetTexture(&TEXTURE_MGR.Get(STAGE_TABLE->GetTileTextureId()));
+	//tileMap->InitializeEmpty(STAGE_TABLE->GetTileSize(), { 40, 40 });
 	player = AddGo(new Player());
 	uiHud = AddGo(new UiHudL());
 	enemies.push_back(AddGo(new Enemy()));

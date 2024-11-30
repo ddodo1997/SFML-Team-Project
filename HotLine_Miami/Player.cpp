@@ -96,7 +96,7 @@ void Player::Update(float dt)
 		if (attackTimer > weaponStatus.attackInterval)
 			isMoving = false;
 		attackTimer = Utils::Clamp(attackTimer, 0, weaponStatus.attackInterval);
-		isSwingging = false;
+		isAttacking = false;
 	}
 
 	hitBox.UpdateTr(body, body.getLocalBounds());
@@ -137,7 +137,7 @@ void Player::Update(float dt)
 		{
 			animatorLeg.Play("animations/Player/pLegAni.json");
 			animatorLeg.SetSpeed(-1.f);
-			if (!isSwingging)
+			if (!isAttacking)
 			{
 				UpdateBodyAnimationMoving();
 				//animatorBody.Play("animations/Player/pBodyAni_default.json");
@@ -147,7 +147,7 @@ void Player::Update(float dt)
 	}
 	else
 	{
-		if (!isSwingging)
+		if (!isAttacking)
 		{
 			UpdateBodyAnimationMoving();
 			//animatorBody.Play("animations/Player/pBodyAni_default.json");
@@ -227,7 +227,7 @@ void Player::UpdateBodyAnimationMoving()
 
 void Player::FixedUpdate(float dt)
 {
-	if (isSwingging)
+	if (isAttacking)
 	{
 		std::vector<Enemy*>& enemies = sceneDevL->GetEnemyVector();
 		for (auto enemy : enemies)
@@ -347,6 +347,8 @@ void Player::WeaponPickUp(Weapon::WeaponStatus weapon)
 {
 	weaponStatus = weapon;
 	attackHitBoxCheck.setSize({ weaponStatus.hitBoxWidth, weaponStatus.hitBoxHeight });
+	attackTimer = weaponStatus.attackInterval;
+	UpdateBodyAnimationMoving();
 }
 
 void Player::SetWeaponStatus()
@@ -374,14 +376,9 @@ void Player::SetWeaponStatus()
 	attackHitBoxCheck.setSize({ weaponStatus.hitBoxWidth, weaponStatus.hitBoxHeight });
 }
 
-void Player::SetRemainingBullet(int remainingBullet)
-{
-	this->remainingBullet = remainingBullet;
-}
-
 int Player::GetRemainingBullet()
 {
-	return remainingBullet;
+	return weaponStatus.remainingBullet;
 }
 
 void Player::ThrowWeapon(sf::Vector2f lookDir)
@@ -433,7 +430,7 @@ void Player::Attack()
 void Player::AttackDefault()
 {
 	animatorBody.Play("animations/Player/Attack/pAttackPunch.json");
-	isSwingging = true;
+	isAttacking = true;
 	isFlipped = !isFlipped;
 	if (isFlipped)
 	{
@@ -448,7 +445,7 @@ void Player::AttackDefault()
 void Player::AttackBat()
 {
 	animatorBody.Play("animations/Player/Attack/pAttackBat.json");
-	isSwingging = true;
+	isAttacking = true;
 	isFlipped = !isFlipped;
 	if (isFlipped)
 	{
@@ -463,7 +460,7 @@ void Player::AttackBat()
 void Player::AttackKnife()
 {
 	animatorBody.Play("animations/Player/Attack/pAttackKnife.json");
-	isSwingging = true;
+	isAttacking = true;
 	isFlipped = !isFlipped;
 	if (isFlipped)
 	{
@@ -477,10 +474,31 @@ void Player::AttackKnife()
 
 void Player::AttackMachinegun()
 {
-
+	if (weaponStatus.remainingBullet > 0)
+	{
+		sceneDevL->SpawnBullet()->Fire(Utils::AngleSpread(look, 10), this, weaponStatus);
+		weaponStatus.remainingBullet--;
+		animatorBody.Play("animations/Player/Attack/pAttackMachinegun.json");
+		isAttacking = true;
+	}
+	else
+	{
+		// 실패사운드?
+	}
 }
 
 void Player::AttackShotgun()
 {
-
+	if (weaponStatus.remainingBullet > 0)
+	{
+		for (int i = 0; i < 6; i++)
+			sceneDevL->SpawnBullet()->Fire(Utils::AngleSpread(look, 10), this, weaponStatus);
+		weaponStatus.remainingBullet--;
+		animatorBody.Play("animations/Player/Attack/pAttackShotgun.json");
+		isAttacking = true;
+	}
+	else
+	{
+		// 실패사운드?
+	}
 }

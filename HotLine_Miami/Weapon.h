@@ -79,6 +79,7 @@ public:
 	void OnPickUp();
 	void OnThrow(sf::Vector2f direction);
 	void OnDrop(sf::Vector2f direction = {0.f,0.f});
+	void OnHitWall();
 
 	// 구조체 Get, Set 함수
 	void SetWeaponType(WeaponType type);

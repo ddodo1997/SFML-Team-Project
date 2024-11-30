@@ -1,0 +1,11 @@
+{
+    "ID": "pAttackMachinegun",
+    "LoopType": 0,
+    "FPS": 20,
+    "texId": "graphics/player/Attack/pAttackM16.png",
+    "Frames":
+    [
+        [0,0,66,32],
+        [66,0,66,32]
+    ]
+}

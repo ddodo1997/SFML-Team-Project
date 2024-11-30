@@ -17,7 +17,6 @@ public:
 protected:
 	Weapon::WeaponStatus weaponStatus;
 
-	int remainingBullet;
 	float attackTimer;
 
 	SceneDevL* sceneDevL;
@@ -42,7 +41,7 @@ protected:
 	sf::RectangleShape attackHitBoxCheck;
 
 	bool isFlipped = false;
-	bool isSwingging = false;
+	bool isAttacking = false;
 	
 	std::map<std::string, AnimationClip> aniClipMap;
 
@@ -84,7 +83,7 @@ public:
 
 	void WeaponPickUp(Weapon::WeaponStatus weapon);
 	void SetWeaponStatus();
-	void SetRemainingBullet(int remainingBullet);
+	void SetRemainingBullet(int remainingBullet) { weaponStatus.remainingBullet = remainingBullet; }
 	int GetRemainingBullet();
 
 	Weapon::WeaponStatus GetWeaponStatus() { return weaponStatus; }
