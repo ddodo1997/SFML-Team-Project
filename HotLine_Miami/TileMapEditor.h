@@ -8,6 +8,8 @@ protected:
 	sf::Sprite selectedTileSprite;
 	std::string tileMapTexId = "graphics/Map/Tiles/tlFloorTiles.png";
 
+	sf::RectangleShape background;
+
 	int selectedTileIndex = -1;
 public:
 	TileMapEditor(const std::string& name = "");
@@ -30,4 +32,5 @@ public:
 	bool IsInTileSelectArea(const sf::Vector2f& position) const;
 	void SetSelectTileIndex(int index);
 
+	int GetSelectedTileIndex() const { return selectedTileIndex; }
 };

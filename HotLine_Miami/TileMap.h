@@ -4,6 +4,7 @@ class TileMap : public GameObject
 {
 protected:
 	sf::VertexArray va;
+	sf::VertexArray gridLines;
 	std::string tileMapTexId;
 	sf::Texture* texture = nullptr;
 	std::vector<int> floorTiles;
@@ -24,7 +25,6 @@ public:
 
 	sf::FloatRect GetLocalBounds() const override;
 	sf::FloatRect GetGlobalBounds() const override;
-	sf::Vector2i GetCellSize() const;
 
 	void Init() override;
 	void Release() override;
@@ -33,6 +33,13 @@ public:
 	void Draw(sf::RenderWindow& window) override;
 
 	void Initialize(const sf::Vector2i& tileSize, const sf::Vector2i& tileCount, const std::vector<int>& floorTiles);
+	void InitializeEmpty(const sf::Vector2i& tileSize, const sf::Vector2i& tileCount);
 	void UpdateTransform();
 	void SetTexture(sf::Texture* texture) { this->texture = texture; }
+
+	void PaintTile(const sf::Vector2f& mousePos, const int index);
+
+	sf::Vector2i GetTileSize() const { return tileSize; }
+	sf::Vector2i GetTileCount() const { return tileCount; }
+	std::vector<int> GetFloorTiles() const { return floorTiles; }
 };
