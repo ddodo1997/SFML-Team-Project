@@ -1,5 +1,7 @@
 #pragma once
-
+#include "Weapon.h"
+class Player;
+class SceneDev_K;
 class Enemy : public GameObject
 {
 public:
@@ -24,7 +26,7 @@ public:
 		{
 			sf::Vector2f position;
 			sf::CircleShape point;
-			//float nextAngle;
+
 			WayPoint(sf::Vector2f position) {
 				this->position = position;
 				point.setPosition(this->position);
@@ -52,6 +54,11 @@ protected:
 	sf::Sprite body;
 	sf::Sprite legs;
 
+	sf::ConvexShape viewAngle;
+
+	Player* player;
+	SceneDev_K* sceneGame;
+
 	Animator animatorBody;
 	Animator animatorLegs;
 
@@ -65,10 +72,17 @@ protected:
 	Idle idle;
 	Patrol patrol;
 
+	Weapon::WeaponStatus weaponStatus;
+
 	int hp = 1;
 
 	float stunTimer = 0.f;
 	float stunDelay = 2.f;
+
+	float attackTimer = 0.f;
+
+	bool isWalking = false;
+	bool isAttacking = false;
 public:
 	Enemy(const std::string& name = "");
 	~Enemy() = default;
@@ -79,6 +93,9 @@ public:
 
 	void SetOrigin(Origins preset) override;
 	void SetOrigin(const sf::Vector2f& newOrigin) override;
+
+	sf::FloatRect GetLocalBounds()const { return legs.getLocalBounds(); }
+	sf::FloatRect GetGlobalBounds()const { return legs.getGlobalBounds(); }
 
 	void Init() override;
 	void Release() override;
@@ -95,14 +112,23 @@ public:
 	void UpdateGetUp(float dt);
 	void UpdateDie(float dt);
 
+	void FixedUpdate(float dt) override;
+
 	void SetStatus(Status stat);
+	void SetWeapon(Weapon::WeaponType type);
 
 	void SetWayPoints(std::vector<sf::Vector2f> pos);
 	void clearWayPoints();
 	void Draw(sf::RenderWindow& window) override;
 
-
-	void OnHit(int damage, sf::Vector2f direction);
+	void PickupWeapon(Weapon* weapon);
+	void OnHit(Weapon::WeaponStatus weaponStatus, sf::Vector2f direction);
 	void DropWeapon();
 	void OnDie(sf::Vector2f direction);
+
+	bool isDie() const{ return currentStatus == Status::Die ? true : false; }
+
+	void Attack();
+
+
 };
