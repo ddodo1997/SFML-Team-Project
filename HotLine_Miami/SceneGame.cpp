@@ -279,6 +279,9 @@ void SceneGame::PlayerTryPickUpWeapon()
 		{
 			PlayerPickUpWeapon(weapon->GetStatus());
 			weapon->SetActive(false);
+
+			weaponPool.Return(weapon);
+			RemoveGo(weapon);
 			return;
 		}
 	}
