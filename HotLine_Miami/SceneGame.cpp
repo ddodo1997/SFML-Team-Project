@@ -43,6 +43,7 @@ void SceneGame::Enter()
 
 void SceneGame::Exit()
 {
+	RemoveAllObjPool();
 	Scene::Exit();
 }
 
@@ -52,6 +53,28 @@ void SceneGame::Update(float dt)
 	if (InputMgr::GetKeyDown(sf::Keyboard::R))
 		SCENE_MGR.ChangeScene(SceneIds::SceneGame);
 	Scene::Update(dt);
+
+	float randPosX = Utils::RandomRange(20.f, 200.f);
+	float randPosY = Utils::RandomRange(10.f, 80.f);
+	if (InputMgr::GetKeyDown(sf::Keyboard::F1))
+	{
+		SpawnWeapon(Weapon::WeaponType::Bat, sf::Vector2f(randPosX, randPosY));
+	}
+	if (InputMgr::GetKeyDown(sf::Keyboard::F2))
+	{
+		SpawnWeapon(Weapon::WeaponType::Knife, sf::Vector2f(randPosX, randPosY));
+	}
+	if (InputMgr::GetKeyDown(sf::Keyboard::F3))
+	{
+		SpawnWeapon(Weapon::WeaponType::Machinegun, sf::Vector2f(randPosX, randPosY));
+	}
+	if (InputMgr::GetKeyDown(sf::Keyboard::F4))
+	{
+		SpawnWeapon(Weapon::WeaponType::Shotgun, sf::Vector2f(randPosX, randPosY));
+	}
+
+
+
 }
 
 
@@ -181,6 +204,19 @@ void SceneGame::ReturnBullet(Bullet* val)
 	bulletPool.Return(val);
 	activeBullets.remove(val);
 }
+
+
+void SceneGame::RemoveAllObjPool()
+{
+	for (auto bullet : activeBullets)
+	{
+		RemoveGo(bullet);
+		bulletPool.Return(bullet);
+	}
+	activeBullets.clear();
+}
+
+
 void SceneGame::Draw(sf::RenderWindow& window)
 {
 	Scene::Draw(window);

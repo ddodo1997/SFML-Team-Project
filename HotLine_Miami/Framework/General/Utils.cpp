@@ -3,7 +3,8 @@
 #include "stdafx.h"
 #include "Utils.h"
 #include <cmath>
-#include <SceneDev_K.h>
+#include "SceneGame.h"
+#include "Wall.h"
 
 std::mt19937 Utils::generator;
 const float Utils::PI = acosf(-1.f);
@@ -383,10 +384,17 @@ bool Utils::RayCast(const sf::Vector2f& origin, const sf::Vector2f& direction, f
 
     if (CheckCollision(ray, target->GetHitBox().rect))
     {
-        // for(auto& wall : 현재 맵 테이블)
-        // 모든 벽을 돌며 체크.. 현재 포지션과 방향을 기반으로 뒤쪽의 벽들은 무시
-        // 
-        //
+        auto walls = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene())->GetWalls();
+        for (auto wall : walls)
+        {
+            auto wallBounds = wall->GetGlobalBounds();
+            if (wallBounds.intersects(ray.getGlobalBounds()))
+            {
+                result = Distance(origin, wall->GetPosition()) < Distance(origin, target->GetPosition()) ? true : false;
+                if (result)
+                    break;
+            }
+        }
     }
     return result;
 }

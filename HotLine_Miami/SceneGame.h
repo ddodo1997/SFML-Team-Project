@@ -58,6 +58,8 @@ public:
 	Bullet* SpawnBullet();
 	void ReturnBullet(Bullet* val);
 
+	void RemoveAllObjPool();
+
 	virtual void Draw(sf::RenderWindow& window);
 };
 

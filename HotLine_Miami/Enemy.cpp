@@ -4,6 +4,7 @@
 #include "SceneDevS.h"
 #include "SceneDevL.h"
 #include "Player.h"
+#include "Wall.h"
 #include "Bullet.h"
 #include "SceneGame.h"
 
@@ -19,6 +20,7 @@ void Enemy::SetPosition(const sf::Vector2f& pos)
 	body.setPosition(position);
 	legs.setPosition(position);
 	viewAngle.setPosition(position);
+	meleeHitBox.setPosition(position);
 }
 
 void Enemy::SetRotation(float angle)
@@ -27,6 +29,7 @@ void Enemy::SetRotation(float angle)
 	body.setRotation(rotation);
 	legs.setRotation(rotation);
 	viewAngle.setRotation(rotation);
+	meleeHitBox.setRotation(rotation);
 }
 
 
@@ -36,6 +39,7 @@ void Enemy::SetScale(const sf::Vector2f& s)
 	body.setScale(scale);
 	legs.setScale(scale);
 	viewAngle.setScale(scale);
+	meleeHitBox.setScale(scale);
 }
 
 void Enemy::SetOrigin(Origins preset)
@@ -72,6 +76,7 @@ void Enemy::Reset()
 	sceneGame = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene());
 
 	player = sceneGame->GetPlayer();
+	walls = sceneGame->GetWalls();
 	animatorBody.SetTarget(&body);
 	animatorLegs.SetTarget(&legs);
 	viewAngle.setPointCount(3);
@@ -79,8 +84,9 @@ void Enemy::Reset()
 	viewAngle.setPoint(1, { 100.f, -10.f });
 	viewAngle.setPoint(2, { 100.f, 10.f });
 	viewAngle.setFillColor(sf::Color::Red);
+
 	SetOrigin(Origins::MC);
-	SetWeapon(Weapon::WeaponType::Shotgun);
+	SetWeapon(Weapon::WeaponType::Bat);
 	SetStatus(Status::Patrol);
 	SetPatterns();
 	attackTimer = weaponStatus.attackInterval;
@@ -96,6 +102,7 @@ void Enemy::SetPatterns()
 
 	idle.lookAwayTimer = 0.f;
 
+	patrol.currentWayPoint = 0;
 	patrol.originPoint.setRadius(0.1f);
 	Utils::SetOrigin(patrol.originPoint, Origins::MC);
 	patrol.originPoint.setFillColor(sf::Color::Blue);
@@ -240,32 +247,35 @@ void Enemy::UpdateIdle(float dt)
 void Enemy::UpdatePatrol(float dt)
 {
 	patrol.originPoint.setPosition(position);
-	static int wayPointCnt = 1;
-	wayPointCnt %= patrol.wayPointCnt;
-	if (!patrol.originPoint.getGlobalBounds().intersects(patrol.wayPoints[wayPointCnt].point.getGlobalBounds()))
-		direction = Utils::GetNormal(patrol.wayPoints[wayPointCnt].position - position);
+	patrol.currentWayPoint %= patrol.wayPointCnt;
+	if (!patrol.originPoint.getGlobalBounds().intersects(patrol.wayPoints[patrol.currentWayPoint].point.getGlobalBounds()))
+		direction = Utils::GetNormal(patrol.wayPoints[patrol.currentWayPoint].position - position);
 	else
-		wayPointCnt++;
+		patrol.currentWayPoint++;
 }
 
 void Enemy::UpdateAggro(float dt)
 {
-	speed = 100.f;
 	direction = Utils::GetNormal(player->GetPosition() - position);
 	attackTimer += dt;
 
 	if (attackTimer >= weaponStatus.attackInterval)
 	{
-		attackTimer = 0.f;
 		switch (weaponStatus.weaponType)
 		{
 		case Weapon::WeaponType::Bat:
 		case Weapon::WeaponType::Knife:
-			if (Utils::Distance(position, player->GetPosition()) < 10.f)
+			speed = 100.f;
+			meleeHitBox.setPosition(position);
+			if (Utils::Distance(position, player->GetPosition()) < meleeHitBox.getLocalBounds().width)
+			{
+				attackTimer = 0.f;
 				Attack();
+			}
 			break;
 		case Weapon::WeaponType::Machinegun:
 		case Weapon::WeaponType::Shotgun:
+			attackTimer = 0.f;
 			speed = 0.f;
 			Attack();
 			break;
@@ -315,10 +325,59 @@ void Enemy::UpdateDie(float dt)
 
 void Enemy::FixedUpdate(float dt)
 {
-	if (isDie())
+	if (isDie() || currentStatus == Status::Stun || currentStatus == Status::GetUp)
 		return;
+
+	for (auto wall : walls)
+	{
+		auto wallBounds = wall->GetGlobalBounds();
+		if (wallBounds.intersects(body.getGlobalBounds()))
+		{
+			if (currentStatus != Status::Stun || currentStatus != Status::Die)
+			{
+				auto wall6Points = Utils::Get6Points(wallBounds);
+				auto closetPoint = Utils::FindClosesPoint(wallBounds, wall6Points);
+
+				auto wallCenter = Utils::GetCenter(wallBounds);
+
+				//충돌 시 방향 반전
+				if (closetPoint.y != wallCenter.y)
+				{
+					if (closetPoint.y > wallCenter.y)
+					{
+						position.y = closetPoint.y + body.getGlobalBounds().height * 0.5f;
+					}
+					if (closetPoint.y < wallCenter.y)
+					{
+						position.y = closetPoint.y;
+					}
+
+					direction.y *= -1.f;
+				}
+				else
+				{
+					if (closetPoint.x > wallCenter.x)
+					{
+						position.x = closetPoint.x + body.getGlobalBounds().width * 0.5f;
+					}
+					if (closetPoint.x < wallCenter.x)
+					{
+						position.x = closetPoint.x - body.getGlobalBounds().width * 0.5f;
+					}
+
+					direction.x *= -1.f;
+				}
+			}
+			else
+			{
+				speed = 0.f;
+			}
+		}
+	}
+
 	if (viewAngle.getGlobalBounds().intersects(player->GetHitBox().rect.getGlobalBounds()) && currentStatus != Status::Aggro)
-		SetStatus(Status::Aggro);
+		if(!Utils::RayCast(position,direction,viewAngle.getLocalBounds().width,player))
+			SetStatus(Status::Aggro);
 }
 
 void Enemy::SetStatus(Status stat)
@@ -327,7 +386,7 @@ void Enemy::SetStatus(Status stat)
 	currentStatus = stat;
 	animatorLegs.Play("animations/Enemy/enemy_legs.json");
 	isWalking = true;
-
+	speed = 30.f;
 	switch (currentStatus)
 	{
 	case Status::Normal:
@@ -425,6 +484,7 @@ void Enemy::SetStatus(Status stat)
 		break;
 	case Status::GetUp:
 		animatorBody.Play("animations/Enemy/enemy_getup.json");
+		animatorBody.PlayQueue("animations/Enemy/enemy_none_sneak.json");
 		isWalking = false;
 		break;
 	case Status::Die:
@@ -437,6 +497,11 @@ void Enemy::SetStatus(Status stat)
 void Enemy::SetWeapon(Weapon::WeaponType type)
 {
 	weaponStatus = WEAPON_TABLE->Get(type);
+	if (!weaponStatus.isRangedWeapon)
+	{
+		meleeHitBox.setSize({ weaponStatus.hitBoxWidth, weaponStatus.hitBoxHeight });
+		Utils::SetOrigin(meleeHitBox, Origins::ML);
+	}
 }
 
 void Enemy::SetWayPoints(std::vector<sf::Vector2f> pos)
@@ -466,7 +531,10 @@ void Enemy::Draw(sf::RenderWindow& window)
 		window.draw(point.point);
 	window.draw(patrol.originPoint);
 	hitBox.Draw(window);
-	window.draw(viewAngle);
+	if (Variables::isDrawHitBox)
+	{
+		window.draw(viewAngle);
+	}
 }
 
 void Enemy::PickupWeapon(Weapon* weapon)
@@ -474,9 +542,9 @@ void Enemy::PickupWeapon(Weapon* weapon)
 	weaponStatus = weapon->GetStatus();
 }
 
-void Enemy::OnHit(Weapon::WeaponStatus weaponStatus, sf::Vector2f direction)
+void Enemy::OnHit(Weapon::WeaponStatus weaponStatus, sf::Vector2f direction, bool isThrow)
 {
-	hp -= weaponStatus.damage;
+	isThrow ? hp -= weaponStatus.damageOnThrow : hp -= weaponStatus.damage;
 	speed = 150.f;
 	if (hp <= 0)
 	{
@@ -508,10 +576,14 @@ void Enemy::Attack()
 		switch (weaponStatus.weaponType)
 		{
 		case Weapon::WeaponType::Bat:
+			if (meleeHitBox.getGlobalBounds().intersects(player->GetGlobalBounds()))
+				player->OnHit(weaponStatus, direction);
 			animatorBody.Play("animations/Enemy/enemy_bat_attack.json");
 			animatorBody.PlayQueue("animations/Enemy/enemy_bat_search.json");
 			break;
 		case Weapon::WeaponType::Knife:
+			if (meleeHitBox.getGlobalBounds().intersects(player->GetGlobalBounds()))
+				player->OnHit(weaponStatus, direction);
 			animatorBody.Play("animations/Enemy/enemy_knife_attack.json");
 			animatorBody.PlayQueue("animations/Enemy/enemy_knife_search.json");
 			break;
