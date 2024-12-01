@@ -3,12 +3,13 @@
 #include "SceneDevL.h"
 #include "SceneDev_K.h"
 #include "SceneDevS.h"
-
+#include "SceneGame.h"
 void SceneMgr::Init()
 {
 	scenes.push_back(new SceneDev_K());
 	scenes.push_back(new SceneDevL());
 	scenes.push_back(new SceneDevS());
+	scenes.push_back(new SceneGame());
 
 	for (auto scene : scenes)
 	{

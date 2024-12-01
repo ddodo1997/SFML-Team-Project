@@ -16,7 +16,7 @@ public:
 protected:
 	sf::Sprite body;
 
-	float speed = 300.f;
+	float speed = 500.f;
 	sf::Vector2f direction;
 
 	Animator animator;

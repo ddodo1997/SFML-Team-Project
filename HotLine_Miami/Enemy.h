@@ -2,8 +2,7 @@
 #include "Weapon.h"
 
 class Player;
-class SceneDev_K;
-class SceneDevL;
+class SceneGame;
 
 class Enemy : public GameObject
 {
@@ -62,7 +61,7 @@ protected:
 	Player* player;
 
 	// 각자 테스트 신에 맞추어 Scene형 변환
-	SceneDevL* sceneGame;
+	SceneGame* sceneGame;
 
 	Animator animatorBody;
 	Animator animatorLegs;

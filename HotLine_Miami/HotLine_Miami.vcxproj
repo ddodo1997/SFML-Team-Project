@@ -181,6 +181,7 @@
     <ClCompile Include="SceneDev_K.cpp" />
     <ClCompile Include="SceneDevS.cpp" />
     <ClCompile Include="Framework\Tables\StageTable.cpp" />
+    <ClCompile Include="SceneGame.cpp" />
     <ClCompile Include="TileMap.cpp" />
     <ClCompile Include="TileMapEditor.cpp" />
     <ClCompile Include="UiHudL.cpp" />
@@ -225,6 +226,7 @@
     <ClInclude Include="SceneDev_K.h" />
     <ClInclude Include="SceneDevS.h" />
     <ClInclude Include="Framework\Tables\StageTable.h" />
+    <ClInclude Include="SceneGame.h" />
     <ClInclude Include="TileMap.h" />
     <ClInclude Include="TileMapEditor.h" />
     <ClInclude Include="UiHudL.h" />

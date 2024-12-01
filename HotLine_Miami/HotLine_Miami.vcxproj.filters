@@ -87,6 +87,7 @@
     <ClCompile Include="Decoration.cpp" />
     <ClCompile Include="Framework\Tables\WallTable.cpp" />
     <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="SceneGame.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Framework\Animation\AnimationClip.h">
@@ -187,6 +188,7 @@
     <ClInclude Include="Decoration.h" />
     <ClInclude Include="Framework\Tables\WallTable.h" />
     <ClInclude Include="Bullet.h" />
+    <ClInclude Include="SceneGame.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Framework">

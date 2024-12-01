@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "Player.h"
-#include "SceneDevL.h"
+#include "SceneGame.h"
 #include "Enemy.h"
+#include "Bullet.h"
 
 Player::Player(const std::string& name)
 	: GameObject(name)
@@ -47,9 +48,9 @@ void Player::SetOrigin(const sf::Vector2f& newOrigin)
 	leg.setOrigin(origin);
 }
 
-void Player::SetScene(SceneDevL* sceneDevL)
+void Player::SetScene(SceneGame* sceneGame)
 {
-	this->sceneDevL = sceneDevL;
+	this->sceneGame = sceneGame;
 }
 
 void Player::Init()
@@ -76,7 +77,7 @@ void Player::Reset()
 	animatorBody.SetTarget(&body);
 	animatorLeg.SetTarget(&leg);
 	SetOrigin(Origins::MC);
-	sceneDevL = (SceneDevL*)SCENE_MGR.GetCurrentScene();
+	sceneGame = (SceneGame*)SCENE_MGR.GetCurrentScene();
 
 	SetWeaponStatus();
 	attackHitBoxCheck.setFillColor(sf::Color::Transparent);
@@ -166,11 +167,11 @@ void Player::Update(float dt)
 	}
 	if (InputMgr::GetMouseButtonDown(sf::Mouse::Right))
 	{
-		if (sceneDevL == nullptr)
-			SetScene((SceneDevL*)SCENE_MGR.GetCurrentScene());
+		if (sceneGame == nullptr)
+			SetScene((SceneGame*)SCENE_MGR.GetCurrentScene());
 		ThrowWeapon(look);
 		weaponStatus.weaponType = Weapon::WeaponType::None;
-		sceneDevL->PlayerTryPickUpWeapon();
+		sceneGame->PlayerTryPickUpWeapon();
 	}
 
 	SetPosition(position + direction * speed * dt);
@@ -229,7 +230,7 @@ void Player::FixedUpdate(float dt)
 {
 	if (isAttacking)
 	{
-		std::vector<Enemy*>& enemies = sceneDevL->GetEnemyVector();
+		std::vector<Enemy*> enemies = sceneGame->GetEnemies();
 		for (auto enemy : enemies)
 		{
 			if (enemy != nullptr)
@@ -385,7 +386,7 @@ void Player::ThrowWeapon(sf::Vector2f lookDir)
 {
 	if (weaponStatus.weaponType == Weapon::WeaponType::None)
 		return;
-	sceneDevL->OnWeaponThrow(weaponStatus, lookDir, position);
+	sceneGame->OnWeaponThrow(weaponStatus, lookDir, position);
 	weaponStatus.weaponType = Weapon::WeaponType::None;
 	SetWeaponStatus();
 }
@@ -395,7 +396,7 @@ void Player::DropWeapon(sf::Vector2f hitDir)
 {
 	if (weaponStatus.weaponType == Weapon::WeaponType::None)
 		return;
-	sceneDevL->OnWeaponDrop(weaponStatus, position);
+	sceneGame->OnWeaponDrop(weaponStatus, position);
 	weaponStatus.weaponType = Weapon::WeaponType::None;
 	SetWeaponStatus();
 }
@@ -476,7 +477,7 @@ void Player::AttackMachinegun()
 {
 	if (weaponStatus.remainingBullet > 0)
 	{
-		sceneDevL->SpawnBullet()->Fire(Utils::AngleSpread(look, 10), this, weaponStatus);
+		sceneGame->SpawnBullet()->Fire(Utils::AngleSpread(look, 10), this, weaponStatus);
 		weaponStatus.remainingBullet--;
 		animatorBody.Play("animations/Player/Attack/pAttackMachinegun.json");
 		isAttacking = true;
@@ -492,7 +493,7 @@ void Player::AttackShotgun()
 	if (weaponStatus.remainingBullet > 0)
 	{
 		for (int i = 0; i < 6; i++)
-			sceneDevL->SpawnBullet()->Fire(Utils::AngleSpread(look, 10), this, weaponStatus);
+			sceneGame->SpawnBullet()->Fire(Utils::AngleSpread(look, 10), this, weaponStatus);
 		weaponStatus.remainingBullet--;
 		animatorBody.Play("animations/Player/Attack/pAttackShotgun.json");
 		isAttacking = true;

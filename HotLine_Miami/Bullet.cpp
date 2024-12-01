@@ -2,9 +2,10 @@
 #include "Bullet.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "Wall.h"
 #include "SceneDev_K.h"
 #include "SceneDevL.h"
-
+#include "SceneGame.h"
 Bullet::Bullet(const std::string& name)
 	: GameObject(name)
 {
@@ -56,6 +57,7 @@ void Bullet::Release()
 
 void Bullet::Reset()
 {
+	walls = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene())->GetWalls();
 	animator.SetTarget(&body);
 	animator.Play("animations/bullet.json");
 }
@@ -69,7 +71,13 @@ void Bullet::FixedUpdate(float dt)
 {
 	auto bulletBounds = body.getGlobalBounds();
 
-
+	//º® 
+	for (auto wall : walls)
+	{
+		auto wallBounds = wall->GetGlobalBounds();
+		if(wallBounds.intersects(body.getGlobalBounds()))
+			dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene())->ReturnBullet(this);
+	}
 
 	switch (currentOwner)
 	{
@@ -84,26 +92,28 @@ void Bullet::FixedUpdate(float dt)
 
 void Bullet::FixedUpdatePlayer(float dt)
 {
-	auto enemies = dynamic_cast<SceneDevL*>(SCENE_MGR.GetCurrentScene())->GetEnemyVector();
+	auto enemies = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene())->GetEnemies();
 	for (auto enemy : enemies)
 	{
 		if (enemy->GetGlobalBounds().intersects(body.getGlobalBounds()))
 		{
-			enemy->OnHit(weaponStatus, direction);
-			dynamic_cast<SceneDevL*>(SCENE_MGR.GetCurrentScene())->ReturnBullet(this);
+			if (!enemy->isDie())
+			{
+				enemy->OnHit(weaponStatus, direction);
+				dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene())->ReturnBullet(this);
+			}
 		}
 	}
-
 }
 
 void Bullet::FixedUpdateEnemies(float dt)
 {
-	auto player = dynamic_cast<SceneDevL*>(SCENE_MGR.GetCurrentScene())->GetPlayer();
+	auto player = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene())->GetPlayer();
 	if (player->GetGlobalBounds().intersects(body.getGlobalBounds()))
 	{
 		player->OnHit(weaponStatus, direction);
-		if(!player->IsDead())
-			dynamic_cast<SceneDev_K*>(SCENE_MGR.GetCurrentScene())->ReturnBullet(this);
+		if (!player->IsDead())
+			dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene())->ReturnBullet(this);
 	}
 }
 

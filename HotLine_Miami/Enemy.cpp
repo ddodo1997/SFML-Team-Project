@@ -5,7 +5,7 @@
 #include "SceneDevL.h"
 #include "Player.h"
 #include "Bullet.h"
-
+#include "SceneGame.h"
 
 Enemy::Enemy(const std::string& name)
 	: GameObject(name)
@@ -69,15 +69,15 @@ void Enemy::Release()
 void Enemy::Reset()
 {
 	// 각자 테스트할 Scene에 맞추어 Scene 추가
-	sceneGame = dynamic_cast<SceneDevL*>(SCENE_MGR.GetCurrentScene());
+	sceneGame = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene());
 
 	player = sceneGame->GetPlayer();
 	animatorBody.SetTarget(&body);
 	animatorLegs.SetTarget(&legs);
 	viewAngle.setPointCount(3);
-	viewAngle.setPoint(0, { 0.f,0.f });
-	viewAngle.setPoint(1, { 50.f,-10.f });
-	viewAngle.setPoint(2, { 50.f,10.f });
+	viewAngle.setPoint(0, { 0.f, 0.f });
+	viewAngle.setPoint(1, { 100.f, -10.f });
+	viewAngle.setPoint(2, { 100.f, 10.f });
 	viewAngle.setFillColor(sf::Color::Red);
 	SetOrigin(Origins::MC);
 	SetWeapon(Weapon::WeaponType::Shotgun);
@@ -95,24 +95,6 @@ void Enemy::SetPatterns()
 	normal.movingCnt = 0;
 
 	idle.lookAwayTimer = 0.f;
-
-	Patrol::WayPoint waypo(sf::Vector2f(-50.f, -50.f));
-	waypo.point.setRadius(0.5f);
-	waypo.point.setFillColor(sf::Color::Green);
-	patrol.wayPointCnt = 4;
-	patrol.wayPoints.push_back(waypo);
-
-	waypo.position = { 50.f,-50.f };
-	waypo.point.setPosition(waypo.position);
-	patrol.wayPoints.push_back(waypo);
-
-	waypo.position = { 50.f,50.f };
-	waypo.point.setPosition(waypo.position);
-	patrol.wayPoints.push_back(waypo);
-
-	waypo.position = { -50.f,50.f };
-	waypo.point.setPosition(waypo.position);
-	patrol.wayPoints.push_back(waypo);
 
 	patrol.originPoint.setRadius(0.1f);
 	Utils::SetOrigin(patrol.originPoint, Origins::MC);
@@ -139,7 +121,7 @@ void Enemy::Update(float dt)
 	}
 	//�þ߰��� �÷��̾�� �浹�� �˻��� ���̸� ����ĳ��Ʈ ����.
 
-	if (player->IsDead())
+	if (player->IsDead() || isDie())
 	{
 		animatorLegs.Stop();
 		return;
@@ -333,6 +315,8 @@ void Enemy::UpdateDie(float dt)
 
 void Enemy::FixedUpdate(float dt)
 {
+	if (isDie())
+		return;
 	if (viewAngle.getGlobalBounds().intersects(player->GetHitBox().rect.getGlobalBounds()) && currentStatus != Status::Aggro)
 		SetStatus(Status::Aggro);
 }
@@ -482,7 +466,7 @@ void Enemy::Draw(sf::RenderWindow& window)
 		window.draw(point.point);
 	window.draw(patrol.originPoint);
 	hitBox.Draw(window);
-	//window.draw(viewAngle);
+	window.draw(viewAngle);
 }
 
 void Enemy::PickupWeapon(Weapon* weapon)

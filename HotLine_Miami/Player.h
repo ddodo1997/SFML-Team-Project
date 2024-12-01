@@ -1,7 +1,7 @@
 #pragma once
 #include "Weapon.h"
 
-class SceneDevL;
+class SceneGame;
 class Weapon;
 class Enemy;
 
@@ -19,7 +19,7 @@ protected:
 
 	float attackTimer;
 
-	SceneDevL* sceneDevL;
+	SceneGame* sceneGame;
 
 	sf::Sprite body;
 	sf::Sprite leg;
@@ -58,7 +58,7 @@ public:
 	void SetOrigin(Origins preset) override;
 	void SetOrigin(const sf::Vector2f& newOrigin) override;
 
-	void SetScene(SceneDevL* sceneDevL);
+	void SetScene(SceneGame* sceneDevL);
 	
 	bool IsDead() { return !isAlive; }
 

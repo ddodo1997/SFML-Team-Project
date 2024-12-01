@@ -20,6 +20,7 @@ enum class SceneIds
 	Dev_K,
 	DevL,
 	DevS,
+	SceneGame,
 	Count,
 };
 
