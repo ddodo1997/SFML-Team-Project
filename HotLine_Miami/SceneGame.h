@@ -1,5 +1,6 @@
 #pragma once
 #include "Scene.h"
+
 class TileMap;
 class TileMapEditor;
 class Player;
@@ -7,12 +8,19 @@ class Enemy;
 class Decoration;
 class Wall;
 class Bullet;
+class UiHudL;
+
 class SceneGame :
     public Scene
 {
 protected:
 	Player* player;
 	TileMap* tileMap;
+	UiHudL* uiHud;
+
+	sf::Vector2f directionXY;
+	float directionX = 0.f;
+	float directionY = 0.f;
 
 	std::vector<Enemy*> enemies;
 	std::vector<Decoration*> decorations;
@@ -31,6 +39,8 @@ public:
 
 	virtual void Enter();
 	virtual void Exit();
+	void RemovePoolObjects();
+	void ClearInactivePoolObjects();
 
 	virtual void Update(float dt);
 

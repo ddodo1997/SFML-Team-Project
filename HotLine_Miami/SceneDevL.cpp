@@ -54,12 +54,12 @@ void SceneDevL::RemovePoolObjects()
 	}
 	weapons.clear();
 
-	for (auto bullet : bullets)
+	for (auto bullet : activeBullets)
 	{
 		RemoveGo(bullet);
 		bulletPool.Return(bullet);
 	}
-	bullets.clear();
+	activeBullets.clear();
 
 }
 
@@ -79,14 +79,14 @@ void SceneDevL::ClearInactivePoolObjects()
 			weapon++;
 		}
 	}
-	auto bullet = bullets.begin();
-	while (bullet != bullets.end())
+	auto bullet = activeBullets.begin();
+	while (bullet != activeBullets.end())
 	{
 		if (!(*bullet)->IsActive())
 		{
 			bulletPool.Return(*bullet);
 			RemoveGo(*bullet);
-			bullet = bullets.erase(bullet);
+			bullet = activeBullets.erase(bullet);
 		}
 		else
 		{
@@ -244,7 +244,7 @@ void SceneDevL::SpawnWeapon(Weapon::WeaponType weaponType, sf::Vector2f pos)
 Bullet* SceneDevL::SpawnBullet()
 {
 	Bullet* bullet = bulletPool.Take();
-	bullets.push_back(bullet);
+	activeBullets.push_back(bullet);
 	return AddGo(bullet);
 }
 
@@ -252,5 +252,5 @@ void SceneDevL::ReturnBullet(Bullet* val)
 {
 	RemoveGo(val);
 	bulletPool.Return(val);
-	bullets.remove(val);
+	activeBullets.remove(val);
 }

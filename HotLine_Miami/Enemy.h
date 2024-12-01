@@ -125,6 +125,8 @@ public:
 	void clearWayPoints();
 	void Draw(sf::RenderWindow& window) override;
 
+	Status GetStatus() const { return currentStatus; }
+
 	void PickupWeapon(Weapon* weapon);
 	void OnHit(Weapon::WeaponStatus weaponStatus, sf::Vector2f direction);
 	void DropWeapon();

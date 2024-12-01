@@ -235,9 +235,12 @@ void Player::FixedUpdate(float dt)
 		{
 			if (enemy != nullptr)
 			{
-				if (attackHitBoxCheck.getGlobalBounds().intersects(enemy->GetGlobalBounds()))
+				if (enemy->GetStatus() != Enemy::Status::Die && enemy->GetStatus() != Enemy::Status::Stun)
 				{
-					enemy->OnHit(weaponStatus, look);
+					if (attackHitBoxCheck.getGlobalBounds().intersects(enemy->GetGlobalBounds()))
+					{
+						enemy->OnHit(weaponStatus, look);
+					}
 				}
 			}
 		}
@@ -391,7 +394,6 @@ void Player::ThrowWeapon(sf::Vector2f lookDir)
 	SetWeaponStatus();
 }
 
-
 void Player::DropWeapon(sf::Vector2f hitDir)
 {
 	if (weaponStatus.weaponType == Weapon::WeaponType::None)
@@ -478,7 +480,7 @@ void Player::AttackMachinegun()
 	if (weaponStatus.remainingBullet > 0)
 	{
 		sceneGame->SpawnBullet()->Fire(Utils::AngleSpread(look, 10), this, weaponStatus);
-		weaponStatus.remainingBullet--;
+		//weaponStatus.remainingBullet--;
 		animatorBody.Play("animations/Player/Attack/pAttackMachinegun.json");
 		isAttacking = true;
 	}
@@ -494,7 +496,7 @@ void Player::AttackShotgun()
 	{
 		for (int i = 0; i < 6; i++)
 			sceneGame->SpawnBullet()->Fire(Utils::AngleSpread(look, 10), this, weaponStatus);
-		weaponStatus.remainingBullet--;
+		//weaponStatus.remainingBullet--;
 		animatorBody.Play("animations/Player/Attack/pAttackShotgun.json");
 		isAttacking = true;
 	}
