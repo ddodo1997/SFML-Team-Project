@@ -38,7 +38,9 @@ public:
 	void LoadDecorations();
 	void LoadEnemies();
 
-	void SetStatusEnemies();
+	void SetWalls();
+	void SetDecorations();
+	void SetEnemies();
 	Player* GetPlayer() { return player; }
 
 	std::vector<Enemy*> GetEnemies() const { return enemies; }

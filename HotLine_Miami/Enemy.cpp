@@ -88,6 +88,7 @@ void Enemy::Reset()
 	SetOrigin(Origins::MC);
 	SetWeapon(Weapon::WeaponType::Bat);
 	SetStatus(Status::Patrol);
+	direction = { 0.f, 0.f };
 	SetPatterns();
 	attackTimer = weaponStatus.attackInterval;
 	hp = 1;
@@ -160,8 +161,11 @@ void Enemy::Update(float dt)
 		UpdateDie(dt);
 		break;
 	}
-
-	SetRotation(Utils::Angle(direction));
+	
+	if (Utils::Magnitude(direction) > 0.f)
+	{
+		SetRotation(Utils::Angle(direction));
+	}
 	SetPosition(position + direction * speed * dt);
 }
 

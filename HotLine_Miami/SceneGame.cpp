@@ -29,7 +29,9 @@ void SceneGame::Release()
 void SceneGame::Enter()
 {
 	Scene::Enter();
-	SetStatusEnemies();
+	SetEnemies();
+	SetWalls();
+	SetDecorations();
 
 	tileMap->SetTexture(&TEXTURE_MGR.Get(STAGE_TABLE->GetTileTextureId()));
 	tileMap->Initialize(STAGE_TABLE->GetTileSize(), STAGE_TABLE->GetTileCount(), STAGE_TABLE->GetFloorTiles());
@@ -86,11 +88,9 @@ void SceneGame::LoadWalls()
 	{
 		const DataWall& wallData = WallPair.second;
 
-		Wall* wall = new Wall(wallData.id);
-		//wall->Reset();
-		wall->DrawWall(wallData);
+		Wall* wall = AddGo(new Wall(wallData.id));
 		walls.push_back(wall);
-		AddGo(wall);
+		wall->DrawWall(wallData);
 	}
 }
 
@@ -101,13 +101,11 @@ void SceneGame::LoadDecorations()
 	{
 		const DataDecoration& decoData = decoPair.second;
 
-		Decoration* deco = new Decoration(decoData.id);
-		//deco->Reset();
+		Decoration* deco = AddGo(new Decoration(decoData.id));
+		decorations.push_back(deco);
 		deco->SetTexture(decoData.textureId);
 		deco->SetRotation(decoData.rotation);
 		deco->SetPosition(decoData.pos);
-		decorations.push_back(deco);
-		AddGo(deco);
 	}
 }
 
@@ -118,23 +116,49 @@ void SceneGame::LoadEnemies()
 	{
 		const DataEnemy& enemyData = enemyPair.second;
 
-		Enemy* enemy = new Enemy(enemyData.id);
-		// enemy->SetStatus(enemyData.state);
-		enemy->SetPosition({ (enemyData.pos.x * STAGE_TABLE->GetTileSize().x) + 8.f,  (enemyData.pos.y * STAGE_TABLE->GetTileSize().y) + 8.f });
-		enemy->SetWayPoints(enemyData.waypoints);
-
+		Enemy* enemy = AddGo(new Enemy(enemyData.id));
 		enemies.push_back(enemy);
-		AddGo(enemy);
 	}
 }
 
-void SceneGame::SetStatusEnemies()
+void SceneGame::SetWalls()
+{
+	int i = 0;
+	const auto& wallTable = STAGE_TABLE->GetWallTable();
+
+	for (const auto& WallPair : wallTable)
+	{
+		const DataWall& wallData = WallPair.second;
+		walls[i++]->DrawWall(wallData);
+	}
+}
+
+void SceneGame::SetDecorations()
+{
+	int i = 0;
+	const auto& decoTable = STAGE_TABLE->GetDecoTable();
+	for (const auto& decoPair : decoTable)
+	{
+		const DataDecoration& decoData = decoPair.second;
+		decorations[i]->SetTexture(decoData.textureId);
+		decorations[i]->SetRotation(decoData.rotation);
+		decorations[i]->SetPosition(decoData.pos);
+		i++;
+	}
+}
+
+void SceneGame::SetEnemies()
 {
 	int i = 0;
 	const auto& enemyTable = STAGE_TABLE->GetEnemyTable();
 	for (const auto& enemyPair : enemyTable)
 	{
-		enemies[i++]->SetStatus(enemyPair.second.state);
+		const DataEnemy& enemyData = enemyPair.second;
+		enemies[i]->SetPosition({(enemyData.pos.x * STAGE_TABLE->GetTileSize().x) + 8.f,  (enemyData.pos.y * STAGE_TABLE->GetTileSize().y) + 8.f});
+		enemies[i]->SetRotation(enemyData.rotation);
+		enemies[i]->SetStatus(enemyData.state);
+		enemies[i]->SetWayPoints(enemyData.waypoints);
+		i++;
 	}
 }
 
