@@ -4,7 +4,7 @@
 class SceneGame;
 class Weapon;
 class Enemy;
-class Wall;
+class Wall2;
 
 class Player : public GameObject
 {
@@ -21,7 +21,7 @@ protected:
 	float attackTimer;
 
 	SceneGame* sceneGame;
-	std::vector<Wall*> walls;
+	std::vector<Wall2*> walls;
 
 	sf::Sprite body;
 	sf::Sprite leg;

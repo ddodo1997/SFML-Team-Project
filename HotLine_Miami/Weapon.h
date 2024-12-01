@@ -2,7 +2,7 @@
 #include "GameObject.h"
 
 class Enemy;
-class SceneDevL;
+class SceneGame;
 
 class Weapon : public GameObject
 {
@@ -47,9 +47,9 @@ protected:
 	// 개별 전달 필요
 	bool			isPickupable = false;
 
-	SceneDevL*		scenePointer;
+	SceneGame*		scenePointer;
 
-	int				indexNo;
+	long long				indexNo;
 
 public:
 	Weapon(std::string name = "");

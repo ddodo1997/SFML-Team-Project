@@ -3,7 +3,7 @@
 #include "SceneGame.h"
 #include "Enemy.h"
 #include "Bullet.h"
-#include "Wall.h"
+#include "Wall2.h"
 
 Player::Player(const std::string& name)
 	: GameObject(name)
@@ -362,7 +362,7 @@ void Player::OnHitByShotgun(sf::Vector2f hitDir)
 
 void Player::TryPickUpWeapon()
 {
-	auto weapons = sceneGame->GetWeapons();
+	auto weapons = sceneGame->GetActiveWeapons();
 	for (auto weapon : weapons)
 	{
 		if (GetHitBox().rect.getGlobalBounds().intersects(weapon->GetHitBox().rect.getGlobalBounds()))

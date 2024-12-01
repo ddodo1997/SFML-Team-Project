@@ -52,24 +52,6 @@ void SceneGame::Exit()
 	Scene::Exit();
 }
 
-void SceneGame::RemovePoolObjects()
-{
-	for (auto weapon : weapons)
-	{
-		RemoveGo(weapon);
-		weaponPool.Return(weapon);
-	}
-	weapons.clear();
-
-	for (auto bullet : activeBullets)
-	{
-		RemoveGo(bullet);
-		bulletPool.Return(bullet);
-	}
-	activeBullets.clear();
-
-}
-
 void SceneGame::ClearInactivePoolObjects()
 {
 	auto weapon = weapons.begin();
@@ -128,7 +110,7 @@ void SceneGame::Update(float dt)
 	}
 	if (InputMgr::GetKeyDown(sf::Keyboard::R))
 	{
-		player->Reset();
+		SCENE_MGR.ChangeScene(SceneIds::SceneGame);
 	}
 	if (InputMgr::GetKey(sf::Keyboard::Numpad7))
 	{
@@ -329,28 +311,6 @@ void SceneGame::OnWeaponThrow(Weapon::WeaponStatus weapon, sf::Vector2f dir, sf:
 	AddGo(newWeapon);
 }
 
-<<<<<<< HEAD
-void SceneGame::PlayerTryPickUpWeapon()
-{
-	for (auto weapon : weapons)
-	{
-		if (player->GetHitBox().rect.getGlobalBounds().intersects(weapon->GetHitBox().rect.getGlobalBounds()))
-		{
-			PlayerPickUpWeapon(weapon->GetStatus());
-			weapon->SetActive(false); 
-			weaponPool.Return(weapon);
-			RemoveGo(weapon);
-			return;
-		}
-	}
-}
-
-void SceneGame::PlayerPickUpWeapon(Weapon::WeaponStatus weapon)
-{
-	player->WeaponPickUp(weapon);
-}
-=======
->>>>>>> 79b2384d25d2bf1a95275259d55393d57ec1df79
 
 void SceneGame::SpawnWeapon(Weapon::WeaponType weaponType, sf::Vector2f pos)
 {
@@ -392,11 +352,12 @@ void SceneGame::RemoveAllObjPool()
 		RemoveGo(bullet);
 		bulletPool.Return(bullet);
 	}
+	activeBullets.clear();
+
 	for (auto wall : walls)
 	{
 		RemoveGo(wall);
 	}
-	activeBullets.clear();
 	walls.clear();
 
 	for (auto weapon : weapons)

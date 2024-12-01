@@ -39,7 +39,6 @@ public:
 
 	virtual void Enter();
 	virtual void Exit();
-	void RemovePoolObjects();
 	void ClearInactivePoolObjects();
 
 	virtual void Update(float dt);
@@ -55,14 +54,9 @@ public:
 
 	std::vector<Enemy*> GetEnemies() const { return enemies; }
 	std::vector<Decoration*> GetDecorations() const { return decorations; }
-<<<<<<< HEAD
 	std::vector<Wall2*> GetWalls() const { return walls; }
 
 	const std::list<Weapon*>& GetActiveWeapons() const { return weapons; }
-=======
-	std::vector<Wall*> GetWalls() const { return walls; }
-	std::list<Weapon*> GetWeapons() const { return weapons; }
->>>>>>> 79b2384d25d2bf1a95275259d55393d57ec1df79
 
 	void OnWeaponDrop(Weapon::WeaponStatus weapon, sf::Vector2f pos);
 	void OnWeaponThrow(Weapon::WeaponStatus weapon, sf::Vector2f dir, sf::Vector2f pos);

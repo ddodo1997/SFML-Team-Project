@@ -302,10 +302,13 @@ void Enemy::UpdateSearchWeapon(float dt)
 		closetWeapon = closetWeaponPos.begin()->second;
 	}
 	if (closetWeapon == nullptr)
+	{
+		//루팅할 무기가 없는 경우...
 		return;
+	}
 	direction = Utils::GetNormal(closetWeapon->GetPosition() - position);
 
-	if (closetWeapon->GetGlobalBounds().intersects(body.getGlobalBounds()))
+	if (closetWeapon->GetGlobalBounds().intersects(legs.getGlobalBounds()) && closetWeapon->GetIsPickupable())
 		PickupWeapon(closetWeapon);
 }
 
@@ -348,75 +351,75 @@ void Enemy::FixedUpdate(float dt)
 	if (isDie() || currentStatus == Status::Stun || currentStatus == Status::GetUp)
 		return;
 
-	//for (auto wall : walls)
-	//{
-	//	auto wallBounds = wall->GetGlobalBounds();
-	//	if (wallBounds.intersects(patrol.originPoint.getGlobalBounds()))
-	//	{
-	//		auto wall6Points = Utils::Get6Points(wallBounds);
-	//		auto closetPoint = Utils::FindClosesPoint(legs.getGlobalBounds(), wall6Points);
+	for (auto wall : walls)
+	{
+		auto wallBounds = wall->GetGlobalBounds();
+		if (wallBounds.intersects(legs.getGlobalBounds()))
+		{
+			auto wall6Points = Utils::Get6Points(wallBounds);
+			auto closetPoint = Utils::FindClosesPoint(legs.getGlobalBounds(), wall6Points);
 
-	//		auto wallCenter = Utils::GetCenter(wallBounds);
+			auto wallCenter = Utils::GetCenter(wallBounds);
 
-	//		if (closetPoint.y != wallCenter.y)
-	//		{
-	//			if (closetPoint.y > wallCenter.y)
-	//			{
-	//				position.y = closetPoint.y + legs.getGlobalBounds().height * 0.5f;
-	//			}
-	//			if (closetPoint.y < wallCenter.y)
-	//			{
-	//				position.y = closetPoint.y;
-	//			}
-	//		}
-	//		else
-	//		{
-	//			if (closetPoint.x > wallCenter.x)
-	//			{
-	//				position.x = closetPoint.x + legs.getGlobalBounds().width * 0.5f;
-	//			}
-	//			if (closetPoint.x < wallCenter.x)
-	//			{
-	//				position.x = closetPoint.x - legs.getGlobalBounds().width * 0.5f;
-	//			}
-	//		}
-	//	}
-	//}
+			if (closetPoint.y != wallCenter.y)
+			{
+				if (closetPoint.y > wallCenter.y)
+				{
+					position.y = closetPoint.y + legs.getGlobalBounds().height * 0.5f;
+				}
+				if (closetPoint.y < wallCenter.y)
+				{
+					position.y = closetPoint.y;
+				}
+			}
+			else
+			{
+				if (closetPoint.x > wallCenter.x)
+				{
+					position.x = closetPoint.x + legs.getGlobalBounds().width * 0.5f;
+				}
+				if (closetPoint.x < wallCenter.x)
+				{
+					position.x = closetPoint.x - legs.getGlobalBounds().width * 0.5f;
+				}
+			}
+		}
+	}
 
-	//for (auto deco : decorations)
-	//{
-	//	auto decoBounds = deco->GetGlobalBounds();
-	//	if (decoBounds.intersects(patrol.originPoint.getGlobalBounds()))
-	//	{
-	//		auto deco6Points = Utils::Get6Points(decoBounds);
-	//		auto closetPoint = Utils::FindClosesPoint(legs.getGlobalBounds(), deco6Points);
+	for (auto deco : decorations)
+	{
+		auto decoBounds = deco->GetGlobalBounds();
+		if (decoBounds.intersects(legs.getGlobalBounds()))
+		{
+			auto deco6Points = Utils::Get6Points(decoBounds);
+			auto closetPoint = Utils::FindClosesPoint(legs.getGlobalBounds(), deco6Points);
 
-	//		auto decoCenter = Utils::GetCenter(decoBounds);
+			auto decoCenter = Utils::GetCenter(decoBounds);
 
-	//		if (closetPoint.y != decoCenter.y)
-	//		{
-	//			if (closetPoint.y > decoCenter.y)
-	//			{
-	//				position.y = closetPoint.y + legs.getGlobalBounds().height * 0.5f;
-	//			}
-	//			if (closetPoint.y < decoCenter.y)
-	//			{
-	//				position.y = closetPoint.y;
-	//			}
-	//		}
-	//		else
-	//		{
-	//			if (closetPoint.x > decoCenter.x)
-	//			{
-	//				position.x = closetPoint.x + legs.getGlobalBounds().width * 0.5f;
-	//			}
-	//			if (closetPoint.x < decoCenter.x)
-	//			{
-	//				position.x = closetPoint.x - legs.getGlobalBounds().width * 0.5f;
-	//			}
-	//		}
-	//	}
-	//}
+			if (closetPoint.y != decoCenter.y)
+			{
+				if (closetPoint.y > decoCenter.y)
+				{
+					position.y = closetPoint.y + legs.getGlobalBounds().height * 0.5f;
+				}
+				if (closetPoint.y < decoCenter.y)
+				{
+					position.y = closetPoint.y;
+				}
+			}
+			else
+			{
+				if (closetPoint.x > decoCenter.x)
+				{
+					position.x = closetPoint.x + legs.getGlobalBounds().width * 0.5f;
+				}
+				if (closetPoint.x < decoCenter.x)
+				{
+					position.x = closetPoint.x - legs.getGlobalBounds().width * 0.5f;
+				}
+			}
+		}
+	}
 
 
 
@@ -641,13 +644,17 @@ void Enemy::Attack()
 			animatorBody.PlayQueue("animations/Enemy/enemy_knife_search.json");
 			break;
 		case Weapon::WeaponType::Machinegun:
-			sceneGame->SpawnBullet()->Fire(Utils::AngleSpread(direction, 10), this, weaponStatus);
+			if (weaponStatus.remainingBullet > 0)
+				sceneGame->SpawnBullet()->Fire(Utils::AngleSpread(direction, 10), this, weaponStatus);
+			weaponStatus.remainingBullet--;
 			animatorBody.Play("animations/Enemy/enemy_m16_attack.json");
 			animatorBody.PlayQueue("animations/Enemy/enemy_m16_search.json");
 			break;
 		case Weapon::WeaponType::Shotgun:
-			for (int i = 0; i < 6; i++)
-				sceneGame->SpawnBullet()->Fire(Utils::AngleSpread(direction, 10), this, weaponStatus);
+			if(weaponStatus.remainingBullet > 0)
+				for (int i = 0; i < 6; i++)
+					sceneGame->SpawnBullet()->Fire(Utils::AngleSpread(direction, 10), this, weaponStatus);
+			weaponStatus.remainingBullet--;
 			animatorBody.Play("animations/Enemy/enemy_shotgun_attack.json");
 			animatorBody.PlayQueue("animations/Enemy/enemy_shotgun_search.json");
 			break;

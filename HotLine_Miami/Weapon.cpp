@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "Weapon.h"
 #include "Enemy.h"
-#include "SceneDevL.h"
+#include "SceneGame.h"
 #include <chrono>
-
+#include "time.h"
 int Weapon::indexCounter = 0;
 
 Weapon::Weapon(std::string name)
@@ -35,6 +35,7 @@ void Weapon::Release()
 
 void Weapon::Reset()
 {
+	scenePointer = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene());
 	isPickupable = false;
 }
 
@@ -68,11 +69,10 @@ void Weapon::FixedUpdate(float dt)
 	{
 		return;
 	}
-	scenePointer = (SceneDevL*)SCENE_MGR.GetCurrentScene();
-	auto eList = scenePointer->GetEnemyVector();
+	auto eList = scenePointer->GetEnemies();
 	for (auto enemy : eList)
 	{
-		if (weaponSprite.getGlobalBounds().intersects(enemy->GetGlobalBounds()))
+		if (weaponSprite.getGlobalBounds().intersects(enemy->GetGlobalBounds()) && !enemy->isDie() && !enemy->isStun())
 		{
 			enemy->OnHit(weaponStatus, direction, true);
 		}

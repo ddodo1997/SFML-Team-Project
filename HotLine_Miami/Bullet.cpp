@@ -100,7 +100,7 @@ void Bullet::FixedUpdatePlayer(float dt)
 	{
 		if (enemy->GetGlobalBounds().intersects(body.getGlobalBounds()))
 		{
-			if (!enemy->isDie())
+			if (!enemy->isDie() && !enemy->isStun())
 			{
 				enemy->OnHit(weaponStatus, direction);
 				dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene())->ReturnBullet(this);

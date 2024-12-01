@@ -137,6 +137,7 @@ public:
 	void OnDie(sf::Vector2f direction);
 
 	bool isDie() const{ return currentStatus == Status::Die ? true : false; }
+	bool isStun() const { return currentStatus == Status::Stun ? true : false; }
 
 	void Attack();
 };
