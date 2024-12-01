@@ -5,6 +5,7 @@
 #include "SceneDevL.h"
 #include "Player.h"
 #include "Wall.h"
+#include "Decoration.h"
 #include "Bullet.h"
 #include "SceneGame.h"
 
@@ -77,6 +78,7 @@ void Enemy::Reset()
 
 	player = sceneGame->GetPlayer();
 	walls = sceneGame->GetWalls();
+	decorations = sceneGame->GetDecorations();
 	animatorBody.SetTarget(&body);
 	animatorLegs.SetTarget(&legs);
 	viewAngle.setPointCount(3);
@@ -84,7 +86,7 @@ void Enemy::Reset()
 	viewAngle.setPoint(1, { 100.f, -10.f });
 	viewAngle.setPoint(2, { 100.f, 10.f });
 	viewAngle.setFillColor(sf::Color::Red);
-
+	weaponSearchRange.setRadius(30.f);
 	SetOrigin(Origins::MC);
 	SetWeapon(Weapon::WeaponType::Bat);
 	SetStatus(Status::Patrol);
@@ -161,7 +163,7 @@ void Enemy::Update(float dt)
 		UpdateDie(dt);
 		break;
 	}
-	
+
 	if (Utils::Magnitude(direction) > 0.f)
 	{
 		SetRotation(Utils::Angle(direction));
@@ -291,6 +293,20 @@ void Enemy::UpdateSearchWeapon(float dt)
 {
 	// TODO : Searches for weapons within a certain radius.
 	// If not found, moves away from the player.
+	auto& activeWeapons = sceneGame->GetActiveWeapons();
+	std::map<float, Weapon*> closetWeaponPos;
+	Weapon* closetWeapon = nullptr;
+	for (auto weapon : activeWeapons)
+	{
+		closetWeaponPos.insert({ Utils::Distance(position, weapon->GetPosition()), weapon });
+		closetWeapon = closetWeaponPos.begin()->second;
+	}
+	if (closetWeapon == nullptr)
+		return;
+	direction = Utils::GetNormal(closetWeapon->GetPosition() - position);
+
+	if (closetWeapon->GetGlobalBounds().intersects(body.getGlobalBounds()))
+		PickupWeapon(closetWeapon);
 }
 
 void Enemy::UpdateStun(float dt)
@@ -332,55 +348,80 @@ void Enemy::FixedUpdate(float dt)
 	if (isDie() || currentStatus == Status::Stun || currentStatus == Status::GetUp)
 		return;
 
-	for (auto wall : walls)
-	{
-		auto wallBounds = wall->GetGlobalBounds();
-		if (wallBounds.intersects(body.getGlobalBounds()))
-		{
-			if (currentStatus != Status::Stun || currentStatus != Status::Die)
-			{
-				auto wall6Points = Utils::Get6Points(wallBounds);
-				auto closetPoint = Utils::FindClosesPoint(wallBounds, wall6Points);
+	//for (auto wall : walls)
+	//{
+	//	auto wallBounds = wall->GetGlobalBounds();
+	//	if (wallBounds.intersects(patrol.originPoint.getGlobalBounds()))
+	//	{
+	//		auto wall6Points = Utils::Get6Points(wallBounds);
+	//		auto closetPoint = Utils::FindClosesPoint(legs.getGlobalBounds(), wall6Points);
 
-				auto wallCenter = Utils::GetCenter(wallBounds);
+	//		auto wallCenter = Utils::GetCenter(wallBounds);
 
-				//충돌 시 방향 반전
-				if (closetPoint.y != wallCenter.y)
-				{
-					if (closetPoint.y > wallCenter.y)
-					{
-						position.y = closetPoint.y + body.getGlobalBounds().height * 0.5f;
-					}
-					if (closetPoint.y < wallCenter.y)
-					{
-						position.y = closetPoint.y;
-					}
+	//		if (closetPoint.y != wallCenter.y)
+	//		{
+	//			if (closetPoint.y > wallCenter.y)
+	//			{
+	//				position.y = closetPoint.y + legs.getGlobalBounds().height * 0.5f;
+	//			}
+	//			if (closetPoint.y < wallCenter.y)
+	//			{
+	//				position.y = closetPoint.y;
+	//			}
+	//		}
+	//		else
+	//		{
+	//			if (closetPoint.x > wallCenter.x)
+	//			{
+	//				position.x = closetPoint.x + legs.getGlobalBounds().width * 0.5f;
+	//			}
+	//			if (closetPoint.x < wallCenter.x)
+	//			{
+	//				position.x = closetPoint.x - legs.getGlobalBounds().width * 0.5f;
+	//			}
+	//		}
+	//	}
+	//}
 
-					direction.y *= -1.f;
-				}
-				else
-				{
-					if (closetPoint.x > wallCenter.x)
-					{
-						position.x = closetPoint.x + body.getGlobalBounds().width * 0.5f;
-					}
-					if (closetPoint.x < wallCenter.x)
-					{
-						position.x = closetPoint.x - body.getGlobalBounds().width * 0.5f;
-					}
+	//for (auto deco : decorations)
+	//{
+	//	auto decoBounds = deco->GetGlobalBounds();
+	//	if (decoBounds.intersects(patrol.originPoint.getGlobalBounds()))
+	//	{
+	//		auto deco6Points = Utils::Get6Points(decoBounds);
+	//		auto closetPoint = Utils::FindClosesPoint(legs.getGlobalBounds(), deco6Points);
 
-					direction.x *= -1.f;
-				}
-			}
-			else
-			{
-				speed = 0.f;
-			}
-		}
-	}
+	//		auto decoCenter = Utils::GetCenter(decoBounds);
 
-	if (viewAngle.getGlobalBounds().intersects(player->GetHitBox().rect.getGlobalBounds()) && currentStatus != Status::Aggro)
-		if(!Utils::RayCast(position,direction,viewAngle.getLocalBounds().width,player))
+	//		if (closetPoint.y != decoCenter.y)
+	//		{
+	//			if (closetPoint.y > decoCenter.y)
+	//			{
+	//				position.y = closetPoint.y + legs.getGlobalBounds().height * 0.5f;
+	//			}
+	//			if (closetPoint.y < decoCenter.y)
+	//			{
+	//				position.y = closetPoint.y;
+	//			}
+	//		}
+	//		else
+	//		{
+	//			if (closetPoint.x > decoCenter.x)
+	//			{
+	//				position.x = closetPoint.x + legs.getGlobalBounds().width * 0.5f;
+	//			}
+	//			if (closetPoint.x < decoCenter.x)
+	//			{
+	//				position.x = closetPoint.x - legs.getGlobalBounds().width * 0.5f;
+	//			}
+	//		}
+	//	}
+	//}
+
+
+
+	if (viewAngle.getGlobalBounds().intersects(player->GetHitBox().rect.getGlobalBounds()) && currentStatus != Status::Aggro && weaponStatus.weaponType != Weapon::WeaponType::None)
+		if (!Utils::RayCast(position, direction, viewAngle.getLocalBounds().width, player))
 			SetStatus(Status::Aggro);
 }
 
@@ -480,6 +521,7 @@ void Enemy::SetStatus(Status stat)
 		}
 		break;
 	case Status::SearchWeapon:
+		speed = 50.f;
 		animatorBody.Play("animations/Enemy/enemy_none_walk.json");
 		break;
 	case Status::Stun:
@@ -544,12 +586,16 @@ void Enemy::Draw(sf::RenderWindow& window)
 void Enemy::PickupWeapon(Weapon* weapon)
 {
 	weaponStatus = weapon->GetStatus();
+	direction = Utils::GetNormal(player->GetPosition() - position);
+	SetStatus(Status::Normal);
+	sceneGame->ReturnWeapon(weapon);
 }
 
 void Enemy::OnHit(Weapon::WeaponStatus weaponStatus, sf::Vector2f direction, bool isThrow)
 {
 	isThrow ? hp -= weaponStatus.damageOnThrow : hp -= weaponStatus.damage;
 	speed = 150.f;
+	DropWeapon();
 	if (hp <= 0)
 	{
 		OnDie(direction);
@@ -562,7 +608,10 @@ void Enemy::OnHit(Weapon::WeaponStatus weaponStatus, sf::Vector2f direction, boo
 
 void Enemy::DropWeapon()
 {
-
+	if (weaponStatus.weaponType == Weapon::WeaponType::None)
+		return;
+	sceneGame->OnWeaponDrop(weaponStatus, position);
+	SetWeapon(Weapon::WeaponType::None);
 }
 
 void Enemy::OnDie(sf::Vector2f direction)
@@ -597,8 +646,8 @@ void Enemy::Attack()
 			animatorBody.PlayQueue("animations/Enemy/enemy_m16_search.json");
 			break;
 		case Weapon::WeaponType::Shotgun:
-			for(int i = 0 ; i < 6 ; i++)
-				sceneGame->SpawnBullet()->Fire(Utils::AngleSpread(direction,10), this, weaponStatus);
+			for (int i = 0; i < 6; i++)
+				sceneGame->SpawnBullet()->Fire(Utils::AngleSpread(direction, 10), this, weaponStatus);
 			animatorBody.Play("animations/Enemy/enemy_shotgun_attack.json");
 			animatorBody.PlayQueue("animations/Enemy/enemy_shotgun_search.json");
 			break;

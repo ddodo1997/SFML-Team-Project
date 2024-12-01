@@ -37,7 +37,7 @@ void SceneGame::Enter()
 	tileMap->Initialize(STAGE_TABLE->GetTileSize(), STAGE_TABLE->GetTileCount(), STAGE_TABLE->GetFloorTiles());
 
 	worldView.setSize(windowSize * 0.2f);
-	worldView.setCenter(0, 0);
+	worldView.setCenter(player->GetPosition());
 
 	uiView.setSize(windowSize);
 	uiView.setCenter(windowSize * 0.5f);
@@ -193,7 +193,9 @@ void SceneGame::PlayerTryPickUpWeapon()
 		if (player->GetHitBox().rect.getGlobalBounds().intersects(weapon->GetHitBox().rect.getGlobalBounds()))
 		{
 			PlayerPickUpWeapon(weapon->GetStatus());
-			weapon->SetActive(false);
+			weapon->SetActive(false); 
+			weaponPool.Return(weapon);
+			RemoveGo(weapon);
 			return;
 		}
 	}
@@ -229,6 +231,13 @@ void SceneGame::ReturnBullet(Bullet* val)
 	activeBullets.remove(val);
 }
 
+void SceneGame::ReturnWeapon(Weapon* val)
+{
+	RemoveGo(val);
+	weaponPool.Return(val);
+	weapons.remove(val);
+}
+
 
 void SceneGame::RemoveAllObjPool()
 {
@@ -238,6 +247,13 @@ void SceneGame::RemoveAllObjPool()
 		bulletPool.Return(bullet);
 	}
 	activeBullets.clear();
+
+	for (auto weapon : weapons)
+	{
+		RemoveGo(weapon);
+		weaponPool.Return(weapon);
+	}
+	weapons.clear();
 }
 
 

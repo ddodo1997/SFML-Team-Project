@@ -344,6 +344,25 @@ sf::Vector2f Utils::FindClosesPoint(const sf::FloatRect& srcBounds, const std::v
     return closestPoint;
 }
 
+sf::Vector2f Utils::FindClosesPoint(const sf::Vector2f& srcBounds, const std::vector<sf::Vector2f>& targetBounds)
+{
+    sf::Vector2f ballCenter = srcBounds;
+
+    float minDistance = std::numeric_limits<float>::max();
+    sf::Vector2f closestPoint;
+
+    for (const auto& middle : targetBounds) {
+        float dist = Utils::Distance(ballCenter, middle);
+        if (dist < minDistance) {
+            minDistance = dist;
+            closestPoint = middle;
+        }
+    }
+
+    return closestPoint;
+}
+
+
 sf::Vector2f Utils::GetCenter(const sf::FloatRect& rect) 
 {
     sf::Vector2f topLeft = sf::Vector2f(rect.left, rect.top);
@@ -375,7 +394,7 @@ sf::Vector2f Utils::GetTransratedPoint(const sf::Vector2f& origin, const sf::Vec
 
 bool Utils::RayCast(const sf::Vector2f& origin, const sf::Vector2f& direction, float maxDistance, GameObject* target)
 {
-    bool result = false;
+    bool result = true;
     sf::RectangleShape ray;
     ray.setPosition(origin);
     ray.setSize({Utils::Distance(origin,GetTransratedPoint(origin,direction,maxDistance)), 0.1f});
@@ -384,14 +403,19 @@ bool Utils::RayCast(const sf::Vector2f& origin, const sf::Vector2f& direction, f
 
     if (CheckCollision(ray, target->GetHitBox().rect))
     {
+        result = false;
         auto walls = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene())->GetWalls();
         for (auto wall : walls)
         {
             auto wallBounds = wall->GetGlobalBounds();
             if (wallBounds.intersects(ray.getGlobalBounds()))
             {
-                result = Distance(origin, wall->GetPosition()) < Distance(origin, target->GetPosition()) ? true : false;
-                if (result)
+                auto wall6Points = Utils::Get6Points(wallBounds);
+                auto closetPoint = Utils::FindClosesPoint(origin, wall6Points);
+
+                result = Distance(origin, closetPoint) < Distance(origin, target->GetPosition()) ? true : false;
+
+                if (!result)
                     break;
             }
         }

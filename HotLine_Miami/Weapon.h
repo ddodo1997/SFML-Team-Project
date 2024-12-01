@@ -89,5 +89,9 @@ public:
 	bool GetIsRanged();
 	bool GetIsPickupable();
 	// Test Code
+
+	sf::FloatRect GetLocalBounds()const { return weaponSprite.getLocalBounds(); }
+	sf::FloatRect GetGlobalBounds()const { return weaponSprite.getGlobalBounds(); }
+
 };
 
