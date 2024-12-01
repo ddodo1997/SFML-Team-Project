@@ -74,7 +74,7 @@ void Bullet::FixedUpdate(float dt)
 	//º® 
 	for (auto wall : walls)
 	{
-		auto wallBounds = wall->GetLocalBounds();
+		auto wallBounds = wall->GetGlobalBounds();
 		if (wallBounds.intersects(body.getGlobalBounds()))
 		{
 			dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene())->ReturnBullet(this);

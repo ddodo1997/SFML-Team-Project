@@ -4,6 +4,8 @@
 class Player;
 class SceneGame;
 class Wall2;
+class Wall;
+class Decoration;
 class Enemy : public GameObject
 {
 public:
@@ -58,11 +60,12 @@ protected:
 	sf::Sprite legs;
 	sf::RectangleShape meleeHitBox;
 	sf::ConvexShape viewAngle;
+	sf::CircleShape weaponSearchRange;
 
 	Player* player;
 	std::vector<Wall2*> walls;
+	std::vector<Decoration*> decorations;
 
-	// 각자 테스트 신에 맞추어 Scene형 변환
 	SceneGame* sceneGame;
 
 	Animator animatorBody;
@@ -79,7 +82,6 @@ protected:
 	Patrol patrol;
 
 	Weapon::WeaponStatus weaponStatus;
-
 	int hp = 1;
 
 	float stunTimer = 0.f;
@@ -137,6 +139,4 @@ public:
 	bool isDie() const{ return currentStatus == Status::Die ? true : false; }
 
 	void Attack();
-
-
 };
