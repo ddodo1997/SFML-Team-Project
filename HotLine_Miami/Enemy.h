@@ -3,7 +3,7 @@
 
 class Player;
 class SceneGame;
-
+class Wall;
 class Enemy : public GameObject
 {
 public:
@@ -38,6 +38,7 @@ public:
 		std::vector<WayPoint> wayPoints;
 		sf::CircleShape originPoint;
 		int wayPointCnt;
+		int currentWayPoint = 0;
 	};
 	enum class Status
 	{
@@ -55,10 +56,11 @@ public:
 protected:
 	sf::Sprite body;
 	sf::Sprite legs;
-
+	sf::RectangleShape meleeHitBox;
 	sf::ConvexShape viewAngle;
 
 	Player* player;
+	std::vector<Wall*> walls;
 
 	// 각자 테스트 신에 맞추어 Scene형 변환
 	SceneGame* sceneGame;
@@ -128,7 +130,7 @@ public:
 	Status GetStatus() const { return currentStatus; }
 
 	void PickupWeapon(Weapon* weapon);
-	void OnHit(Weapon::WeaponStatus weaponStatus, sf::Vector2f direction);
+	void OnHit(Weapon::WeaponStatus weaponStatus, sf::Vector2f direction, bool isThrow = false);
 	void DropWeapon();
 	void OnDie(sf::Vector2f direction);
 

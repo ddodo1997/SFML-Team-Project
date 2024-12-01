@@ -48,18 +48,19 @@ public:
 	void LoadDecorations();
 	void LoadEnemies();
 
-	void SetStatusEnemies();
+	void SetWalls();
+	void SetDecorations();
+	void SetEnemies();
 	Player* GetPlayer() { return player; }
 
 	std::vector<Enemy*> GetEnemies() const { return enemies; }
 	std::vector<Decoration*> GetDecorations() const { return decorations; }
 	std::vector<Wall*> GetWalls() const { return walls; }
+	std::list<Weapon*> GetWeapons() const { return weapons; }
 
 	void OnWeaponDrop(Weapon::WeaponStatus weapon, sf::Vector2f pos);
 	void OnWeaponThrow(Weapon::WeaponStatus weapon, sf::Vector2f dir, sf::Vector2f pos);
 
-	void PlayerTryPickUpWeapon();
-	void PlayerPickUpWeapon(Weapon::WeaponStatus weapon);
 
 	// Test Code
 	void SpawnWeapon(Weapon::WeaponType weaponType, sf::Vector2f pos);
@@ -67,6 +68,8 @@ public:
 
 	Bullet* SpawnBullet();
 	void ReturnBullet(Bullet* val);
+
+	void RemoveAllObjPool();
 
 	virtual void Draw(sf::RenderWindow& window);
 };

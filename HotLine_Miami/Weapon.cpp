@@ -74,7 +74,7 @@ void Weapon::FixedUpdate(float dt)
 	{
 		if (weaponSprite.getGlobalBounds().intersects(enemy->GetGlobalBounds()))
 		{
-			enemy->OnHit(weaponStatus, direction);
+			enemy->OnHit(weaponStatus, direction, true);
 		}
 	}
 }
