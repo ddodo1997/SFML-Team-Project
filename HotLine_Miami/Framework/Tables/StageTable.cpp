@@ -41,12 +41,13 @@ bool StageTable::Load()
 		DataEnemy enemyData;
 		enemyData.id = enemy["id"];
 		enemyData.pos = { enemy["x"], enemy["y"] };
+		enemyData.rotation = enemy["rotation"];
 
 		const auto& enemyTypeInfo = ENEMY_TABLE->GetEnemyType(enemy["state"]);
 
 		enemyData.state = enemyTypeInfo.state;
 		enemyData.weaponType = enemyTypeInfo.weaponType;
-
+		
 		for (const auto& waypoint : enemy["waypoint"])
 		{
 			enemyData.waypoints.emplace_back((waypoint["x"] * GetTileSize().x) + GetTileSize().x * 0.5f, (waypoint["y"] * GetTileSize().y) + GetTileSize().y * 0.5f);

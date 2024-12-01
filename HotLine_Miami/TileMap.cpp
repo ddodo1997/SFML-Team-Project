@@ -57,6 +57,7 @@ void TileMap::Init()
 {
 	sortingLayer = SortingLayers::Background;
 	sortingOrder = -1;
+	Variables::isDrawHitBox = true;
 }
 
 void TileMap::Release()
