@@ -139,7 +139,7 @@
     "enemies": [
     {
       "id" : "Enemy_1",
-      "state": "enemy_PN",
+      "state": "enemy_PS",
       "x": 7,
       "y": 7,
       "rotation" : 90,
@@ -150,7 +150,7 @@
     },
     {
       "id" : "Enemy_2",
-      "state": "enemy_NN",
+      "state": "enemy_NM",
       "x": 10,
       "y": 10,
       "rotation" : 0,
@@ -158,7 +158,7 @@
     },
     {
       "id" : "Enemy_3",
-      "state": "enemy_IN",
+      "state": "enemy_IK",
       "x": 10,
       "y": 3,
       "rotation" : 270,
@@ -166,7 +166,7 @@
     },
     {
       "id" : "Enemy_4",
-      "state": "enemy_IN",
+      "state": "enemy_IB",
       "x": 15,
       "y": 10,
       "rotation" : 180,
@@ -174,7 +174,7 @@
     },
     {
       "id" : "Enemy_5",
-      "state": "enemy_IN",
+      "state": "enemy_IS",
       "x": 10,
       "y": 15,
       "rotation" : 270,

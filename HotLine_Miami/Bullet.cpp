@@ -2,7 +2,7 @@
 #include "Bullet.h"
 #include "Player.h"
 #include "Enemy.h"
-#include "Wall.h"
+#include "Wall2.h"
 #include "SceneDev_K.h"
 #include "SceneDevL.h"
 #include "SceneGame.h"

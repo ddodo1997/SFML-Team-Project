@@ -3,7 +3,7 @@
 
 class Player;
 class Enemy;
-class Wall;
+class Wall2;
 
 class Bullet : public GameObject
 {
@@ -23,7 +23,7 @@ protected:
 
 	Owner currentOwner;
 
-	std::vector<Wall*> walls;
+	std::vector<Wall2*> walls;
 
 	Weapon::WeaponStatus weaponStatus;
 public:

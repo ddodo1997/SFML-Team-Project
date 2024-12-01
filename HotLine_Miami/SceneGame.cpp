@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "SceneGame.h"
 #include "StageTable.h"
-#include "Wall.h"
+#include "Wall2.h"
 #include "Decoration.h"
 #include "Enemy.h"
 #include "Weapon.h"
@@ -16,7 +16,6 @@ void SceneGame::Init()
 	player = AddGo(new Player("Player"));
 	tileMap = AddGo(new TileMap("Tile Map"));
 	LoadDecorations();
-	LoadWalls();
 	LoadEnemies();
 
 	Scene::Init();
@@ -24,13 +23,14 @@ void SceneGame::Init()
 
 void SceneGame::Release()
 {
+	Scene::Release();
 }
 
 void SceneGame::Enter()
 {
 	Scene::Enter();
-	SetEnemies();
 	SetWalls();
+	SetEnemies();
 	SetDecorations();
 
 	tileMap->SetTexture(&TEXTURE_MGR.Get(STAGE_TABLE->GetTileTextureId()));
@@ -88,9 +88,8 @@ void SceneGame::LoadWalls()
 	{
 		const DataWall& wallData = WallPair.second;
 
-		Wall* wall = AddGo(new Wall(wallData.id));
+		Wall2* wall = AddGo(new Wall2(wallData.id));
 		walls.push_back(wall);
-		wall->DrawWall(wallData);
 	}
 }
 
@@ -129,7 +128,38 @@ void SceneGame::SetWalls()
 	for (const auto& WallPair : wallTable)
 	{
 		const DataWall& wallData = WallPair.second;
-		walls[i++]->DrawWall(wallData);
+
+		sf::Vector2f start = wallData.start;
+		sf::Vector2f end = wallData.end;
+		
+		if (start.x == end.x)
+		{
+			int yDirection = (start.y < end.y) ? 1 : -1;
+			for (int y = start.y; y != end.y; y += yDirection * 2) 
+			{
+				Wall2* wall = AddGo(new Wall2("Wall_V"));
+				wall->SetScale({ 1.f, 1.f }); 
+				wall->SetPosition({ static_cast<float>(start.x * 16), static_cast<float>(y * 16)  + 16.f});
+				wall->SetTexture(wallData.textureIds[i % wallData.textureIds.size()]);
+				wall->SetOrigin(Origins::MC);
+				walls.push_back(wall);
+				i++;
+			}
+		}
+		else if (start.y == end.y)
+		{
+			int xDirection = (start.x < end.x) ? 1 : -1;
+			for (int x = start.x; x != end.x; x += xDirection * 2)
+			{
+				Wall2* wall = AddGo(new Wall2("Wall_H"));
+				wall->SetScale({ 1.f, 1.f });
+				wall->SetPosition({ static_cast<float>(x * 16) + 16.f, static_cast<float>(start.y * 16) });
+				wall->SetTexture(wallData.textureIds[i % wallData.textureIds.size()]);
+				wall->SetOrigin(Origins::MC);
+				walls.push_back(wall);
+				i++;
+			}
+		}
 	}
 }
 
@@ -156,6 +186,7 @@ void SceneGame::SetEnemies()
 		const DataEnemy& enemyData = enemyPair.second;
 		enemies[i]->SetPosition({(enemyData.pos.x * STAGE_TABLE->GetTileSize().x) + 8.f,  (enemyData.pos.y * STAGE_TABLE->GetTileSize().y) + 8.f});
 		enemies[i]->SetRotation(enemyData.rotation);
+		enemies[i]->SetWeapon(enemyData.weaponType);
 		enemies[i]->SetStatus(enemyData.state);
 		enemies[i]->SetWayPoints(enemyData.waypoints);
 		i++;
@@ -237,7 +268,12 @@ void SceneGame::RemoveAllObjPool()
 		RemoveGo(bullet);
 		bulletPool.Return(bullet);
 	}
+	for (auto wall : walls)
+	{
+		RemoveGo(wall);
+	}
 	activeBullets.clear();
+	walls.clear();
 }
 
 

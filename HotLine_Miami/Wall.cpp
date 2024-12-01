@@ -70,12 +70,12 @@ void Wall::DrawWall(const DataWall& dataWall)
     if (data.start.x == data.end.x)
     {
         length = abs(data.end.y - data.start.y) * STAGE_TABLE->GetTileSize().y;
-        setOrigin(0.f, 0.f);  // 수직 벽의 경우, 상단 기준으로 오리진 설정
+        SetOrigin(Origins::TC);
     }
     else
     {
         length = abs(data.end.x - data.start.x) * STAGE_TABLE->GetTileSize().x;
-        setOrigin(0.f, 0.f);  // 수평 벽의 경우, 좌측 기준으로 오리진 설정
+        SetOrigin(Origins::ML);
     }
 
     sf::Vector2f texSize(textures[0]->getSize().x, textures[0]->getSize().y);

@@ -4,7 +4,7 @@
 struct DataEnemyType
 {
 	std::string id = "";
-	std::string weaponType = "";
+	Weapon::WeaponType weaponType = Weapon::WeaponType::None;
 	Enemy::Status state = Enemy::Status::Normal;
 };
 class EnemyTable : public DataTable
@@ -15,6 +15,13 @@ private:
 		{"Normal", Enemy::Status::Normal},
 		{"Idle", Enemy::Status::Idle},
 		{"Patrol", Enemy::Status::Patrol}
+	};
+	std::unordered_map<std::string, Weapon::WeaponType> stringToWeaponMap = {
+		{"None", Weapon::WeaponType::None},
+		{"Bat", Weapon::WeaponType::Bat},
+		{"Knife", Weapon::WeaponType::Knife},
+		{"Machinegun", Weapon::WeaponType::Machinegun},
+		{"Shotgun", Weapon::WeaponType::Shotgun}
 	};
 public:
 	static DataEnemyType Undefined;
@@ -27,4 +34,5 @@ public:
 
 	const DataEnemyType& GetEnemyType(const std::string& id) const;
 	Enemy::Status StringToEnemyStatus(const std::string& status);
+	Weapon::WeaponType StringToWeaponType(const std::string& type);
 };

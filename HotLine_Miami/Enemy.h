@@ -3,7 +3,7 @@
 
 class Player;
 class SceneGame;
-class Wall;
+class Wall2;
 class Enemy : public GameObject
 {
 public:
@@ -60,7 +60,7 @@ protected:
 	sf::ConvexShape viewAngle;
 
 	Player* player;
-	std::vector<Wall*> walls;
+	std::vector<Wall2*> walls;
 
 	// 각자 테스트 신에 맞추어 Scene형 변환
 	SceneGame* sceneGame;

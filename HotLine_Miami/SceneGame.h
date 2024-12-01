@@ -5,7 +5,7 @@ class TileMapEditor;
 class Player;
 class Enemy;
 class Decoration;
-class Wall;
+class Wall2;
 class Bullet;
 class SceneGame :
     public Scene
@@ -16,7 +16,7 @@ protected:
 
 	std::vector<Enemy*> enemies;
 	std::vector<Decoration*> decorations;
-	std::vector<Wall*> walls;
+	std::vector<Wall2*> walls;
 
 	std::list<Weapon*> weapons;
 	ObjectPool<Weapon> weaponPool;
@@ -45,7 +45,7 @@ public:
 
 	std::vector<Enemy*> GetEnemies() const { return enemies; }
 	std::vector<Decoration*> GetDecorations() const { return decorations; }
-	std::vector<Wall*> GetWalls() const { return walls; }
+	std::vector<Wall2*> GetWalls() const { return walls; }
 
 	void OnWeaponDrop(Weapon::WeaponStatus weapon, sf::Vector2f pos);
 	void OnWeaponThrow(Weapon::WeaponStatus weapon, sf::Vector2f dir, sf::Vector2f pos);

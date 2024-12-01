@@ -186,6 +186,7 @@
     <ClCompile Include="TileMapEditor.cpp" />
     <ClCompile Include="UiHudL.cpp" />
     <ClCompile Include="ViewMgr.cpp" />
+    <ClCompile Include="Wall2.cpp" />
     <ClCompile Include="Weapon.cpp" />
     <ClCompile Include="WeaponTable.cpp" />
     <ClCompile Include="Wall.cpp" />
@@ -231,6 +232,7 @@
     <ClInclude Include="TileMapEditor.h" />
     <ClInclude Include="UiHudL.h" />
     <ClInclude Include="ViewMgr.h" />
+    <ClInclude Include="Wall2.h" />
     <ClInclude Include="Weapon.h" />
     <ClInclude Include="WeaponTable.h" />
     <ClInclude Include="Wall.h" />

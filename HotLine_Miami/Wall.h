@@ -22,6 +22,7 @@ public:
 
 	sf::FloatRect GetLocalBounds() const override;
 	sf::FloatRect GetGlobalBounds() const override;
+
 	void Init() override;
 	void Release() override;
 	void Reset() override;

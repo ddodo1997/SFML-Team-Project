@@ -4,7 +4,7 @@
 #include "Utils.h"
 #include <cmath>
 #include "SceneGame.h"
-#include "Wall.h"
+#include "Wall2.h"
 
 std::mt19937 Utils::generator;
 const float Utils::PI = acosf(-1.f);

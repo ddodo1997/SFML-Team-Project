@@ -19,7 +19,7 @@ bool EnemyTable::Load()
 	{
 		DataEnemyType dataEnemyType;
 		dataEnemyType.id = enemy["id"];
-		dataEnemyType.weaponType = enemy["weapontype"];
+		dataEnemyType.weaponType = StringToWeaponType(enemy["weapontype"]);
 		dataEnemyType.state = StringToEnemyStatus(enemy["state"]);
 
 		table[dataEnemyType.id] = dataEnemyType;
@@ -54,4 +54,15 @@ Enemy::Status EnemyTable::StringToEnemyStatus(const std::string& status)
 	}
 
 	return Enemy::Status();
+}
+
+Weapon::WeaponType EnemyTable::StringToWeaponType(const std::string& type)
+{
+	auto it = stringToWeaponMap.find(type);
+	if (it != stringToWeaponMap.end())
+	{
+		return it->second;
+	}
+
+	return Weapon::WeaponType();
 }

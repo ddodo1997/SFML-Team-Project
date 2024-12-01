@@ -4,7 +4,7 @@
 #include "SceneDevS.h"
 #include "SceneDevL.h"
 #include "Player.h"
-#include "Wall.h"
+#include "Wall2.h"
 #include "Bullet.h"
 #include "SceneGame.h"
 
@@ -86,7 +86,6 @@ void Enemy::Reset()
 	viewAngle.setFillColor(sf::Color::Red);
 
 	SetOrigin(Origins::MC);
-	SetWeapon(Weapon::WeaponType::Bat);
 	SetStatus(Status::Patrol);
 	direction = { 0.f, 0.f };
 	SetPatterns();

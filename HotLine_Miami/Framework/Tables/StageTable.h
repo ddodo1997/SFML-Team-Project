@@ -14,7 +14,7 @@ struct DataEnemy
     std::string id = "";
     sf::Vector2f pos = { 0.f, 0.f };
     float rotation = 0.f;
-    std::string weaponType = "";
+    Weapon::WeaponType weaponType = Weapon::WeaponType::None;
     Enemy::Status state = Enemy::Status::Normal;
     std::vector<sf::Vector2f> waypoints;
 };

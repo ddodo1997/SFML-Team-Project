@@ -88,6 +88,7 @@
     <ClCompile Include="Framework\Tables\WallTable.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="SceneGame.cpp" />
+    <ClCompile Include="Wall2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Framework\Animation\AnimationClip.h">
@@ -189,6 +190,7 @@
     <ClInclude Include="Framework\Tables\WallTable.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="SceneGame.h" />
+    <ClInclude Include="Wall2.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Framework">
