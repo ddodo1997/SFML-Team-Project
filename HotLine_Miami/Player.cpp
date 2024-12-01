@@ -3,6 +3,7 @@
 #include "SceneGame.h"
 #include "Enemy.h"
 #include "Bullet.h"
+#include "Wall.h"
 
 Player::Player(const std::string& name)
 	: GameObject(name)
@@ -78,6 +79,7 @@ void Player::Reset()
 	animatorLeg.SetTarget(&leg);
 	SetOrigin(Origins::MC);
 	sceneGame = (SceneGame*)SCENE_MGR.GetCurrentScene();
+	walls = sceneGame->GetWalls();
 
 	SetWeaponStatus();
 	attackHitBoxCheck.setFillColor(sf::Color::Transparent);
@@ -171,7 +173,7 @@ void Player::Update(float dt)
 			SetScene((SceneGame*)SCENE_MGR.GetCurrentScene());
 		ThrowWeapon(look);
 		weaponStatus.weaponType = Weapon::WeaponType::None;
-		sceneGame->PlayerTryPickUpWeapon();
+		TryPickUpWeapon();
 	}
 
 	SetPosition(position + direction * speed * dt);
@@ -235,11 +237,25 @@ void Player::FixedUpdate(float dt)
 		{
 			if (enemy != nullptr)
 			{
-				if (attackHitBoxCheck.getGlobalBounds().intersects(enemy->GetGlobalBounds()))
+				if (enemy->GetStatus() != Enemy::Status::Die && enemy->GetStatus() != Enemy::Status::Stun)
 				{
-					enemy->OnHit(weaponStatus, look);
+					if (attackHitBoxCheck.getGlobalBounds().intersects(enemy->GetGlobalBounds()))
+					{
+						enemy->OnHit(weaponStatus, look);
+					}
 				}
 			}
+		}
+	}
+
+	for (auto wall : walls)
+	{
+		auto wallBounds = wall->GetGlobalBounds();
+		if (wallBounds.intersects(body.getGlobalBounds()))
+		{
+			auto wall6Points = Utils::Get6Points(wallBounds);
+			auto closetPoint = Utils::FindClosesPoint(wallBounds, wall6Points);
+			auto wallCenter = Utils::GetCenter(wallBounds);
 		}
 	}
 }
@@ -344,6 +360,20 @@ void Player::OnHitByShotgun(sf::Vector2f hitDir)
 	Utils::SetOrigin(body, Origins::MC);
 }
 
+void Player::TryPickUpWeapon()
+{
+	auto weapons = sceneGame->GetWeapons();
+	for (auto weapon : weapons)
+	{
+		if (GetHitBox().rect.getGlobalBounds().intersects(weapon->GetHitBox().rect.getGlobalBounds()))
+		{
+			WeaponPickUp(weapon->GetStatus());
+			weapon->SetActive(false);
+			return;
+		}
+	}
+}
+
 void Player::WeaponPickUp(Weapon::WeaponStatus weapon)
 {
 	weaponStatus = weapon;
@@ -390,7 +420,6 @@ void Player::ThrowWeapon(sf::Vector2f lookDir)
 	weaponStatus.weaponType = Weapon::WeaponType::None;
 	SetWeaponStatus();
 }
-
 
 void Player::DropWeapon(sf::Vector2f hitDir)
 {
@@ -478,7 +507,7 @@ void Player::AttackMachinegun()
 	if (weaponStatus.remainingBullet > 0)
 	{
 		sceneGame->SpawnBullet()->Fire(Utils::AngleSpread(look, 10), this, weaponStatus);
-		weaponStatus.remainingBullet--;
+		//weaponStatus.remainingBullet--;
 		animatorBody.Play("animations/Player/Attack/pAttackMachinegun.json");
 		isAttacking = true;
 	}
@@ -494,7 +523,7 @@ void Player::AttackShotgun()
 	{
 		for (int i = 0; i < 6; i++)
 			sceneGame->SpawnBullet()->Fire(Utils::AngleSpread(look, 10), this, weaponStatus);
-		weaponStatus.remainingBullet--;
+		//weaponStatus.remainingBullet--;
 		animatorBody.Play("animations/Player/Attack/pAttackShotgun.json");
 		isAttacking = true;
 	}

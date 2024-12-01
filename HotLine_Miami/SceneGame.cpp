@@ -8,6 +8,8 @@
 #include "Bullet.h"
 #include "Player.h"
 #include "TileMap.h"
+#include "UiHudL.h"
+
 SceneGame::SceneGame() : Scene(SceneIds::SceneGame)
 {
 }
@@ -15,6 +17,7 @@ void SceneGame::Init()
 {
 	player = AddGo(new Player("Player"));
 	tileMap = AddGo(new TileMap("Tile Map"));
+	uiHud = AddGo(new UiHudL());
 	LoadDecorations();
 	LoadEnemies();
 
@@ -49,12 +52,100 @@ void SceneGame::Exit()
 	Scene::Exit();
 }
 
+void SceneGame::RemovePoolObjects()
+{
+	for (auto weapon : weapons)
+	{
+		RemoveGo(weapon);
+		weaponPool.Return(weapon);
+	}
+	weapons.clear();
+
+	for (auto bullet : activeBullets)
+	{
+		RemoveGo(bullet);
+		bulletPool.Return(bullet);
+	}
+	activeBullets.clear();
+
+}
+
+void SceneGame::ClearInactivePoolObjects()
+{
+	auto weapon = weapons.begin();
+	while (weapon != weapons.end())
+	{
+		if (!(*weapon)->IsActive())
+		{
+			weaponPool.Return(*weapon);
+			RemoveGo(*weapon);
+			weapon = weapons.erase(weapon);
+		}
+		else
+		{
+			weapon++;
+		}
+	}
+	auto bullet = activeBullets.begin();
+	while (bullet != activeBullets.end())
+	{
+		if (!(*bullet)->IsActive())
+		{
+			bulletPool.Return(*bullet);
+			RemoveGo(*bullet);
+			bullet = activeBullets.erase(bullet);
+		}
+		else
+		{
+			bullet++;
+		}
+	}
+}
+
 void SceneGame::Update(float dt)
 {
-	worldView.setCenter(player->GetPosition());
-	if (InputMgr::GetKeyDown(sf::Keyboard::R))
-		SCENE_MGR.ChangeScene(SceneIds::SceneGame);
 	Scene::Update(dt);
+
+	Weapon::WeaponType tempIndex = Weapon::WeaponType::Bat;
+	if (InputMgr::GetKeyDown(sf::Keyboard::Numpad0))
+	{
+		player->OnHit(WEAPON_TABLE->Get(tempIndex), directionXY);
+	}
+	if (InputMgr::GetKeyDown(sf::Keyboard::Numpad1))
+	{
+		tempIndex = Weapon::WeaponType::Knife;
+		player->OnHit(WEAPON_TABLE->Get(tempIndex), directionXY);
+	}
+	if (InputMgr::GetKeyDown(sf::Keyboard::Numpad2))
+	{
+		tempIndex = Weapon::WeaponType::Machinegun;
+		player->OnHit(WEAPON_TABLE->Get(tempIndex), directionXY);
+	}
+	if (InputMgr::GetKeyDown(sf::Keyboard::Numpad3))
+	{
+		tempIndex = Weapon::WeaponType::Shotgun;
+		player->OnHit(WEAPON_TABLE->Get(tempIndex), directionXY);
+	}
+	if (InputMgr::GetKeyDown(sf::Keyboard::R))
+	{
+		player->Reset();
+	}
+	if (InputMgr::GetKey(sf::Keyboard::Numpad7))
+	{
+		directionX -= 1.f;
+	}
+	if (InputMgr::GetKey(sf::Keyboard::Numpad8))
+	{
+		directionX += 1.f;
+	}
+	if (InputMgr::GetKey(sf::Keyboard::Numpad4))
+	{
+		directionY -= 1.f;
+	}
+	if (InputMgr::GetKey(sf::Keyboard::Numpad5))
+	{
+		directionY += 1.f;
+	}
 
 	float randPosX = Utils::RandomRange(20.f, 200.f);
 	float randPosY = Utils::RandomRange(10.f, 80.f);
@@ -75,8 +166,29 @@ void SceneGame::Update(float dt)
 		SpawnWeapon(Weapon::WeaponType::Shotgun, sf::Vector2f(randPosX, randPosY));
 	}
 
+	if (InputMgr::GetKeyDown(sf::Keyboard::F9))
+	{
+		Variables::isDrawHitBox = !Variables::isDrawHitBox;
+	}
 
+	if (std::fabs(directionX) > 1000.f)
+	{
+		directionX = 0;
+	}
+	if (std::fabs(directionY) > 1000.f)
+	{
+		directionY = 0;
+	}
 
+	directionXY = { directionX, directionY };
+
+	uiHud->UpdateHitDir(directionXY);
+	uiHud->UpdateWeaponStatus(player->GetWeaponStatus(), player->GetRemainingBullet());
+
+	worldView.setCenter(player->GetPosition());
+	FRAMEWORK.GetWindow().setView(worldView);
+
+	ClearInactivePoolObjects();
 }
 
 
@@ -217,6 +329,7 @@ void SceneGame::OnWeaponThrow(Weapon::WeaponStatus weapon, sf::Vector2f dir, sf:
 	AddGo(newWeapon);
 }
 
+<<<<<<< HEAD
 void SceneGame::PlayerTryPickUpWeapon()
 {
 	for (auto weapon : weapons)
@@ -236,6 +349,8 @@ void SceneGame::PlayerPickUpWeapon(Weapon::WeaponStatus weapon)
 {
 	player->WeaponPickUp(weapon);
 }
+=======
+>>>>>>> 79b2384d25d2bf1a95275259d55393d57ec1df79
 
 void SceneGame::SpawnWeapon(Weapon::WeaponType weaponType, sf::Vector2f pos)
 {

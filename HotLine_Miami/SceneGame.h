@@ -1,5 +1,6 @@
 #pragma once
 #include "Scene.h"
+
 class TileMap;
 class TileMapEditor;
 class Player;
@@ -7,12 +8,19 @@ class Enemy;
 class Decoration;
 class Wall2;
 class Bullet;
+class UiHudL;
+
 class SceneGame :
     public Scene
 {
 protected:
 	Player* player;
 	TileMap* tileMap;
+	UiHudL* uiHud;
+
+	sf::Vector2f directionXY;
+	float directionX = 0.f;
+	float directionY = 0.f;
 
 	std::vector<Enemy*> enemies;
 	std::vector<Decoration*> decorations;
@@ -31,6 +39,8 @@ public:
 
 	virtual void Enter();
 	virtual void Exit();
+	void RemovePoolObjects();
+	void ClearInactivePoolObjects();
 
 	virtual void Update(float dt);
 
@@ -45,15 +55,18 @@ public:
 
 	std::vector<Enemy*> GetEnemies() const { return enemies; }
 	std::vector<Decoration*> GetDecorations() const { return decorations; }
+<<<<<<< HEAD
 	std::vector<Wall2*> GetWalls() const { return walls; }
 
 	const std::list<Weapon*>& GetActiveWeapons() const { return weapons; }
+=======
+	std::vector<Wall*> GetWalls() const { return walls; }
+	std::list<Weapon*> GetWeapons() const { return weapons; }
+>>>>>>> 79b2384d25d2bf1a95275259d55393d57ec1df79
 
 	void OnWeaponDrop(Weapon::WeaponStatus weapon, sf::Vector2f pos);
 	void OnWeaponThrow(Weapon::WeaponStatus weapon, sf::Vector2f dir, sf::Vector2f pos);
 
-	void PlayerTryPickUpWeapon();
-	void PlayerPickUpWeapon(Weapon::WeaponStatus weapon);
 
 	// Test Code
 	void SpawnWeapon(Weapon::WeaponType weaponType, sf::Vector2f pos);

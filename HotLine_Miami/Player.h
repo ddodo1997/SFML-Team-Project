@@ -4,6 +4,7 @@
 class SceneGame;
 class Weapon;
 class Enemy;
+class Wall;
 
 class Player : public GameObject
 {
@@ -20,6 +21,7 @@ protected:
 	float attackTimer;
 
 	SceneGame* sceneGame;
+	std::vector<Wall*> walls;
 
 	sf::Sprite body;
 	sf::Sprite leg;
@@ -81,6 +83,7 @@ public:
 	sf::FloatRect GetGlobalBounds() { return leg.getGlobalBounds(); }
 	sf::FloatRect GetLocalBounds() { return leg.getLocalBounds(); }
 
+	void TryPickUpWeapon();
 	void WeaponPickUp(Weapon::WeaponStatus weapon);
 	void SetWeaponStatus();
 	void SetRemainingBullet(int remainingBullet) { weaponStatus.remainingBullet = remainingBullet; }

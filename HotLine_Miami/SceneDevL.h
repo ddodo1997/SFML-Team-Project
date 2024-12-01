@@ -33,7 +33,7 @@ protected:
 	//ObjectPool<Enemy> enemyPool;
 
 	ObjectPool<Bullet> bulletPool;
-	std::list<Bullet*> bullets;
+	std::list<Bullet*> activeBullets;
 
 	TileMap* tileMap;
 	std::vector<Decoration*> decorations;
