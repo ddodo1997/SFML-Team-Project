@@ -74,7 +74,13 @@ void Weapon::FixedUpdate(float dt)
 	{
 		if (weaponSprite.getGlobalBounds().intersects(enemy->GetGlobalBounds()) && !enemy->isDie() && !enemy->isStun())
 		{
+			onThrowTimer = 0.f;
 			enemy->OnHit(weaponStatus, direction, true);
+			if (weaponStatus.weaponType == WeaponType::Knife)
+			{
+				scenePointer->ReturnWeapon(this);
+			}
+				
 		}
 	}
 }
@@ -124,7 +130,7 @@ void Weapon::SetScale(const sf::Vector2f& scale)
 void Weapon::SetStatus(const WeaponStatus& status)
 {
 	this->weaponStatus = status;
-	weaponSprite.setTexture(TEXTURE_MGR.Get(weaponStatus.textureId));
+	weaponSprite.setTexture(TEXTURE_MGR.Get(weaponStatus.textureId), true);
 	SetScale({ 1.f, 1.f });
 	SetOrigin(Origins::MC);
 }
@@ -159,7 +165,7 @@ void Weapon::OnHitWall()
 void Weapon::SetWeaponType(WeaponType type)
 {
 	weaponStatus = WEAPON_TABLE->Get(type);
-	weaponSprite.setTexture(TEXTURE_MGR.Get(weaponStatus.textureId));
+	weaponSprite.setTexture(TEXTURE_MGR.Get(weaponStatus.textureId), true);
 }
 
 Weapon::WeaponType Weapon::GetWeaponType()

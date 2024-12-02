@@ -421,8 +421,6 @@ void Enemy::FixedUpdate(float dt)
 		}
 	}
 
-
-
 	if (viewAngle.getGlobalBounds().intersects(player->GetHitBox().rect.getGlobalBounds()) && currentStatus != Status::Aggro && weaponStatus.weaponType != Weapon::WeaponType::None)
 		if (!Utils::RayCast(position, direction, viewAngle.getLocalBounds().width, player))
 			SetStatus(Status::Aggro);

@@ -5,6 +5,7 @@ class SceneGame;
 class Weapon;
 class Enemy;
 class Wall2;
+class Decoration;
 
 class Player : public GameObject
 {
@@ -22,6 +23,7 @@ protected:
 
 	SceneGame* sceneGame;
 	std::vector<Wall2*> walls;
+	std::vector<Decoration*> decorations;
 
 	sf::Sprite body;
 	sf::Sprite leg;
