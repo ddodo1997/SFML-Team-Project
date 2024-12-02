@@ -51,7 +51,8 @@ public:
 		SearchWeapon,
 		Stun,
 		GetUp,
-		Die
+		Die,
+		Pounded
 	};
 
 
@@ -119,6 +120,7 @@ public:
 	void UpdateStun(float dt);
 	void UpdateGetUp(float dt);
 	void UpdateDie(float dt);
+	void UpdatePounded(float dt);
 
 	void FixedUpdate(float dt) override;
 
@@ -130,6 +132,7 @@ public:
 	void Draw(sf::RenderWindow& window) override;
 
 	Status GetStatus() const { return currentStatus; }
+	sf::Vector2f GetDirection() const { return direction; }
 
 	void PickupWeapon(Weapon* weapon);
 	void OnHit(Weapon::WeaponStatus weaponStatus, sf::Vector2f direction, bool isThrow = false);

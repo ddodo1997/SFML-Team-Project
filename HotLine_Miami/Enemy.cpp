@@ -86,7 +86,7 @@ void Enemy::Reset()
 	viewAngle.setPoint(0, { 0.f, 0.f });
 	viewAngle.setPoint(1, { 100.f, -10.f });
 	viewAngle.setPoint(2, { 100.f, 10.f });
-	viewAngle.setFillColor(sf::Color::Red);
+	viewAngle.setFillColor(sf::Color(255,0,0,140));
 	weaponSearchRange.setRadius(30.f);
 	SetOrigin(Origins::MC);
 	SetStatus(Status::Patrol);
@@ -161,6 +161,9 @@ void Enemy::Update(float dt)
 		break;
 	case Status::Die:
 		UpdateDie(dt);
+		break;
+	case Status::Pounded:
+		UpdatePounded(dt);
 		break;
 	}
 
@@ -346,9 +349,14 @@ void Enemy::UpdateDie(float dt)
 	speed -= dt * 300;
 }
 
+void Enemy::UpdatePounded(float dt)
+{
+	speed = 0.f;
+}
+
 void Enemy::FixedUpdate(float dt)
 {
-	if (isDie() || currentStatus == Status::Stun || currentStatus == Status::GetUp)
+	if (isDie() || currentStatus == Status::Stun || currentStatus == Status::GetUp || currentStatus == Status::Pounded)
 		return;
 
 	for (auto wall : walls)
@@ -536,6 +544,10 @@ void Enemy::SetStatus(Status stat)
 		break;
 	case Status::Die:
 		animatorBody.Play("animations/Enemy/enemy_back_bashed.json");
+		isWalking = false;
+		break;
+	case Status::Pounded:
+		animatorBody.Play("animations/Enemy/enemy_stun.json");
 		isWalking = false;
 		break;
 	}

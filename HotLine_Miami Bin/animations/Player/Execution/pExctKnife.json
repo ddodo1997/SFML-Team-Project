@@ -1,0 +1,17 @@
+{
+    "ID": "pExctKnife",
+    "LoopType": 0,
+    "FPS": 20,
+    "texId": "graphics/player/Attack/Pound/sprPKnifeKill_sheet.png",
+    "Frames":
+    [
+        [0,0,68,60],
+        [68,0,68,60],
+        [136,0,68,60],
+        [204,0,68,60],
+        [272,0,68,60],
+        [340,0,68,60],
+        [408,0,68,60],
+        [476,0,68,60]
+    ]
+}

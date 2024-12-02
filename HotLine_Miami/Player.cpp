@@ -65,7 +65,7 @@ void Player::Init()
 
 void Player::Release()
 {
-
+	executingEnemy = nullptr;
 }
 
 void Player::Reset()
@@ -83,7 +83,8 @@ void Player::Reset()
 	walls = sceneGame->GetWalls();
 	decorations = sceneGame->GetDecorations();
 
-	SetWeaponStatus();
+	weaponStatus.weaponType = Weapon::WeaponType::None;
+	weaponStatus = WEAPON_TABLE->Get(weaponStatus.weaponType);
 	attackHitBoxCheck.setFillColor(sf::Color::Transparent);
 	attackHitBoxCheck.setOutlineColor(sf::Color::Green);
 	attackHitBoxCheck.setOutlineThickness(1.f);
@@ -113,6 +114,22 @@ void Player::Update(float dt)
 	{
 		isMoving = false;
 		UpdateOnDie(dt);
+		return;
+	}
+
+	if (isOnPound)
+	{
+		
+		if (executionCount > 0)
+		{
+			UpdateExecution(dt);
+		}
+		else
+		{
+			executingEnemy->SetStatus(Enemy::Status::Die);
+			executingEnemy = nullptr;
+			isOnPound = false;
+		}
 		return;
 	}
 
@@ -177,11 +194,15 @@ void Player::Update(float dt)
 		weaponStatus.weaponType = Weapon::WeaponType::None;
 		TryPickUpWeapon();
 	}
+	if (InputMgr::GetKeyDown(sf::Keyboard::Space))
+	{
+		if (sceneGame == nullptr)
+			SetScene((SceneGame*)SCENE_MGR.GetCurrentScene());
+		TryExecute();
+	}
 
 	SetPosition(position + direction * speed * dt);
 	hitBox.UpdateTr(body, body.getLocalBounds());
-
-
 }
 
 void Player::UpdateBodyAnimationMoving()
@@ -229,6 +250,95 @@ void Player::UpdateBodyAnimationMoving()
 		animatorBody.Play("animations/Player/pBodyAni_Shotgun.json");
 		body.setScale(1.f, 1.f);
 		break;
+	}
+}
+
+void Player::UpdateExecution(float dt)
+{
+	switch (weaponStatus.weaponType)
+	{
+	case Weapon::WeaponType::None:
+		UpdateExecutionDefualt(dt);
+		break;
+	case Weapon::WeaponType::Bat:
+		UpdateExecutionBat(dt);
+		break;
+	case Weapon::WeaponType::Knife:
+		UpdateExecutionKnife(dt);
+		break;
+	} 	
+}
+
+void Player::UpdateExecutionDefualt(float dt)
+{
+	if (isExecuting)
+	{
+		if (executionTimer > 0)
+		{
+			executionTimer -= dt;
+			executionTimer = Utils::Clamp(executionTimer, 0.f, 10.f);
+			animatorBody.Play("animations/Player/Execution/pExctDefault.json");
+		}
+		else
+		{
+			executionCount--;
+			// + 피 튀는 이펙트 재생?
+		}
+	}
+	else
+	{
+		executionTimer = 10.f;
+		animatorBody.Play("animations/Player/Execution/pExctDefault.json");
+		if (InputMgr::GetKeyDown(sf::Keyboard::Space))
+		{
+			isExecuting = true;
+			executionTimer = 0.4f;
+		}
+	}
+}
+
+void Player::UpdateExecutionBat(float dt)
+{
+	if (isExecuting)
+	{
+		if (executionTimer > 0)
+		{
+			executionTimer -= dt;
+			executionTimer = Utils::Clamp(executionTimer, 0.f, 10.f);
+			animatorBody.Play("animations/Player/Execution/pExctBat.json");
+		}
+		else
+		{
+			executionCount--;
+			// + 피 튀는 이펙트 재생?
+		}
+	}
+	else
+	{
+		executionTimer = 10.f;
+		animatorBody.Play("animations/Player/Execution/pExctBat.json");
+		if (InputMgr::GetKeyDown(sf::Keyboard::Space))
+		{
+			isExecuting = true;
+			executionTimer = 0.4f;
+		}
+	}
+}
+
+void Player::UpdateExecutionKnife(float dt)
+{
+	if (isExecuting)
+	{
+		if (executionTimer > 0)
+		{
+			executionTimer -= dt;
+			executionTimer = Utils::Clamp(executionTimer, 0.f, 10.f);
+			animatorBody.Play("animations/Player/Execution/pExctKnife.json");
+		}
+		else
+		{
+			executionCount--;
+		}
 	}
 }
 
@@ -480,7 +590,7 @@ void Player::ThrowWeapon(sf::Vector2f lookDir)
 		return;
 	sceneGame->OnWeaponThrow(weaponStatus, lookDir, position);
 	weaponStatus.weaponType = Weapon::WeaponType::None;
-	SetWeaponStatus();
+	weaponStatus = WEAPON_TABLE->Get(weaponStatus.weaponType);
 }
 
 void Player::DropWeapon(sf::Vector2f hitDir)
@@ -489,12 +599,80 @@ void Player::DropWeapon(sf::Vector2f hitDir)
 		return;
 	sceneGame->OnWeaponDrop(weaponStatus, position);
 	weaponStatus.weaponType = Weapon::WeaponType::None;
-	SetWeaponStatus();
+	weaponStatus = WEAPON_TABLE->Get(weaponStatus.weaponType);
 }
 
-void Player::DropWeapon()
+void Player::TryExecute()
 {
+	std::vector<Enemy*> enemies = sceneGame->GetEnemies();
 
+	for (auto enemy : enemies)
+	{
+		if (enemy->GetStatus() == Enemy::Status::Stun)
+		{
+			if (GetHitBox().rect.getGlobalBounds().intersects(enemy->GetHitBox().rect.getGlobalBounds()))
+			{
+				enemy->SetStatus(Enemy::Status::Pounded); // 요기에 처형으로 잡은건지 전달 // Status 추가로
+				look = enemy->GetDirection();
+				SetPosition(enemy->GetPosition());
+				executingEnemy = enemy;
+				Execute();
+			}
+		}
+	}
+}
+
+void Player::Execute()
+{
+	switch (weaponStatus.weaponType)
+	{
+	case Weapon::WeaponType::None:
+		ExecuteDefault();
+		break;
+	case Weapon::WeaponType::Bat:
+		ExecuteBat();
+		break;
+	case Weapon::WeaponType::Knife:
+		ExecuteKnife();
+		break;
+	case Weapon::WeaponType::Machinegun:
+		ExecuteMachinegun();
+		break;
+	case Weapon::WeaponType::Shotgun:
+		ExecuteShotgun();
+		break;
+	}
+	isOnPound = true;
+	executionTimer = 0.4f;
+}
+
+void Player::ExecuteDefault()
+{
+	executionCount = Utils::RandomRange(3,4);
+}
+
+void Player::ExecuteBat()
+{
+	executionCount = 2;
+}
+
+void Player::ExecuteKnife()
+{
+	executionCount = 1;
+	isExecuting = true;
+	executionTimer = 0.4f;
+}
+
+void Player::ExecuteMachinegun()
+{
+	DropWeapon();
+	ExecuteDefault();
+}
+
+void Player::ExecuteShotgun()
+{
+	DropWeapon();
+	ExecuteDefault();
 }
 
 void Player::Attack()

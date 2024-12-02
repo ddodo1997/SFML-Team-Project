@@ -1,0 +1,17 @@
+{
+    "ID": "pExctBat",
+    "LoopType": 0,
+    "FPS": 20,
+    "texId": "graphics/player/Attack/Pound/sprPBatKill_sheet.png",
+    "Frames":
+    [
+        [0,0,60,60],
+        [60,0,60,60],
+        [120,0,60,60],
+        [180,0,60,60],
+        [240,0,60,60],
+        [300,0,60,60],
+        [360,0,60,60],
+        [420,0,60,60]
+    ]
+}

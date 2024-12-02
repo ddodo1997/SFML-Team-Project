@@ -24,6 +24,7 @@ protected:
 	SceneGame* sceneGame;
 	std::vector<Wall2*> walls;
 	std::vector<Decoration*> decorations;
+	Enemy* executingEnemy;
 
 	sf::Sprite body;
 	sf::Sprite leg;
@@ -46,6 +47,11 @@ protected:
 
 	bool isFlipped = false;
 	bool isAttacking = false;
+	
+	bool isOnPound = false;
+	bool isExecuting = false;
+	float executionTimer = 0.f;
+	int executionCount = 0;
 	
 	std::map<std::string, AnimationClip> aniClipMap;
 
@@ -71,6 +77,12 @@ public:
 	void Reset() override;
 	void Update(float dt) override;
 	void UpdateBodyAnimationMoving();
+	void UpdateExecution(float dt);
+
+	void UpdateExecutionDefualt(float dt);
+	void UpdateExecutionBat(float dt);
+	void UpdateExecutionKnife(float dt);
+
 	void FixedUpdate(float dt) override;
 	void UpdateOnDie(float dt);
 
@@ -95,7 +107,15 @@ public:
 	
 	void ThrowWeapon(sf::Vector2f lookDir);
 	void DropWeapon(sf::Vector2f hitDir = {0.f,0.f});
-	void DropWeapon();
+
+	void TryExecute();
+	void Execute();
+
+	void ExecuteDefault();
+	void ExecuteBat();
+	void ExecuteKnife();
+	void ExecuteMachinegun();
+	void ExecuteShotgun();
 
 	void Attack();
 
