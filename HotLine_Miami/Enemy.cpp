@@ -65,7 +65,7 @@ void Enemy::SetOrigin(const sf::Vector2f& newOrigin)
 void Enemy::Init()
 {
 	sortingLayer = SortingLayers::Foreground;
-	sortingOrder = 3;
+	sortingOrder = 0;
 }
 
 void Enemy::Release()

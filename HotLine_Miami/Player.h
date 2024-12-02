@@ -16,6 +16,12 @@ public:
 		std::string move;
 	};
 
+	enum class Mask
+	{
+
+
+	};
+
 protected:
 	Weapon::WeaponStatus weaponStatus;
 

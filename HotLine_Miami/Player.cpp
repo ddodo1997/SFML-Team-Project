@@ -71,6 +71,10 @@ void Player::Release()
 void Player::Reset()
 {
 	isAlive = true;
+	isOnPound = false;
+	isExecuting = false;
+	executionTimer = 10.f;
+	executionCount = 10;
 	speed = 100.f;
 	onDieSpeed = 100.f;
 	onDieEffectAccumTime = 0.6f;
@@ -83,12 +87,14 @@ void Player::Reset()
 	walls = sceneGame->GetWalls();
 	decorations = sceneGame->GetDecorations();
 
-	weaponStatus.weaponType = Weapon::WeaponType::None;
-	weaponStatus = WEAPON_TABLE->Get(weaponStatus.weaponType);
 	attackHitBoxCheck.setFillColor(sf::Color::Transparent);
 	attackHitBoxCheck.setOutlineColor(sf::Color::Green);
 	attackHitBoxCheck.setOutlineThickness(1.f);
 	Utils::SetOrigin(attackHitBoxCheck, Origins::ML);
+
+	weaponStatus.weaponType = Weapon::WeaponType::None;
+	weaponStatus = WEAPON_TABLE->Get(weaponStatus.weaponType);
+	attackHitBoxCheck.setSize({ weaponStatus.hitBoxWidth, weaponStatus.hitBoxHeight });
 }
 
 void Player::Update(float dt)
@@ -117,6 +123,9 @@ void Player::Update(float dt)
 		return;
 	}
 
+	animatorBody.Update(dt);
+	animatorLeg.Update(dt);
+
 	if (isOnPound)
 	{
 		
@@ -133,8 +142,6 @@ void Player::Update(float dt)
 		return;
 	}
 
-	animatorBody.Update(dt);
-	animatorLeg.Update(dt);
 		
 	direction.x = InputMgr::GetAxis(Axis::Horizontal);
 	direction.y = InputMgr::GetAxis(Axis::Vertical);
@@ -277,11 +284,12 @@ void Player::UpdateExecutionDefualt(float dt)
 		{
 			executionTimer -= dt;
 			executionTimer = Utils::Clamp(executionTimer, 0.f, 10.f);
-			animatorBody.Play("animations/Player/Execution/pExctDefault.json");
+			//animatorBody.Play("animations/Player/Execution/pExctDefault.json");
 		}
 		else
 		{
 			executionCount--;
+			isExecuting = false;
 			// + ÇÇ Æ¢´Â ÀÌÆåÆ® Àç»ý?
 		}
 	}
@@ -289,7 +297,7 @@ void Player::UpdateExecutionDefualt(float dt)
 	{
 		executionTimer = 10.f;
 		animatorBody.Play("animations/Player/Execution/pExctDefault.json");
-		if (InputMgr::GetKeyDown(sf::Keyboard::Space))
+		if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
 		{
 			isExecuting = true;
 			executionTimer = 0.4f;
@@ -305,11 +313,12 @@ void Player::UpdateExecutionBat(float dt)
 		{
 			executionTimer -= dt;
 			executionTimer = Utils::Clamp(executionTimer, 0.f, 10.f);
-			animatorBody.Play("animations/Player/Execution/pExctBat.json");
+			//animatorBody.Play("animations/Player/Execution/pExctBat.json");
 		}
 		else
 		{
 			executionCount--;
+			isExecuting = false;
 			// + ÇÇ Æ¢´Â ÀÌÆåÆ® Àç»ý?
 		}
 	}
@@ -317,7 +326,7 @@ void Player::UpdateExecutionBat(float dt)
 	{
 		executionTimer = 10.f;
 		animatorBody.Play("animations/Player/Execution/pExctBat.json");
-		if (InputMgr::GetKeyDown(sf::Keyboard::Space))
+		if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
 		{
 			isExecuting = true;
 			executionTimer = 0.4f;
@@ -333,11 +342,12 @@ void Player::UpdateExecutionKnife(float dt)
 		{
 			executionTimer -= dt;
 			executionTimer = Utils::Clamp(executionTimer, 0.f, 10.f);
-			animatorBody.Play("animations/Player/Execution/pExctKnife.json");
+			//animatorBody.Play("animations/Player/Execution/pExctKnife.json");
 		}
 		else
 		{
 			executionCount--;
+			isExecuting = false;
 		}
 	}
 }
@@ -447,7 +457,7 @@ void Player::Draw(sf::RenderWindow& window)
 	{
 
 	}
-	else if (isMoving)
+	else if (isMoving && !isOnPound)
 		window.draw(leg);
 	window.draw(body);
 	hitBox.Draw(window);
@@ -649,11 +659,13 @@ void Player::Execute()
 void Player::ExecuteDefault()
 {
 	executionCount = Utils::RandomRange(3,4);
+	isExecuting = false;
 }
 
 void Player::ExecuteBat()
 {
 	executionCount = 2;
+	isExecuting = false;
 }
 
 void Player::ExecuteKnife()
@@ -661,6 +673,7 @@ void Player::ExecuteKnife()
 	executionCount = 1;
 	isExecuting = true;
 	executionTimer = 0.4f;
+	animatorBody.Play("animations/Player/Execution/pExctKnife.json");
 }
 
 void Player::ExecuteMachinegun()
