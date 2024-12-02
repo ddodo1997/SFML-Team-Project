@@ -3,6 +3,7 @@
 #include "SceneGame.h"
 #include "Enemy.h"
 #include "Bullet.h"
+#include "Wall.h"
 #include "Wall2.h"
 #include "Decoration.h"
 

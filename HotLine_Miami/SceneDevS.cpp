@@ -28,7 +28,7 @@ void SceneDevS::Enter()
 {
 	Scene::Enter();
 	tileMap->SetTexture(&TEXTURE_MGR.Get(STAGE_TABLE->GetTileTextureId()));
-	tileMap->InitializeEmpty(STAGE_TABLE->GetTileSize(), {40, 40});
+	tileMap->InitializeEmpty(STAGE_TABLE->GetTileSize(), { 40, 40 });
 	//tileMap->Initialize(STAGE_TABLE->GetTileSize(), STAGE_TABLE->GetTileCount(), STAGE_TABLE->GetFloorTiles());
 	// SetStatusEnemies();
 	worldView.setSize(windowSize * zoomNoun);
@@ -56,11 +56,11 @@ void SceneDevS::Update(float dt)
 	worldView.move(cameraSpeed * direction);
 
 	float wheelDelta = InputMgr::GetMouseWheelDelta();
-	
+
 
 	if (wheelDelta > 0)
 	{
-		zoomNoun -= 0.1f; 
+		zoomNoun -= 0.1f;
 	}
 	else if (wheelDelta < 0)
 	{
@@ -71,11 +71,27 @@ void SceneDevS::Update(float dt)
 
 	worldView.setSize(windowSize * zoomNoun);
 
-	sf::Vector2i mousePos = InputMgr::GetMousePosition();
-	if (InputMgr::GetMouseButton(sf::Mouse::Left))
+	if (InputMgr::GetKeyDown(sf::Keyboard::Num1))
 	{
-		sf::Vector2f worldPos = ScreenToWorld(mousePos);
-		tileMap->PaintTile(worldPos, tileMapEditor->GetSelectedTileIndex());
+		tileMapEditor->SetMode(TileMapEditor::EditorMode::TileMode);
+	}
+	if (InputMgr::GetKeyDown(sf::Keyboard::Num2))
+	{
+		tileMapEditor->SetMode(TileMapEditor::EditorMode::WallMode);
+	}
+
+	sf::Vector2i mousePos = InputMgr::GetMousePosition();
+	if (tileMapEditor->GetMode() == TileMapEditor::EditorMode::TileMode)
+	{
+		if (InputMgr::GetMouseButton(sf::Mouse::Left))
+		{
+			sf::Vector2f worldPos = ScreenToWorld(mousePos);
+			tileMap->PaintTile(worldPos, tileMapEditor->GetSelectedTileIndex());
+		}
+	}
+	else if (tileMapEditor->GetMode() == TileMapEditor::EditorMode::WallMode)
+	{
+
 	}
 	if (InputMgr::GetKeyDown(sf::Keyboard::Delete))
 	{

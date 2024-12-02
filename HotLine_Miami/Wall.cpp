@@ -8,6 +8,19 @@ Wall::Wall(const std::string& name)
 {
 }
 
+void Wall::SetOrigin(Origins preset)
+{
+    originPreset = preset;
+    if (originPreset != Origins::Custom)
+    {
+        sf::FloatRect rect = GetGlobalBounds();
+        origin.x = rect.width * ((int)preset % 3) * 0.5f;
+        origin.y = rect.height * ((int)preset / 3) * 0.5f;
+    }
+    this->setOrigin({ origin.x, origin.y });
+
+}
+
 void Wall::Init()
 {
     sortingLayer = SortingLayers::Foreground;
@@ -32,7 +45,6 @@ void Wall::Update(float dt)
 
 void Wall::Draw(sf::RenderWindow& window)
 {
-    // 적용된 변환 정보와 텍스처로 벽을 그립니다.
     sf::RenderStates states;
     states.transform = getTransform();
     for (int i = 0; i < va.getVertexCount(); i += 4)

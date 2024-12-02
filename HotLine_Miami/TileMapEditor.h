@@ -2,15 +2,28 @@
 
 class TileMapEditor : public GameObject
 {
+public:
+	enum class EditorMode
+	{
+		TileMode,
+		WallMode,
+		DecorationMode,
+		EnemyMode,
+	};
 protected:
 	sf::Texture* texture = nullptr;
 	sf::VertexArray tileSelector;
 	sf::Sprite selectedTileSprite;
 	std::string tileMapTexId = "graphics/Map/Tiles/tlFloorTiles.png";
-
-	sf::RectangleShape background;
-
 	int selectedTileIndex = -1;
+
+	std::unordered_map<std::string, sf::Sprite> wallSprites;
+	sf::Sprite selectedWallSprite;
+	std::string selectedWallTextureId = "";
+
+
+	EditorMode currentMode;
+	sf::RectangleShape background;
 public:
 	TileMapEditor(const std::string& name = "");
 	~TileMapEditor() = default;
@@ -26,11 +39,20 @@ public:
 	void Release() override;
 	void Reset() override;
 	void Update(float dt) override;
+	void UpdateTileMode(float dt);
+	void UpdateWallMode(float dt);
+	void UpdateDecoMode(float dt);
+	void UpdateEnemyMode(float dt);
+	void UpdateSelectedSpritePosition();
 	void Draw(sf::RenderWindow& window) override;
 
 	int GetSelectTileIndex(const sf::Vector2f& position);
 	bool IsInTileSelectArea(const sf::Vector2f& position) const;
 	void SetSelectTileIndex(int index);
-
 	int GetSelectedTileIndex() const { return selectedTileIndex; }
+
+	void SetSelectWall(std::pair<std::string, sf::Sprite> wall);
+
+	void SetMode(EditorMode mode);
+	EditorMode GetMode() const { return currentMode; }
 };
