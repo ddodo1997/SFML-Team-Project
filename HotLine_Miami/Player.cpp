@@ -20,6 +20,7 @@ void Player::SetPosition(const sf::Vector2f& pos)
 	body.setPosition(position);
 	leg.setPosition(position);
 	noiseCircle.setPosition(position);
+	collisionBox.setPosition(position);
 }
 
 void Player::SetRotation(float angle)
@@ -86,6 +87,8 @@ void Player::Reset()
 	walls = sceneGame->GetWalls();
 	decorations = sceneGame->GetDecorations();
 	enemies = sceneGame->GetEnemies();
+	collisionBox.setSize({ 10.f,10.f });
+	Utils::SetOrigin(collisionBox, Origins::MC);
 	SetWeaponStatus();
 	noiseCircle.setRadius(weaponStatus.noiseRadius);
 	attackHitBoxCheck.setFillColor(sf::Color::Transparent);
@@ -257,69 +260,25 @@ void Player::FixedUpdate(float dt)
 		}
 	}
 
-	float leftpos = position.x - body.getScale().x * body.getTexture()->getSize().x * 0.5f;
-	float rightpos = position.x + body.getScale().x * 0.5f;
-
 	for (auto wall : walls)
 	{
 		auto wallBounds = wall->GetGlobalBounds();
-		if (wallBounds.intersects(leg.getGlobalBounds()))
+		if (wallBounds.intersects(collisionBox.getGlobalBounds()))
 		{
-			//auto centers = Utils::GetCenterPoints(wallBounds);
-			//auto closetPoint = Utils::FindClosesPoint(Utils::GetCenter(leg.getGlobalBounds()), centers);
-			//auto wallCenter = Utils::GetCenter(wallBounds);
-			//if (closetPoint.x == wallCenter.x)
-			//{
-			//	position = prevPos;
-			//	SetPosition({ position.x + direction.x, position.y});
-			//}
-			//if (closetPoint.y == wallCenter.y)
-			//{
-			//	position = prevPos;
-			//	SetPosition({ position.x, position.y + direction.y });
-			//}
-
-			auto pCenter = Utils::GetCenter(leg.getGlobalBounds());
-			auto wallCenter = Utils::GetCenter(wallBounds);
-			auto dir = wallCenter - pCenter;
-			float length = sqrt(dir.x * dir.x + dir.y * dir.y);
-			dir /= length;
-			sf::Vector2f collisionPoint = pCenter + dir * (leg.getGlobalBounds().width / 2.f + wallBounds.width / 2.f - length);
-
-			if (wallCenter.x < collisionPoint.x || wallCenter.x > collisionPoint.x)
-			{
-				position = prevPos;
-				SetPosition({ position.x, position.y + direction.y });
-				return;
-			}
-			else if (wallCenter.y < collisionPoint.y || wallCenter.y> collisionPoint.y)
-			{
-				position = prevPos;
-				SetPosition({ position.x + direction.x, position.y });
-			}
+			position = prevPos;
 		}
 	}
 
 	for (auto deco : decorations)
 	{
 		auto decoBounds = deco->GetGlobalBounds();
-		if (decoBounds.intersects(leg.getGlobalBounds()))
+		if (decoBounds.intersects(collisionBox.getGlobalBounds()))
 		{
-			auto centers = Utils::GetCenterPoints(decoBounds);
-			auto closetPoint = Utils::FindClosesPoint(Utils::GetCenter(leg.getGlobalBounds()), centers);
-			auto decoCenter = Utils::GetCenter(decoBounds);
-			if (closetPoint.x == decoCenter.x)
-			{
-				position = prevPos;
-				SetPosition({ position.x + direction.x, position.y });
-			}
-			if (closetPoint.y == decoCenter.y)
-			{
-				position = prevPos;
-				SetPosition({ position.x, position.y + direction.y });
-			}
+
+			position = prevPos;
 		}
 	}
+	SetPosition(position);
 }
 
 void Player::UpdateOnDie(float dt)
@@ -344,6 +303,7 @@ void Player::Draw(sf::RenderWindow& window)
 	if (Variables::isDrawHitBox)
 	{
 		window.draw(attackHitBoxCheck);
+		window.draw(collisionBox);
 	}
 }
 

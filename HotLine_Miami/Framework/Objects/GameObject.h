@@ -16,6 +16,8 @@ protected:
 
 	HitBox hitBox;
 	bool isDevMode = false;
+
+	sf::RectangleShape collisionBox;
 public:
 	SortingLayers sortingLayer = SortingLayers::Default;
 	int sortingOrder = 0;
@@ -49,6 +51,8 @@ public:
 	virtual sf::FloatRect GetGlobalBounds()const { return { 0.f,0.f,0.f,0.f }; }
 	
 	virtual const HitBox& GetHitBox() const { return hitBox; }
+
+	const sf::RectangleShape& GetCollisionBox() const { return collisionBox; }
 
 	virtual void Init() = 0;
 	virtual void Release() = 0;

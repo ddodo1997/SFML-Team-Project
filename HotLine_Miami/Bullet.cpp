@@ -99,7 +99,7 @@ void Bullet::FixedUpdatePlayer(float dt)
 	auto enemies = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene())->GetEnemies();
 	for (auto enemy : enemies)
 	{
-		if (enemy->GetGlobalBounds().intersects(body.getGlobalBounds()))
+		if (enemy->GetCollisionBox().getGlobalBounds().intersects(body.getGlobalBounds()))
 		{
 			if (!enemy->isDie() && !enemy->isStun())
 			{
@@ -113,7 +113,7 @@ void Bullet::FixedUpdatePlayer(float dt)
 void Bullet::FixedUpdateEnemies(float dt)
 {
 	auto player = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene())->GetPlayer();
-	if (player->GetGlobalBounds().intersects(body.getGlobalBounds()))
+	if (player->GetCollisionBox().getGlobalBounds().intersects(body.getGlobalBounds()))
 	{
 		player->OnHit(weaponStatus, direction);
 		if (!player->IsDead())

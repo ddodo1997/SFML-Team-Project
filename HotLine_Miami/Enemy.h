@@ -72,7 +72,7 @@ protected:
 	Animator animatorLegs;
 
 	sf::Vector2f direction = { 0.f,0.f };
-
+	sf::Vector2f prevPos;
 	float speed = 30.f;
 
 	Status currentStatus;

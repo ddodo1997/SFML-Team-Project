@@ -35,15 +35,10 @@ void SceneGame::Release()
 
 void SceneGame::Enter()
 {
-<<<<<<< HEAD
-	SetWalls();
-	Scene::Enter();
-=======
 	SetWalls(); // 통짜 벽 사용할 때
 	Scene::Enter();
 
 	// SetWalls_2(); // 개별 벽 사용할 때 
->>>>>>> origin/Daily
 	SetEnemies();
 	SetDecorations();
 
