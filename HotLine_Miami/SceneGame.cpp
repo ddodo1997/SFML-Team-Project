@@ -12,7 +12,9 @@
 
 SceneGame::SceneGame() : Scene(SceneIds::SceneGame)
 {
+
 }
+
 void SceneGame::Init()
 {
 	player = AddGo(new Player("Player"));

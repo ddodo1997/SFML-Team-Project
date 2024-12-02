@@ -4,6 +4,7 @@
 #include "Enemy.h"
 #include "Bullet.h"
 #include "Wall2.h"
+#include "Decoration.h"
 
 Player::Player(const std::string& name)
 	: GameObject(name)
@@ -80,6 +81,7 @@ void Player::Reset()
 	SetOrigin(Origins::MC);
 	sceneGame = (SceneGame*)SCENE_MGR.GetCurrentScene();
 	walls = sceneGame->GetWalls();
+	decorations = sceneGame->GetDecorations();
 
 	SetWeaponStatus();
 	attackHitBoxCheck.setFillColor(sf::Color::Transparent);
@@ -178,6 +180,8 @@ void Player::Update(float dt)
 
 	SetPosition(position + direction * speed * dt);
 	hitBox.UpdateTr(body, body.getLocalBounds());
+
+
 }
 
 void Player::UpdateBodyAnimationMoving()
@@ -251,11 +255,69 @@ void Player::FixedUpdate(float dt)
 	for (auto wall : walls)
 	{
 		auto wallBounds = wall->GetGlobalBounds();
-		if (wallBounds.intersects(body.getGlobalBounds()))
+		if (wallBounds.intersects(leg.getGlobalBounds()))
 		{
 			auto wall6Points = Utils::Get6Points(wallBounds);
-			auto closetPoint = Utils::FindClosesPoint(wallBounds, wall6Points);
+			auto closetPoint = Utils::FindClosesPoint(leg.getGlobalBounds(), wall6Points);
 			auto wallCenter = Utils::GetCenter(wallBounds);
+
+			if (closetPoint.y != wallCenter.y)
+			{
+				if (closetPoint.y > wallCenter.y)
+				{
+					position.y = closetPoint.y + leg.getGlobalBounds().height * 0.5f;
+				}
+				if (closetPoint.y < wallCenter.y)
+				{
+					position.y = closetPoint.y;
+				}
+			}
+			else
+			{
+				if (closetPoint.x > wallCenter.x)
+				{
+					position.x = closetPoint.x + leg.getGlobalBounds().width * 0.5f;
+				}
+				if (closetPoint.x < wallCenter.x)
+				{
+					position.x = closetPoint.x - leg.getGlobalBounds().width * 0.5f;
+				}
+			}
+		}
+	}
+
+	for (auto deco : decorations)
+	{
+		auto decoBounds = deco->GetGlobalBounds();
+		if (decoBounds.intersects(leg.getGlobalBounds()))
+		{
+			auto deco6Points = Utils::Get6Points(decoBounds);
+			auto closetPoint = Utils::FindClosesPoint(leg.getGlobalBounds(), deco6Points);
+
+			auto decoCenter = Utils::GetCenter(decoBounds);
+
+			if (closetPoint.y != decoCenter.y)
+			{
+				if (closetPoint.y > decoCenter.y)
+				{
+					position.y = closetPoint.y + leg.getGlobalBounds().height * 0.5f;
+				}
+				if (closetPoint.y < decoCenter.y)
+				{
+					position.y = closetPoint.y;
+				}
+			}
+			else
+			{
+				if (closetPoint.x > decoCenter.x)
+				{
+					position.x = closetPoint.x + leg.getGlobalBounds().width * 0.5f;
+				}
+				if (closetPoint.x < decoCenter.x)
+				{
+					position.x = closetPoint.x - leg.getGlobalBounds().width * 0.5f;
+				}
+			}
 		}
 	}
 }
