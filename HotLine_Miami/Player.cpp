@@ -14,9 +14,11 @@ Player::Player(const std::string& name)
 
 void Player::SetPosition(const sf::Vector2f& pos)
 {
+	prevPos = position;
 	position = pos;
 	body.setPosition(position);
 	leg.setPosition(position);
+	noiseCircle.setPosition(position);
 }
 
 void Player::SetRotation(float angle)
@@ -74,7 +76,7 @@ void Player::Reset()
 	speed = 100.f;
 	onDieSpeed = 100.f;
 	onDieEffectAccumTime = 0.6f;
-	position = { 50,50 };
+	position = { 50,150 };
 	SetScale({ 1.f, 1.f });
 	animatorBody.SetTarget(&body);
 	animatorLeg.SetTarget(&leg);
@@ -82,8 +84,9 @@ void Player::Reset()
 	sceneGame = (SceneGame*)SCENE_MGR.GetCurrentScene();
 	walls = sceneGame->GetWalls();
 	decorations = sceneGame->GetDecorations();
-
+	enemies = sceneGame->GetEnemies();
 	SetWeaponStatus();
+	noiseCircle.setRadius(weaponStatus.noiseRadius);
 	attackHitBoxCheck.setFillColor(sf::Color::Transparent);
 	attackHitBoxCheck.setOutlineColor(sf::Color::Green);
 	attackHitBoxCheck.setOutlineThickness(1.f);
@@ -118,7 +121,7 @@ void Player::Update(float dt)
 
 	animatorBody.Update(dt);
 	animatorLeg.Update(dt);
-		
+
 	direction.x = InputMgr::GetAxis(Axis::Horizontal);
 	direction.y = InputMgr::GetAxis(Axis::Vertical);
 	float mag = Utils::Magnitude(direction);
@@ -127,7 +130,7 @@ void Player::Update(float dt)
 	{
 		Utils::Normalize(direction);
 	}
-	leg.setRotation(Utils::Angle(direction)); 
+	leg.setRotation(Utils::Angle(direction));
 
 	auto mPos = SCENE_MGR.GetCurrentScene()->ScreenToWorld(InputMgr::GetMousePosition());
 	look = mPos - position;
@@ -178,9 +181,10 @@ void Player::Update(float dt)
 		TryPickUpWeapon();
 	}
 
+
+
 	SetPosition(position + direction * speed * dt);
 	hitBox.UpdateTr(body, body.getLocalBounds());
-
 
 }
 
@@ -222,7 +226,7 @@ void Player::UpdateBodyAnimationMoving()
 		}
 		break;
 	case Weapon::WeaponType::Machinegun:
-		animatorBody.Play("animations/Player/pBodyAni_Machinegun.json"); 
+		animatorBody.Play("animations/Player/pBodyAni_Machinegun.json");
 		body.setScale(1.f, 1.f);
 		break;
 	case Weapon::WeaponType::Shotgun:
@@ -252,36 +256,45 @@ void Player::FixedUpdate(float dt)
 		}
 	}
 
+	float leftpos = position.x - body.getScale().x * body.getTexture()->getSize().x * 0.5f;
+	float rightpos = position.x + body.getScale().x * 0.5f;
+
 	for (auto wall : walls)
 	{
 		auto wallBounds = wall->GetGlobalBounds();
 		if (wallBounds.intersects(leg.getGlobalBounds()))
 		{
-			auto wall6Points = Utils::Get6Points(wallBounds);
-			auto closetPoint = Utils::FindClosesPoint(leg.getGlobalBounds(), wall6Points);
-			auto wallCenter = Utils::GetCenter(wallBounds);
+			//auto centers = Utils::GetCenterPoints(wallBounds);
+			//auto closetPoint = Utils::FindClosesPoint(Utils::GetCenter(leg.getGlobalBounds()), centers);
+			//auto wallCenter = Utils::GetCenter(wallBounds);
+			//if (closetPoint.x == wallCenter.x)
+			//{
+			//	position = prevPos;
+			//	SetPosition({ position.x + direction.x, position.y});
+			//}
+			//if (closetPoint.y == wallCenter.y)
+			//{
+			//	position = prevPos;
+			//	SetPosition({ position.x, position.y + direction.y });
+			//}
 
-			if (closetPoint.y != wallCenter.y)
+			auto pCenter = Utils::GetCenter(leg.getGlobalBounds());
+			auto wallCenter = Utils::GetCenter(wallBounds);
+			auto dir = wallCenter - pCenter;
+			float length = sqrt(dir.x * dir.x + dir.y * dir.y);
+			dir /= length;
+			sf::Vector2f collisionPoint = pCenter + dir * (leg.getGlobalBounds().width / 2.f + wallBounds.width / 2.f - length);
+
+			if (wallCenter.x < collisionPoint.x || wallCenter.x > collisionPoint.x)
 			{
-				if (closetPoint.y > wallCenter.y)
-				{
-					position.y = closetPoint.y + leg.getGlobalBounds().height * 0.5f;
-				}
-				if (closetPoint.y < wallCenter.y)
-				{
-					position.y = closetPoint.y - leg.getGlobalBounds().height * 0.5f;
-				}
+				position = prevPos;
+				SetPosition({ position.x, position.y + direction.y });
+				return;
 			}
-			else
+			else if (wallCenter.y < collisionPoint.y || wallCenter.y> collisionPoint.y)
 			{
-				if (closetPoint.x > wallCenter.x)
-				{
-					position.x = closetPoint.x + leg.getGlobalBounds().width * 0.5f;
-				}
-				if (closetPoint.x < wallCenter.x)
-				{
-					position.x = closetPoint.x - leg.getGlobalBounds().width * 0.5f;
-				}
+				position = prevPos;
+				SetPosition({ position.x + direction.x, position.y });
 			}
 		}
 	}
@@ -291,32 +304,18 @@ void Player::FixedUpdate(float dt)
 		auto decoBounds = deco->GetGlobalBounds();
 		if (decoBounds.intersects(leg.getGlobalBounds()))
 		{
-			auto deco6Points = Utils::Get6Points(decoBounds);
-			auto closetPoint = Utils::FindClosesPoint(leg.getGlobalBounds(), deco6Points);
-
+			auto centers = Utils::GetCenterPoints(decoBounds);
+			auto closetPoint = Utils::FindClosesPoint(Utils::GetCenter(leg.getGlobalBounds()), centers);
 			auto decoCenter = Utils::GetCenter(decoBounds);
-
-			if (closetPoint.y != decoCenter.y)
+			if (closetPoint.x == decoCenter.x)
 			{
-				if (closetPoint.y > decoCenter.y)
-				{
-					position.y = closetPoint.y + leg.getGlobalBounds().height * 0.5f;
-				}
-				if (closetPoint.y < decoCenter.y)
-				{
-					position.y = closetPoint.y - leg.getGlobalBounds().height * 0.5f;
-				}
+				position = prevPos;
+				SetPosition({ position.x + direction.x, position.y });
 			}
-			else
+			if (closetPoint.y == decoCenter.y)
 			{
-				if (closetPoint.x > decoCenter.x)
-				{
-					position.x = closetPoint.x + leg.getGlobalBounds().width * 0.5f;
-				}
-				if (closetPoint.x < decoCenter.x)
-				{
-					position.x = closetPoint.x - leg.getGlobalBounds().width * 0.5f;
-				}
+				position = prevPos;
+				SetPosition({ position.x, position.y + direction.y });
 			}
 		}
 	}
@@ -324,10 +323,10 @@ void Player::FixedUpdate(float dt)
 
 void Player::UpdateOnDie(float dt)
 {
-	if(onDieEffectAccumTime > 0)
+	if (onDieEffectAccumTime > 0)
 		onDieEffectAccumTime -= dt;
 	onDieEffectAccumTime = Utils::Clamp(onDieEffectAccumTime, 0.f, 3.f);
-	
+
 	SetPosition(position + direction * onDieSpeed * onDieEffectAccumTime * dt);
 }
 
@@ -439,6 +438,8 @@ void Player::TryPickUpWeapon()
 void Player::WeaponPickUp(Weapon::WeaponStatus weapon)
 {
 	weaponStatus = weapon;
+	noiseCircle.setRadius(weapon.noiseRadius);
+	Utils::SetOrigin(noiseCircle, Origins::MC);
 	attackHitBoxCheck.setSize({ weaponStatus.hitBoxWidth, weaponStatus.hitBoxHeight });
 	attackTimer = weaponStatus.attackInterval;
 	UpdateBodyAnimationMoving();
@@ -480,7 +481,9 @@ void Player::ThrowWeapon(sf::Vector2f lookDir)
 		return;
 	sceneGame->OnWeaponThrow(weaponStatus, lookDir, position);
 	weaponStatus.weaponType = Weapon::WeaponType::None;
+	Utils::SetOrigin(noiseCircle, Origins::MC);
 	SetWeaponStatus();
+	noiseCircle.setRadius(weaponStatus.noiseRadius);
 }
 
 void Player::DropWeapon(sf::Vector2f hitDir)
@@ -490,6 +493,7 @@ void Player::DropWeapon(sf::Vector2f hitDir)
 	sceneGame->OnWeaponDrop(weaponStatus, position);
 	weaponStatus.weaponType = Weapon::WeaponType::None;
 	SetWeaponStatus();
+	noiseCircle.setRadius(weaponStatus.noiseRadius);
 }
 
 void Player::DropWeapon()
@@ -569,6 +573,13 @@ void Player::AttackMachinegun()
 	if (weaponStatus.remainingBullet > 0)
 	{
 		sceneGame->SpawnBullet()->Fire(Utils::AngleSpread(look, 10), this, weaponStatus);
+		for (auto enemy : enemies)
+		{
+			if (enemy->GetGlobalBounds().intersects(noiseCircle.getGlobalBounds()) && !enemy->isDie() && !enemy->isStun())
+			{
+				enemy->SetStatus(Enemy::Status::Aggro);
+			}
+		}
 		weaponStatus.remainingBullet--;
 		animatorBody.Play("animations/Player/Attack/pAttackMachinegun.json");
 		isAttacking = true;
@@ -585,6 +596,14 @@ void Player::AttackShotgun()
 	{
 		for (int i = 0; i < 6; i++)
 			sceneGame->SpawnBullet()->Fire(Utils::AngleSpread(look, 10), this, weaponStatus);
+
+		for (auto enemy : enemies)
+		{
+			if (enemy->GetGlobalBounds().intersects(noiseCircle.getGlobalBounds()) && !enemy->isDie() && !enemy->isStun())
+			{
+				enemy->SetStatus(Enemy::Status::Aggro);
+			}
+		}
 		weaponStatus.remainingBullet--;
 		animatorBody.Play("animations/Player/Attack/pAttackShotgun.json");
 		isAttacking = true;

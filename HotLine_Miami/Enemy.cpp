@@ -65,7 +65,7 @@ void Enemy::SetOrigin(const sf::Vector2f& newOrigin)
 void Enemy::Init()
 {
 	sortingLayer = SortingLayers::Foreground;
-	sortingOrder = 3;
+	sortingOrder = 0;
 }
 
 void Enemy::Release()
@@ -84,8 +84,8 @@ void Enemy::Reset()
 	animatorLegs.SetTarget(&legs);
 	viewAngle.setPointCount(3);
 	viewAngle.setPoint(0, { 0.f, 0.f });
-	viewAngle.setPoint(1, { 100.f, -10.f });
-	viewAngle.setPoint(2, { 100.f, 10.f });
+	viewAngle.setPoint(1, { 100.f, -30.f });
+	viewAngle.setPoint(2, { 100.f, 30.f });
 	viewAngle.setFillColor(sf::Color::Red);
 	weaponSearchRange.setRadius(30.f);
 	SetOrigin(Origins::MC);
@@ -114,22 +114,9 @@ void Enemy::SetPatterns()
 void Enemy::Update(float dt)
 {
 	SetOrigin(Origins::MC);
-	hitBox.UpdateTr(legs, legs.getLocalBounds());
+	hitBox.UpdateTr(body, body.getLocalBounds());
 	animatorBody.Update(dt);
 	animatorLegs.Update(dt);
-	if (InputMgr::GetKeyDown(sf::Keyboard::Num1))
-	{
-		OnHit(weaponStatus, { -1.f,0.f });
-	}
-	if (InputMgr::GetKeyDown(sf::Keyboard::Num2))
-	{
-		OnHit(weaponStatus, { -1.f,0.f });
-	}
-	if (InputMgr::GetKeyDown(sf::Keyboard::Num3))
-	{
-		Reset();
-	}
-	//�þ߰��� �÷��̾�� �浹�� �˻��� ���̸� ����ĳ��Ʈ ����.
 
 	if (player->IsDead() || isDie())
 	{

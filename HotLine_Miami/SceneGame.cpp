@@ -33,8 +33,8 @@ void SceneGame::Release()
 
 void SceneGame::Enter()
 {
-	Scene::Enter();
 	SetWalls();
+	Scene::Enter();
 	SetEnemies();
 	SetDecorations();
 

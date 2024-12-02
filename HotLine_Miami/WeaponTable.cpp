@@ -28,6 +28,7 @@ bool WeaponTable::Load()
 		newWeapon.attackInterval = weapon["AttackInterval"];
 		newWeapon.hitBoxWidth = weapon["HitBoxWidth"];
 		newWeapon.hitBoxHeight = weapon["HitBoxHeight"];
+		newWeapon.noiseRadius = weapon["NoiseRadius"];
 		table.insert({ (Weapon::WeaponType)newWeapon.weaponType, newWeapon});
 	}
 

@@ -24,6 +24,9 @@ protected:
 	SceneGame* sceneGame;
 	std::vector<Wall2*> walls;
 	std::vector<Decoration*> decorations;
+	std::vector<Enemy*> enemies;
+
+	sf::Vector2f prevPos;
 
 	sf::Sprite body;
 	sf::Sprite leg;
@@ -43,6 +46,7 @@ protected:
 	
 	sf::FloatRect attackHitBox;
 	sf::RectangleShape attackHitBoxCheck;
+	sf::CircleShape noiseCircle;
 
 	bool isFlipped = false;
 	bool isAttacking = false;

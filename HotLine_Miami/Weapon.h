@@ -30,6 +30,7 @@ public:
 		float				attackInterval = 0.f;
 		float				hitBoxWidth = 0.f;
 		float				hitBoxHeight = 0.f;
+		float				noiseRadius = 0.f;
 	};
 	
 protected:
