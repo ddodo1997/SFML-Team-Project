@@ -44,15 +44,5 @@ const std::string& WallTable::GetWall(const std::string& id)
 	return find->second;
 }
 
-Wall::Types WallTable::StringToWallType(const std::string& type)
-{
-	auto it = stringToTypeMap.find(type);
-	if (it != stringToTypeMap.end())
-	{
-		return it->second;
-	}
-
-	return Wall::Types();
-}
 
 

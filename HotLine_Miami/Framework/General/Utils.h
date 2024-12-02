@@ -59,6 +59,7 @@ public:
 	static std::vector<sf::Vector2f> GetRectanglePointsFromBounds(const sf::FloatRect& localBounds);
 	static bool PolygonsIntersect(const std::vector<sf::Vector2f>& polygonA, const sf::Transform& transformA, const std::vector<sf::Vector2f>& polygonB, const sf::Transform& transformB);
 
+	static std::vector<sf::Vector2f> GetCenterPoints(const sf::FloatRect& bounds);
 	static std::vector<sf::Vector2f> Get6Points(const sf::FloatRect& bounds);
 	static std::vector<sf::Vector2f> GetUpperPoints(const sf::FloatRect& bounds);
 

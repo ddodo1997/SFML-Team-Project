@@ -4,7 +4,7 @@
 #include "Utils.h"
 #include <cmath>
 #include "SceneGame.h"
-#include "Wall2.h"
+#include "Wall.h"
 
 std::mt19937 Utils::generator;
 const float Utils::PI = acosf(-1.f);
@@ -283,6 +283,24 @@ bool Utils::PolygonsIntersect(const std::vector<sf::Vector2f>& polygonA, const s
         }
     }
     return true;
+}
+std::vector<sf::Vector2f> Utils::GetCenterPoints(const sf::FloatRect& bounds)
+{
+    std::vector<sf::Vector2f> result;
+
+    sf::Vector2f topLeft = sf::Vector2f(bounds.left, bounds.top);
+    sf::Vector2f topRight = sf::Vector2f(bounds.left + bounds.width, bounds.top);
+    sf::Vector2f bottomLeft = sf::Vector2f(bounds.left, bounds.top + bounds.height);
+    sf::Vector2f bottomRight = sf::Vector2f(bounds.left + bounds.width, bounds.top + bounds.height);
+
+    float halfWidth = bounds.width * 0.5f;
+    float halfHeight = bounds.height * 0.5f;
+    result.push_back(sf::Vector2f(bounds.left, bounds.top + halfHeight)); // 왼쪽 중점
+    result.push_back(sf::Vector2f(bounds.left + halfWidth, bounds.top)); // 위 중점
+    result.push_back(sf::Vector2f(bounds.left + bounds.width, bounds.top + halfHeight)); // 오른쪽 중점
+    result.push_back(sf::Vector2f(bounds.left + halfWidth, bounds.top + bounds.height));
+
+    return  result;
 }
 
 std::vector<sf::Vector2f> Utils::Get6Points(const sf::FloatRect& bounds)

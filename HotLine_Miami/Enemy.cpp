@@ -18,11 +18,13 @@ Enemy::Enemy(const std::string& name)
 
 void Enemy::SetPosition(const sf::Vector2f& pos)
 {
+	prevPos = position;
 	position = pos;
 	body.setPosition(position);
 	legs.setPosition(position);
 	viewAngle.setPosition(position);
 	meleeHitBox.setPosition(position);
+	collisionBox.setPosition(position);
 }
 
 void Enemy::SetRotation(float angle)
@@ -84,9 +86,15 @@ void Enemy::Reset()
 	animatorLegs.SetTarget(&legs);
 	viewAngle.setPointCount(3);
 	viewAngle.setPoint(0, { 0.f, 0.f });
-	viewAngle.setPoint(1, { 100.f, -10.f });
-	viewAngle.setPoint(2, { 100.f, 10.f });
+
 	viewAngle.setFillColor(sf::Color(255,0,0,140));
+
+	viewAngle.setPoint(1, { 100.f, -30.f });
+	viewAngle.setPoint(2, { 100.f, 30.f });
+
+	collisionBox.setSize({ 10.f,10.f });
+	Utils::SetOrigin(collisionBox, Origins::MC);
+
 	weaponSearchRange.setRadius(30.f);
 	SetOrigin(Origins::MC);
 	SetStatus(Status::Patrol);
@@ -114,22 +122,9 @@ void Enemy::SetPatterns()
 void Enemy::Update(float dt)
 {
 	SetOrigin(Origins::MC);
-	hitBox.UpdateTr(legs, legs.getLocalBounds());
+	hitBox.UpdateTr(body, body.getLocalBounds());
 	animatorBody.Update(dt);
 	animatorLegs.Update(dt);
-	if (InputMgr::GetKeyDown(sf::Keyboard::Num1))
-	{
-		OnHit(weaponStatus, { -1.f,0.f });
-	}
-	if (InputMgr::GetKeyDown(sf::Keyboard::Num2))
-	{
-		OnHit(weaponStatus, { -1.f,0.f });
-	}
-	if (InputMgr::GetKeyDown(sf::Keyboard::Num3))
-	{
-		Reset();
-	}
-	//�þ߰��� �÷��̾�� �浹�� �˻��� ���̸� ����ĳ��Ʈ ����.
 
 	if (player->IsDead() || isDie())
 	{
@@ -362,72 +357,22 @@ void Enemy::FixedUpdate(float dt)
 	for (auto wall : walls)
 	{
 		auto wallBounds = wall->GetGlobalBounds();
-		if (wallBounds.intersects(legs.getGlobalBounds()))
+		if (wallBounds.intersects(collisionBox.getGlobalBounds()))
 		{
-			auto wall6Points = Utils::Get6Points(wallBounds);
-			auto closetPoint = Utils::FindClosesPoint(legs.getGlobalBounds(), wall6Points);
-
-			auto wallCenter = Utils::GetCenter(wallBounds);
-
-			if (closetPoint.y != wallCenter.y)
-			{
-				if (closetPoint.y > wallCenter.y)
-				{
-					position.y = closetPoint.y + legs.getGlobalBounds().height * 0.5f;
-				}
-				if (closetPoint.y < wallCenter.y)
-				{
-					position.y = closetPoint.y;
-				}
-			}
-			else
-			{
-				if (closetPoint.x > wallCenter.x)
-				{
-					position.x = closetPoint.x + legs.getGlobalBounds().width * 0.5f;
-				}
-				if (closetPoint.x < wallCenter.x)
-				{
-					position.x = closetPoint.x - legs.getGlobalBounds().width * 0.5f;
-				}
-			}
+			position = prevPos;
 		}
 	}
 
 	for (auto deco : decorations)
 	{
 		auto decoBounds = deco->GetGlobalBounds();
-		if (decoBounds.intersects(legs.getGlobalBounds()))
+		if (decoBounds.intersects(collisionBox.getGlobalBounds()))
 		{
-			auto deco6Points = Utils::Get6Points(decoBounds);
-			auto closetPoint = Utils::FindClosesPoint(legs.getGlobalBounds(), deco6Points);
 
-			auto decoCenter = Utils::GetCenter(decoBounds);
-
-			if (closetPoint.y != decoCenter.y)
-			{
-				if (closetPoint.y > decoCenter.y)
-				{
-					position.y = closetPoint.y + legs.getGlobalBounds().height * 0.5f;
-				}
-				if (closetPoint.y < decoCenter.y)
-				{
-					position.y = closetPoint.y;
-				}
-			}
-			else
-			{
-				if (closetPoint.x > decoCenter.x)
-				{
-					position.x = closetPoint.x + legs.getGlobalBounds().width * 0.5f;
-				}
-				if (closetPoint.x < decoCenter.x)
-				{
-					position.x = closetPoint.x - legs.getGlobalBounds().width * 0.5f;
-				}
-			}
+			position = prevPos;
 		}
 	}
+	SetPosition(position);
 
 	if (viewAngle.getGlobalBounds().intersects(player->GetHitBox().rect.getGlobalBounds()) && currentStatus != Status::Aggro && weaponStatus.weaponType != Weapon::WeaponType::None)
 		if (!Utils::RayCast(position, direction, viewAngle.getLocalBounds().width, player))
@@ -593,6 +538,7 @@ void Enemy::Draw(sf::RenderWindow& window)
 	if (Variables::isDrawHitBox)
 	{
 		window.draw(viewAngle);
+		window.draw(collisionBox);
 	}
 }
 
@@ -654,16 +600,18 @@ void Enemy::Attack()
 			animatorBody.PlayQueue("animations/Enemy/enemy_knife_search.json");
 			break;
 		case Weapon::WeaponType::Machinegun:
-			if (weaponStatus.remainingBullet > 0)
-				sceneGame->SpawnBullet()->Fire(Utils::AngleSpread(direction, 10), this, weaponStatus);
+			if (weaponStatus.remainingBullet <= 0)
+				break;
+			sceneGame->SpawnBullet()->Fire(Utils::AngleSpread(direction, 10), this, weaponStatus);
 			weaponStatus.remainingBullet--;
 			animatorBody.Play("animations/Enemy/enemy_m16_attack.json");
 			animatorBody.PlayQueue("animations/Enemy/enemy_m16_search.json");
 			break;
 		case Weapon::WeaponType::Shotgun:
-			if(weaponStatus.remainingBullet > 0)
-				for (int i = 0; i < 6; i++)
-					sceneGame->SpawnBullet()->Fire(Utils::AngleSpread(direction, 10), this, weaponStatus);
+			if (weaponStatus.remainingBullet <= 0)
+				break;
+			for (int i = 0; i < 6; i++)
+				sceneGame->SpawnBullet()->Fire(Utils::AngleSpread(direction, 10), this, weaponStatus);
 			weaponStatus.remainingBullet--;
 			animatorBody.Play("animations/Enemy/enemy_shotgun_attack.json");
 			animatorBody.PlayQueue("animations/Enemy/enemy_shotgun_search.json");

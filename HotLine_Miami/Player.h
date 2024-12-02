@@ -4,7 +4,7 @@
 class SceneGame;
 class Weapon;
 class Enemy;
-class Wall2;
+class Wall;
 class Decoration;
 
 class Player : public GameObject
@@ -28,9 +28,14 @@ protected:
 	float attackTimer;
 
 	SceneGame* sceneGame;
-	std::vector<Wall2*> walls;
+	std::vector<Wall*> walls;
 	std::vector<Decoration*> decorations;
+
 	Enemy* executingEnemy;
+
+	std::vector<Enemy*> enemies;
+
+	sf::Vector2f prevPos;
 
 	sf::Sprite body;
 	sf::Sprite leg;
@@ -50,6 +55,7 @@ protected:
 	
 	sf::FloatRect attackHitBox;
 	sf::RectangleShape attackHitBoxCheck;
+	sf::CircleShape noiseCircle;
 
 	bool isFlipped = false;
 	bool isAttacking = false;
