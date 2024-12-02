@@ -9,6 +9,7 @@ class Player;
 class Enemy;
 class Decoration;
 class Wall;
+class Wall2;
 class SceneDevS : public Scene
 {
 protected:
@@ -19,10 +20,13 @@ protected:
 	std::vector<Enemy*> enemies;
 	std::vector<Decoration*> decorations;
 	std::vector<Wall*> walls;
-
+	std::vector<Wall2*> wallsVertical;
+	std::vector<Wall2*> wallsHorizontal;
 	sf::Vector2f direction;
 
 	float zoomNoun = 0.5f;
+	sf::Vector2i tileSize;
+	sf::Vector2i tileCount;
 public:
 	SceneDevS();
 	~SceneDevS() = default;
@@ -33,6 +37,8 @@ public:
 
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
+
+	void CreateWall(const sf::Vector2f& pos);
 
 	void LoadWalls();
 	void LoadDecorations();

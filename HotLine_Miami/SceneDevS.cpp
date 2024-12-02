@@ -3,9 +3,11 @@
 #include "TileMap.h"
 #include "TileMapEditor.h"
 #include "StageTable.h"
+#include "WallTable.h"
 #include "Decoration.h"
 #include "Enemy.h"
 #include "Wall.h"
+#include "Wall2.h"
 
 
 SceneDevS::SceneDevS() : Scene(SceneIds::DevS)
@@ -35,6 +37,8 @@ void SceneDevS::Enter()
 	worldView.setCenter(0, 0);
 	uiView.setSize(windowSize);
 	uiView.setCenter(windowSize * 0.5f);
+	tileSize = STAGE_TABLE->GetTileSize();
+	tileCount = tileMap->GetTileCount();
 }
 
 void SceneDevS::Exit()
@@ -45,6 +49,8 @@ void SceneDevS::Exit()
 void SceneDevS::Update(float dt)
 {
 	float cameraSpeed = 300.f * dt;
+	sf::Vector2i mousePos = InputMgr::GetMousePosition();
+	sf::Vector2f worldPos = ScreenToWorld(mousePos);
 
 	direction.x = InputMgr::GetAxis(Axis::Horizontal);
 	direction.y = InputMgr::GetAxis(Axis::Vertical);
@@ -80,19 +86,31 @@ void SceneDevS::Update(float dt)
 		tileMapEditor->SetMode(TileMapEditor::EditorMode::WallMode);
 	}
 
-	sf::Vector2i mousePos = InputMgr::GetMousePosition();
-	if (tileMapEditor->GetMode() == TileMapEditor::EditorMode::TileMode)
+	
+	if (InputMgr::GetMouseButton(sf::Mouse::Left) && tileMapEditor->GetMode() == TileMapEditor::EditorMode::TileMode)
 	{
-		if (InputMgr::GetMouseButton(sf::Mouse::Left))
+		tileMap->PaintTile(worldPos, tileMapEditor->GetSelectedTileIndex());
+	}
+
+	if(InputMgr::GetMouseButtonDown(sf::Mouse::Left))
+	{
+		switch (tileMapEditor->GetMode())
 		{
-			sf::Vector2f worldPos = ScreenToWorld(mousePos);
-			tileMap->PaintTile(worldPos, tileMapEditor->GetSelectedTileIndex());
+		case TileMapEditor::EditorMode::WallMode:
+			if (worldPos.x <  0.f || worldPos.x > tileSize.x * tileCount.x || worldPos.y <  0.f || worldPos.y > tileSize.y * tileCount.y)
+			{
+				break;
+			}
+			CreateWall(worldPos);
+			break;
+		case TileMapEditor::EditorMode::DecorationMode:
+			break;
+		case TileMapEditor::EditorMode::EnemyMode:
+			break;
 		}
 	}
-	else if (tileMapEditor->GetMode() == TileMapEditor::EditorMode::WallMode)
-	{
 
-	}
+
 	if (InputMgr::GetKeyDown(sf::Keyboard::Delete))
 	{
 		tileMap->InitializeEmpty(STAGE_TABLE->GetTileSize(), { 40, 40 });
@@ -107,6 +125,57 @@ void SceneDevS::Update(float dt)
 void SceneDevS::Draw(sf::RenderWindow& window)
 {
 	Scene::Draw(window);
+}
+
+void SceneDevS::CreateWall(const sf::Vector2f& pos)
+{
+	int xIndex = static_cast<int>(pos.x) / 16;
+	int yIndex = static_cast<int>(pos.y) / 16;
+
+	sf::Vector2f tileCenter = { (xIndex + 0.5f) * tileSize.x, (yIndex + 0.5f) * tileSize.y };
+	sf::Vector2f delta = pos - tileCenter;
+
+	sf::Vector2f wallPosition;
+	Wall::Types wallType;
+	if (std::abs(delta.x) > std::abs(delta.y))
+	{
+		wallType = Wall::Types::Horizontal;
+		wallPosition = { static_cast<float>(xIndex * tileSize.x), static_cast<float>((yIndex + (delta.y > 0 ? 1 : 0)) * tileSize.y) };
+	}
+	else
+	{
+		wallType = Wall::Types::Vertical;
+		wallPosition = { static_cast<float>((xIndex + (delta.x > 0 ? 1 : 0)) * tileSize.x), static_cast<float>(yIndex * tileSize.y) };
+	}
+
+	// 벽 생성 및 추가
+	Wall2* wall = new Wall2("Wall");
+	wall->SetPosition(wallPosition);
+	wall->SetTexture(WALL_TABLE->GetWall(tileMapEditor->GetSelectedWallTextureId()));
+	wall->SetOrigin(Origins::MC);
+	if (wallType == Wall::Types::Horizontal)
+	{
+		for (const auto& createdwall : wallsHorizontal)
+		{
+			if (wall->GetGlobalBounds().intersects(createdwall->GetGlobalBounds()))
+			{
+				return;
+			}
+		}
+		wallsHorizontal.push_back(wall);
+	}
+	else
+	{
+		for (const auto& createdwall : wallsVertical)
+		{
+			if (wall->GetGlobalBounds().intersects(createdwall->GetGlobalBounds()))
+			{
+				return;
+			}
+		}
+		wallsVertical.push_back(wall);
+	}
+	AddGo(wall);
 }
 
 void SceneDevS::LoadWalls()

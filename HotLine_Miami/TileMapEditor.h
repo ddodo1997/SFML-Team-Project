@@ -52,6 +52,7 @@ public:
 	int GetSelectedTileIndex() const { return selectedTileIndex; }
 
 	void SetSelectWall(std::pair<std::string, sf::Sprite> wall);
+	std::string GetSelectedWallTextureId() const { return selectedWallTextureId; }
 
 	void SetMode(EditorMode mode);
 	EditorMode GetMode() const { return currentMode; }
