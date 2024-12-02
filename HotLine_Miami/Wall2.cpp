@@ -62,11 +62,11 @@ void Wall2::Reset()
 
 void Wall2::Update(float dt)
 {
-	hitbox.UpdateTr(body, GetGlobalBounds());
+	hitBox.UpdateTr(body, GetLocalBounds());
 }
 
 void Wall2::Draw(sf::RenderWindow& window)
 {
 	window.draw(body);
-	hitbox.Draw(window);
+	hitBox.Draw(window);
 }

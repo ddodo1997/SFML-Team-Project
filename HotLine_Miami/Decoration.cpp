@@ -60,13 +60,16 @@ void Decoration::Reset()
 {
 	SetOrigin(Origins::MC);
 	SetScale({ 1.f, 1.f });
+	hitBox.UpdateTr(body, body.getLocalBounds());
 }
 
 void Decoration::Update(float dt)
 {
+
 }
 
 void Decoration::Draw(sf::RenderWindow& window)
 {
 	window.draw(body);
+	hitBox.Draw(window);
 }

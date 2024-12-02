@@ -5,7 +5,6 @@ class Wall2 : public GameObject
 protected:
 	sf::Sprite body;
 	std::string textureId;
-	HitBox hitbox;
 public:
 	Wall2(const std::string& name = "");
 	~Wall2() = default;
