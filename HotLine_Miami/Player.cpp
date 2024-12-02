@@ -269,7 +269,7 @@ void Player::FixedUpdate(float dt)
 				}
 				if (closetPoint.y < wallCenter.y)
 				{
-					position.y = closetPoint.y;
+					position.y = closetPoint.y - leg.getGlobalBounds().height * 0.5f;
 				}
 			}
 			else
@@ -304,7 +304,7 @@ void Player::FixedUpdate(float dt)
 				}
 				if (closetPoint.y < decoCenter.y)
 				{
-					position.y = closetPoint.y;
+					position.y = closetPoint.y - leg.getGlobalBounds().height * 0.5f;
 				}
 			}
 			else
@@ -569,7 +569,7 @@ void Player::AttackMachinegun()
 	if (weaponStatus.remainingBullet > 0)
 	{
 		sceneGame->SpawnBullet()->Fire(Utils::AngleSpread(look, 10), this, weaponStatus);
-		//weaponStatus.remainingBullet--;
+		weaponStatus.remainingBullet--;
 		animatorBody.Play("animations/Player/Attack/pAttackMachinegun.json");
 		isAttacking = true;
 	}
@@ -585,7 +585,7 @@ void Player::AttackShotgun()
 	{
 		for (int i = 0; i < 6; i++)
 			sceneGame->SpawnBullet()->Fire(Utils::AngleSpread(look, 10), this, weaponStatus);
-		//weaponStatus.remainingBullet--;
+		weaponStatus.remainingBullet--;
 		animatorBody.Play("animations/Player/Attack/pAttackShotgun.json");
 		isAttacking = true;
 	}

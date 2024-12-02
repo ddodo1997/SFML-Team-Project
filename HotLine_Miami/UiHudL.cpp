@@ -93,7 +93,7 @@ void UiHudL::Reset()
 	currentWeaponStatus.setCharacterSize(30.f);
 	currentWeaponStatus.setFillColor(sf::Color::White);
 	currentWeaponStatus.setString(std::to_string(InputMgr::GetMousePosition().y));
-	currentWeaponStatus.setPosition({ 30.f,530.f });
+	currentWeaponStatus.setPosition({ 30.f,30.f });
 	Utils::SetOrigin(currentWeaponStatus, Origins::TL);
 }
 
@@ -155,19 +155,22 @@ void UiHudL::UpdateWeaponStatus(Weapon::WeaponStatus weaponStatus, int remaining
 	{
 		weaponId = "Shotgun";
 	}
-	currentWeaponStatus.setString("Weapon ID: " + weaponId + "\nBullets : " + std::to_string(remainingBullet)
-		+ " \/ " + std::to_string(weaponStatus.maxBullet));
+	std::string bulletStatus = "\nNo guns";
+	if (weaponStatus.isRangedWeapon)
+		bulletStatus = "\nBullets : " + std::to_string(remainingBullet)
+		+ " \/ " + std::to_string(weaponStatus.maxBullet);
+	currentWeaponStatus.setString("Weapon ID: " + weaponId + bulletStatus);
 	Utils::SetOrigin(currentWeaponStatus, Origins::TL);
 }
 
 void UiHudL::Draw(sf::RenderWindow& window)
 {
-	window.draw(mPosX);
-	window.draw(mPosY);
-	window.draw(hitDirectionText);
-	window.draw(hitDirection);
-	window.draw(lookDirectionText);
-	window.draw(lookDirection);
+	//window.draw(mPosX);
+	//window.draw(mPosY);
+	//window.draw(hitDirectionText);
+	//window.draw(hitDirection);
+	//window.draw(lookDirectionText);
+	//window.draw(lookDirection);
 	window.draw(currentWeaponStatus);
 	if (weaponTypeIndex != -1)
 	{
