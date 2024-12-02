@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "SceneGame.h"
 #include "StageTable.h"
+#include "Wall.h"
 #include "Wall2.h"
 #include "Decoration.h"
 #include "Enemy.h"
@@ -20,6 +21,7 @@ void SceneGame::Init()
 	player = AddGo(new Player("Player"));
 	tileMap = AddGo(new TileMap("Tile Map"));
 	uiHud = AddGo(new UiHudL());
+	LoadWalls(); // 통짜 벽 쓸때만 사용하기
 	LoadDecorations();
 	LoadEnemies();
 
@@ -33,8 +35,15 @@ void SceneGame::Release()
 
 void SceneGame::Enter()
 {
+<<<<<<< HEAD
 	SetWalls();
 	Scene::Enter();
+=======
+	SetWalls(); // 통짜 벽 사용할 때
+	Scene::Enter();
+
+	// SetWalls_2(); // 개별 벽 사용할 때 
+>>>>>>> origin/Daily
 	SetEnemies();
 	SetDecorations();
 
@@ -184,7 +193,7 @@ void SceneGame::LoadWalls()
 	{
 		const DataWall& wallData = WallPair.second;
 
-		Wall2* wall = AddGo(new Wall2(wallData.id));
+		Wall* wall = AddGo(new Wall(wallData.id));
 		walls.push_back(wall);
 	}
 }
@@ -224,6 +233,18 @@ void SceneGame::SetWalls()
 	for (const auto& WallPair : wallTable)
 	{
 		const DataWall& wallData = WallPair.second;
+		walls[i++]->DrawWall(wallData);
+	}
+}
+
+void SceneGame::SetWalls_2()
+{
+	int i = 0;
+	const auto& wallTable = STAGE_TABLE->GetWallTable();
+
+	for (const auto& WallPair : wallTable)
+	{
+		const DataWall& wallData = WallPair.second;
 
 		sf::Vector2f start = wallData.start;
 		sf::Vector2f end = wallData.end;
@@ -238,7 +259,7 @@ void SceneGame::SetWalls()
 				wall->SetPosition({ static_cast<float>(start.x * 16), static_cast<float>(y * 16)  + 16.f});
 				wall->SetTexture(wallData.textureIds[i % wallData.textureIds.size()]);
 				wall->SetOrigin(Origins::MC);
-				walls.push_back(wall);
+				walls_2.push_back(wall);
 				i++;
 			}
 		}
@@ -252,7 +273,7 @@ void SceneGame::SetWalls()
 				wall->SetPosition({ static_cast<float>(x * 16) + 16.f, static_cast<float>(start.y * 16) });
 				wall->SetTexture(wallData.textureIds[i % wallData.textureIds.size()]);
 				wall->SetOrigin(Origins::MC);
-				walls.push_back(wall);
+				walls_2.push_back(wall);
 				i++;
 			}
 		}
@@ -356,11 +377,6 @@ void SceneGame::RemoveAllObjPool()
 	}
 	activeBullets.clear();
 
-	for (auto wall : walls)
-	{
-		RemoveGo(wall);
-	}
-	walls.clear();
 
 	for (auto weapon : weapons)
 	{

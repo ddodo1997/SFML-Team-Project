@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "TileMapEditor.h"
-
+#include "WallTable.h"
 TileMapEditor::TileMapEditor(const std::string& name)
 	: GameObject(name)
 {
@@ -52,7 +52,7 @@ void TileMapEditor::Reset()
 	int numTilesY = texture->getSize().y / 16;
 	tileSelector.setPrimitiveType(sf::Quads);
 	tileSelector.resize(numTilesX * numTilesY * 4);
-
+	currentMode = EditorMode::TileMode;
 	sf::Vector2f tilePosOffset[4] =
 	{
 		{0.f, 0.f},
@@ -78,6 +78,17 @@ void TileMapEditor::Reset()
 	selectedTileSprite.setTexture(*texture);
 	selectedTileSprite.setScale(1.f, 1.f);
 
+	const auto& wallDataList = WALL_TABLE->GetTable();
+	for (const auto& wallData : wallDataList)
+	{
+		sf::Sprite wallSprite;
+		wallSprite.setTexture(TEXTURE_MGR.Get(WALL_TABLE->GetFilePath() + wallData.second));
+		wallSprite.setScale(2.f, 2.f);  
+		wallSprite.setPosition(10.f + wallSprites.size() * 84.f, 10.f);
+
+		wallSprites.insert({ wallData.first, wallSprite });
+	}
+	selectedWallSprite.setScale(1.f, 1.f);
 	background.setSize(FRAMEWORK.GetWindowSizeF() * 0.4f);
 	background.setFillColor(sf::Color(150, 150, 150, 100));
 	background.setOutlineColor(sf::Color::White);
@@ -86,29 +97,114 @@ void TileMapEditor::Reset()
 
 void TileMapEditor::Update(float dt)
 {
+	switch (currentMode)
+	{
+	case EditorMode::TileMode:
+		UpdateTileMode(dt);
+		break;
+	case EditorMode::WallMode:
+		UpdateWallMode(dt);
+		break;
+	}
+
+	UpdateSelectedSpritePosition();
+}
+
+void TileMapEditor::UpdateTileMode(float dt)
+{
 	sf::Vector2i mousePos = InputMgr::GetMousePosition();
+	sf::Vector2f worldPos = static_cast<sf::Vector2f>(mousePos);
+
 	if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
 	{
-		sf::Vector2f worldPos = static_cast<sf::Vector2f>(mousePos);
-
 		if (IsInTileSelectArea(worldPos))
 		{
 			SetSelectTileIndex(GetSelectTileIndex(worldPos));
 		}
 	}
-	selectedTileSprite.setPosition(static_cast<sf::Vector2f>(mousePos));
+}
+
+void TileMapEditor::UpdateWallMode(float dt)
+{
+	sf::Vector2i mousePos = InputMgr::GetMousePosition();
+	sf::Vector2f worldPos = static_cast<sf::Vector2f>(mousePos);
+
+	if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
+	{
+		for (auto& pair : wallSprites)
+		{
+			if (pair.second.getGlobalBounds().contains(worldPos))
+			{
+				SetSelectWall(pair);
+				break;
+			}
+		}
+	}
+}
+
+void TileMapEditor::UpdateDecoMode(float dt)
+{
+}
+
+void TileMapEditor::UpdateEnemyMode(float dt)
+{
+}
+
+void TileMapEditor::UpdateSelectedSpritePosition()
+{
+	sf::Vector2i mousePos = InputMgr::GetMousePosition();
+	switch (currentMode)
+	{
+	case EditorMode::TileMode:
+		if (selectedTileIndex != -1)
+		{
+			selectedTileSprite.setPosition({ mousePos.x - 20.f, mousePos.y - 20.f });
+		}
+		break;
+	case EditorMode::WallMode:
+		
+		if (!selectedWallTextureId.empty())
+		{
+			selectedWallSprite.setPosition({ mousePos.x - 10.f, mousePos.y - 5.f });
+		}
+		break;
+	}
 }
 
 void TileMapEditor::Draw(sf::RenderWindow& window)
 {
 	sf::RenderStates states;
-	states.texture = texture;
-	window.draw(background);
-	window.draw(tileSelector, states);
-	if (selectedTileIndex != -1)
+
+	switch (currentMode)
 	{
-		window.draw(selectedTileSprite);
+	case EditorMode::TileMode:
+	{
+		states.texture = texture;
+		window.draw(background);
+		window.draw(tileSelector, states);
+		if (selectedTileIndex != -1)
+		{
+			window.draw(selectedTileSprite);
+		}
+		break;
 	}
+	case EditorMode::WallMode:
+		window.draw(background);
+		for (auto& pair : wallSprites)
+		{
+			window.draw(pair.second);
+		}
+		if (!selectedWallTextureId.empty())
+		{
+			window.draw(selectedWallSprite);
+		}
+		break;
+	case EditorMode::DecorationMode:
+		break;
+	case EditorMode::EnemyMode:
+		break;
+	}
+	
 }
 
 int TileMapEditor::GetSelectTileIndex(const sf::Vector2f& position)
@@ -134,4 +230,36 @@ void TileMapEditor::SetSelectTileIndex(int index)
 
 	selectedTileSprite.setTextureRect(sf::IntRect(xIndex * 16, yIndex * 16, 16, 16));
 	selectedTileSprite.setScale(2.f, 2.f);
+}
+
+void TileMapEditor::SetSelectWall(std::pair<std::string, sf::Sprite> wall)
+{
+	selectedWallTextureId = wall.first;
+	selectedWallSprite = wallSprites[selectedWallTextureId];
+	selectedWallSprite.setScale(2.f, 2.f);
+	std::cout << selectedWallTextureId << std::endl;
+}
+
+void TileMapEditor::SetMode(EditorMode mode)
+{
+	currentMode = mode;
+	selectedTileIndex = -1;
+	selectedWallTextureId = "";
+	switch (currentMode)
+	{
+	case EditorMode::TileMode:
+	{
+		selectedTileIndex = -1;
+		background.setSize(FRAMEWORK.GetWindowSizeF() * 0.4f);
+		break;
+	}
+	case EditorMode::WallMode:
+		selectedWallTextureId = "";
+		background.setSize({ FRAMEWORK.GetWindowSizeF().x * 0.5f, FRAMEWORK.GetWindowSizeF().y * 0.1f });
+		break;
+	case EditorMode::DecorationMode:
+		break;
+	case EditorMode::EnemyMode:
+		break;
+	}
 }
