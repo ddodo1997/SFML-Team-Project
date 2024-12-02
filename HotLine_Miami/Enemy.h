@@ -63,7 +63,7 @@ protected:
 	sf::CircleShape weaponSearchRange;
 
 	Player* player;
-	std::vector<Wall2*> walls;
+	std::vector<Wall*> walls;
 	std::vector<Decoration*> decorations;
 
 	SceneGame* sceneGame;

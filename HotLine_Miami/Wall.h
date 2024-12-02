@@ -20,6 +20,8 @@ public:
 	Wall(const std::string& name = "");
 	~Wall() = default;
 
+	void SetOrigin(Origins preset) override;
+
 	sf::FloatRect GetLocalBounds() const override;
 	sf::FloatRect GetGlobalBounds() const override;
 

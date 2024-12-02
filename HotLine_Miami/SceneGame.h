@@ -6,6 +6,7 @@ class TileMapEditor;
 class Player;
 class Enemy;
 class Decoration;
+class Wall;
 class Wall2;
 class Bullet;
 class UiHudL;
@@ -24,7 +25,8 @@ protected:
 
 	std::vector<Enemy*> enemies;
 	std::vector<Decoration*> decorations;
-	std::vector<Wall2*> walls;
+	std::vector<Wall*> walls;
+	std::vector<Wall2*> walls_2;
 
 	std::list<Weapon*> weapons;
 	ObjectPool<Weapon> weaponPool;
@@ -48,13 +50,15 @@ public:
 	void LoadEnemies();
 
 	void SetWalls();
+	void SetWalls_2();
 	void SetDecorations();
 	void SetEnemies();
 	Player* GetPlayer() { return player; }
 
 	std::vector<Enemy*> GetEnemies() const { return enemies; }
 	std::vector<Decoration*> GetDecorations() const { return decorations; }
-	std::vector<Wall2*> GetWalls() const { return walls; }
+	std::vector<Wall*> GetWalls() const { return walls; }
+	std::vector<Wall2*> GetWalls_2() const { return walls_2; }
 
 	const std::list<Weapon*>& GetActiveWeapons() const { return weapons; }
 
