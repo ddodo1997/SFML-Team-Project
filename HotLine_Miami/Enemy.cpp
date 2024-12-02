@@ -642,16 +642,18 @@ void Enemy::Attack()
 			animatorBody.PlayQueue("animations/Enemy/enemy_knife_search.json");
 			break;
 		case Weapon::WeaponType::Machinegun:
-			if (weaponStatus.remainingBullet > 0)
-				sceneGame->SpawnBullet()->Fire(Utils::AngleSpread(direction, 10), this, weaponStatus);
+			if (weaponStatus.remainingBullet <= 0)
+				break;
+			sceneGame->SpawnBullet()->Fire(Utils::AngleSpread(direction, 10), this, weaponStatus);
 			weaponStatus.remainingBullet--;
 			animatorBody.Play("animations/Enemy/enemy_m16_attack.json");
 			animatorBody.PlayQueue("animations/Enemy/enemy_m16_search.json");
 			break;
 		case Weapon::WeaponType::Shotgun:
-			if(weaponStatus.remainingBullet > 0)
-				for (int i = 0; i < 6; i++)
-					sceneGame->SpawnBullet()->Fire(Utils::AngleSpread(direction, 10), this, weaponStatus);
+			if (weaponStatus.remainingBullet <= 0)
+				break;
+			for (int i = 0; i < 6; i++)
+				sceneGame->SpawnBullet()->Fire(Utils::AngleSpread(direction, 10), this, weaponStatus);
 			weaponStatus.remainingBullet--;
 			animatorBody.Play("animations/Enemy/enemy_shotgun_attack.json");
 			animatorBody.PlayQueue("animations/Enemy/enemy_shotgun_search.json");
