@@ -117,6 +117,12 @@ void Enemy::Update(float dt)
 	hitBox.UpdateTr(legs, legs.getLocalBounds());
 	animatorBody.Update(dt);
 	animatorLegs.Update(dt);
+
+	if (currentStatus == Status::EditorMode)
+	{
+		return;
+	}
+
 	if (InputMgr::GetKeyDown(sf::Keyboard::Num1))
 	{
 		OnHit(weaponStatus, { -1.f,0.f });
@@ -348,7 +354,7 @@ void Enemy::UpdateDie(float dt)
 
 void Enemy::FixedUpdate(float dt)
 {
-	if (isDie() || currentStatus == Status::Stun || currentStatus == Status::GetUp)
+	if (isDie() || currentStatus == Status::Stun || currentStatus == Status::GetUp || currentStatus == Status::EditorMode)
 		return;
 
 	for (auto wall : walls)
@@ -435,6 +441,7 @@ void Enemy::SetStatus(Status stat)
 	speed = 30.f;
 	switch (currentStatus)
 	{
+	case Status::EditorMode:
 	case Status::Normal:
 		switch (weaponStatus.weaponType)
 		{

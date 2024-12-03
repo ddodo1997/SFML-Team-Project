@@ -14,7 +14,7 @@ protected:
 	sf::Vector2f windowSize = { 1920,1080 };
 
 public:
-	const SceneIds id;
+	SceneIds id;
 
 	Scene(SceneIds id);
 	virtual ~Scene() = default;

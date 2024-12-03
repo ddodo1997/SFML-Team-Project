@@ -10,8 +10,9 @@
 #include "Wall2.h"
 
 
-SceneDevS::SceneDevS() : Scene(SceneIds::DevS)
+SceneDevS::SceneDevS() : SceneGame()
 {
+	id = SceneIds::DevS;
 }
 
 void SceneDevS::Init()
@@ -85,17 +86,18 @@ void SceneDevS::Update(float dt)
 	{
 		tileMapEditor->SetMode(TileMapEditor::EditorMode::WallMode);
 	}
-
-	
-	if (InputMgr::GetMouseButton(sf::Mouse::Left) && tileMapEditor->GetMode() == TileMapEditor::EditorMode::TileMode)
+	if (InputMgr::GetKeyDown(sf::Keyboard::Num3))
 	{
-		tileMap->PaintTile(worldPos, tileMapEditor->GetSelectedTileIndex());
+		tileMapEditor->SetMode(TileMapEditor::EditorMode::EnemyMode);
 	}
-
-	if(InputMgr::GetMouseButtonDown(sf::Mouse::Left))
+	
+	if(InputMgr::GetMouseButton(sf::Mouse::Left))
 	{
 		switch (tileMapEditor->GetMode())
 		{
+		case TileMapEditor::EditorMode::TileMode:
+			tileMap->PaintTile(worldPos, tileMapEditor->GetSelectedTileIndex());
+			break;
 		case TileMapEditor::EditorMode::WallMode:
 			if (worldPos.x <  0.f || worldPos.x > tileSize.x * tileCount.x || worldPos.y <  0.f || worldPos.y > tileSize.y * tileCount.y)
 			{
@@ -106,10 +108,19 @@ void SceneDevS::Update(float dt)
 		case TileMapEditor::EditorMode::DecorationMode:
 			break;
 		case TileMapEditor::EditorMode::EnemyMode:
+			if (worldPos.x <  0.f || worldPos.x > tileSize.x * tileCount.x || worldPos.y <  0.f || worldPos.y > tileSize.y * tileCount.y)
+			{
+				break;
+			}
+			CreateEnemy(worldPos);
 			break;
 		}
 	}
 
+	if (InputMgr::GetKeyDown(sf::Keyboard::F9))
+	{
+		Variables::isDrawHitBox = !Variables::isDrawHitBox;
+	}
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::Delete))
 	{
@@ -217,6 +228,23 @@ void SceneDevS::CreateWall(const sf::Vector2f& pos)
 	}
 
 	AddGo(wall);
+}
+
+void SceneDevS::CreateEnemy(const sf::Vector2f& pos)
+{
+	int xIndex = static_cast<int>(pos.x) / tileSize.x;
+	int yIndex = static_cast<int>(pos.y) / tileSize.y;
+	Enemy selectedEnemy = tileMapEditor->GetSelectedEnemy();
+
+	Enemy* enemy = new Enemy("Enemy");
+	enemy->Reset();
+	enemy->SetPosition({ xIndex * tileSize.x + tileSize.x * 0.5f, yIndex * tileSize.y + tileSize.y * 0.5f });
+	enemy->SetOrigin(Origins::MC);
+	enemy->SetWeapon(selectedEnemy.GetWeaponType());
+	enemy->SetStatus(Enemy::Status::EditorMode);
+
+	enemies.push_back(enemy);
+	AddGo(enemy);
 }
 
 void SceneDevS::LoadWalls()

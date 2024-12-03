@@ -98,6 +98,18 @@ void TileMapEditor::Reset()
 		wallSprites.insert({ wallData.first, wallSprite });
 	}
 	selectedWallSprite.setScale(1.f, 1.f);
+
+	for (int i = 0; i < 4; i++)
+	{
+		Enemy* enemy = new Enemy("Enemy");
+		enemy->Reset();
+		enemy->SetScale({ 5.f, 5.f });
+		enemy->SetPosition({ 100.f + 250.f * i, 100.f });
+		enemy->SetWeapon((Weapon::WeaponType)i);
+		enemy->SetStatus(Enemy::Status::EditorMode);
+		enemiesUI.push_back(enemy);
+	}
+
 	background.setSize(FRAMEWORK.GetWindowSizeF() * 0.4f);
 	background.setFillColor(sf::Color(150, 150, 150, 100));
 	background.setOutlineColor(sf::Color::White);
@@ -113,6 +125,9 @@ void TileMapEditor::Update(float dt)
 		break;
 	case EditorMode::WallMode:
 		UpdateWallMode(dt);
+		break;
+	case EditorMode::EnemyMode:
+		UpdateEnemyMode(dt);
 		break;
 	}
 
@@ -157,6 +172,32 @@ void TileMapEditor::UpdateDecoMode(float dt)
 
 void TileMapEditor::UpdateEnemyMode(float dt)
 {
+	sf::Vector2i mousePos = InputMgr::GetMousePosition();
+	sf::Vector2f worldPos = static_cast<sf::Vector2f>(mousePos);
+
+	if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
+	{
+		for (int i = 0; i < enemiesUI.size(); ++i)
+		{
+			if (enemiesUI[i]->GetGlobalBounds().contains(worldPos))
+			{
+				selectedEnemyIndex = i;
+				selectedEnemy = *enemiesUI[selectedEnemyIndex];
+				selectedEnemy.SetScale({ 3.f, 3.f });
+				break;
+			}
+		}
+	}
+
+	if (selectedEnemyIndex != -1)
+	{
+		selectedEnemy.SetPosition({ mousePos.x - 10.f, mousePos.y - 10.f });
+	}
+
+	for (auto& enemy : enemiesUI)
+	{
+		enemy->Update(dt);
+	}
 }
 
 void TileMapEditor::UpdateSelectedSpritePosition()
@@ -211,6 +252,16 @@ void TileMapEditor::Draw(sf::RenderWindow& window)
 	case EditorMode::DecorationMode:
 		break;
 	case EditorMode::EnemyMode:
+		window.draw(background);
+		for (auto& enemy : enemiesUI)
+		{
+			enemy->Draw(window);
+		}
+
+		if (selectedEnemyIndex != -1)
+		{
+			selectedEnemy.Draw(window);
+		}
 		break;
 	}
 	
@@ -252,8 +303,6 @@ void TileMapEditor::SetSelectWall(std::pair<std::string, sf::Sprite> wall)
 void TileMapEditor::SetMode(EditorMode mode)
 {
 	currentMode = mode;
-	selectedTileIndex = -1;
-	selectedWallTextureId = "";
 	switch (currentMode)
 	{
 	case EditorMode::TileMode:
@@ -269,6 +318,7 @@ void TileMapEditor::SetMode(EditorMode mode)
 	case EditorMode::DecorationMode:
 		break;
 	case EditorMode::EnemyMode:
+		background.setSize({ FRAMEWORK.GetWindowSizeF().x * 0.5f, FRAMEWORK.GetWindowSizeF().y * 0.2f });
 		break;
 	}
 }

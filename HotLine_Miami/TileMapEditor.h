@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Enemy.h"
 class TileMapEditor : public GameObject
 {
 public:
@@ -21,6 +21,9 @@ protected:
 	sf::Sprite selectedWallSprite;
 	std::string selectedWallTextureId = "";
 
+	std::vector<Enemy*> enemiesUI;
+	int selectedEnemyIndex = -1;
+	Enemy selectedEnemy;
 
 	EditorMode currentMode;
 	sf::RectangleShape background;
@@ -53,6 +56,8 @@ public:
 
 	void SetSelectWall(std::pair<std::string, sf::Sprite> wall);
 	std::string GetSelectedWallTextureId() const { return selectedWallTextureId; }
+
+	Enemy GetSelectedEnemy() const { return selectedEnemy; }
 
 	void SetMode(EditorMode mode);
 	EditorMode GetMode() const { return currentMode; }

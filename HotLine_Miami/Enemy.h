@@ -44,6 +44,7 @@ public:
 	};
 	enum class Status
 	{
+		EditorMode = -1,
 		Normal,
 		Idle,
 		Patrol,
@@ -124,12 +125,14 @@ public:
 
 	void SetStatus(Status stat);
 	void SetWeapon(Weapon::WeaponType type);
+	
 
 	void SetWayPoints(std::vector<sf::Vector2f> pos);
 	void clearWayPoints();
 	void Draw(sf::RenderWindow& window) override;
 
 	Status GetStatus() const { return currentStatus; }
+	Weapon::WeaponType GetWeaponType() const { return weaponStatus.weaponType; }
 
 	void PickupWeapon(Weapon* weapon);
 	void OnHit(Weapon::WeaponStatus weaponStatus, sf::Vector2f direction, bool isThrow = false);

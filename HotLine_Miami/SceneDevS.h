@@ -3,15 +3,17 @@
 #include "json.hpp"
 #include "DataTableMgr.h"
 #include "StageTable.h"
+#include "SceneGame.h"
 using json = nlohmann::json;
 class TileMap;
 class TileMapEditor;
+
 class Player;
 class Enemy;
 class Decoration;
 class Wall;
 class Wall2;
-class SceneDevS : public Scene
+class SceneDevS : public SceneGame
 {
 protected:
 	Player* player;
@@ -46,6 +48,7 @@ public:
 	void Draw(sf::RenderWindow& window) override;
 
 	void CreateWall(const sf::Vector2f& pos);
+	void CreateEnemy(const sf::Vector2f& pos);
 
 	void LoadWalls();
 	void LoadDecorations();
