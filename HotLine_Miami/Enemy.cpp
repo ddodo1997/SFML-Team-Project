@@ -126,6 +126,25 @@ void Enemy::Update(float dt)
 	animatorBody.Update(dt);
 	animatorLegs.Update(dt);
 
+	if (currentStatus == Status::EditorMode)
+	{
+		return;
+	}
+
+	if (InputMgr::GetKeyDown(sf::Keyboard::Num1))
+	{
+		OnHit(weaponStatus, { -1.f,0.f });
+	}
+	if (InputMgr::GetKeyDown(sf::Keyboard::Num2))
+	{
+		OnHit(weaponStatus, { -1.f,0.f });
+	}
+	if (InputMgr::GetKeyDown(sf::Keyboard::Num3))
+	{
+		Reset();
+	}
+	//�þ߰��� �÷��̾�� �浹�� �˻��� ���̸� ����ĳ��Ʈ ����.
+
 	if (player->IsDead() || isDie())
 	{
 		animatorLegs.Stop();
@@ -351,7 +370,7 @@ void Enemy::UpdatePounded(float dt)
 
 void Enemy::FixedUpdate(float dt)
 {
-	if (isDie() || currentStatus == Status::Stun || currentStatus == Status::GetUp || currentStatus == Status::Pounded)
+	if (isDie() || currentStatus == Status::Stun || currentStatus == Status::GetUp || currentStatus == Status::EditorMode || currentStatus == Status::Pounded)
 		return;
 
 	for (auto wall : walls)
@@ -388,6 +407,7 @@ void Enemy::SetStatus(Status stat)
 	speed = 30.f;
 	switch (currentStatus)
 	{
+	case Status::EditorMode:
 	case Status::Normal:
 		switch (weaponStatus.weaponType)
 		{

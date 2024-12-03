@@ -11,6 +11,16 @@ void Wall2::SetPosition(const sf::Vector2f& pos)
 	body.setPosition(position);
 }
 
+void Wall2::SetStartPostion(const sf::Vector2f& pos)
+{
+	startPosition = pos;
+}
+
+void Wall2::SetEndPosition(const sf::Vector2f& pos)
+{
+	endPosition = pos;
+}
+
 void Wall2::SetRotation(float angle)
 {
 	rotation = angle;
@@ -37,6 +47,11 @@ void Wall2::SetOrigin(const sf::Vector2f& newOrigin)
 	originPreset = Origins::Custom;
 	origin = newOrigin;
 	body.setOrigin(origin);
+}
+
+void Wall2::SetId(const std::string& id)
+{
+	this->id = id;
 }
 
 void Wall2::SetTexture(const std::string& textureId)

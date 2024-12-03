@@ -7,7 +7,9 @@ struct DataWall
     std::string id = "";
     sf::Vector2f start = { 0.f, 0.f };
     sf::Vector2f end = { 0.f, 0.f };
+    // Wall::Types type = Wall::Types::Horizontal;
     std::vector<std::string> textureIds;
+
 };
 struct DataEnemy
 {
