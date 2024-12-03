@@ -16,6 +16,12 @@ void HitBox::UpdateTr(const sf::Transformable& tr, const sf::FloatRect& localBou
 	rect.setPosition(tr.getPosition());
 	rect.setScale(tr.getScale());
 	rect.setRotation(tr.getRotation());
+
+	points.left = rect.getGlobalBounds().left;
+	points.right = rect.getGlobalBounds().left + rect.getGlobalBounds().width;
+	points.top = rect.getGlobalBounds().top;
+	points.bottom = rect.getGlobalBounds().top + rect.getGlobalBounds().height;
+	points.center = Utils::GetCenter(rect.getGlobalBounds());
 }
 
 void HitBox::Draw(sf::RenderWindow& window)

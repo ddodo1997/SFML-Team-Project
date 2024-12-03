@@ -102,6 +102,9 @@ void Player::Reset()
 	Utils::SetOrigin(collisionBox, Origins::MC);
 	SetWeaponStatus();
 	noiseCircle.setRadius(weaponStatus.noiseRadius);
+	noiseCircle.setFillColor(sf::Color::Transparent);
+	noiseCircle.setOutlineColor(sf::Color::Blue);
+	noiseCircle.setOutlineThickness(3);
 
 	attackHitBoxCheck.setFillColor(sf::Color::Transparent);
 	attackHitBoxCheck.setOutlineColor(sf::Color::Green);
@@ -127,7 +130,6 @@ void Player::Update(float dt)
 		isAttacking = false;
 	}
 
-	hitBox.UpdateTr(body, body.getLocalBounds());
 	attackHitBoxCheck.setPosition(body.getPosition());
 	attackHitBoxCheck.setRotation(body.getRotation());
 	Utils::SetOrigin(attackHitBoxCheck, Origins::ML);
@@ -148,7 +150,7 @@ void Player::Update(float dt)
 
 	if (isOnPound)
 	{
-		
+
 		if (executionCount > 0)
 		{
 			UpdateExecution(dt);
@@ -160,7 +162,7 @@ void Player::Update(float dt)
 			isOnPound = false;
 		}
 		return;
-	}		
+	}
 
 	direction.x = InputMgr::GetAxis(Axis::Horizontal);
 	direction.y = InputMgr::GetAxis(Axis::Vertical);
@@ -228,7 +230,12 @@ void Player::Update(float dt)
 	}
 
 	SetPosition(position + direction * speed * dt);
+<<<<<<< HEAD:HotLine_Miami/Player.cpp
 	hitBox.UpdateTr(body, body.getLocalBounds());
+=======
+	hitBox.UpdateTr(collisionBox, collisionBox.getLocalBounds());
+
+>>>>>>> origin/Dev_K:HotLine_Miami/Framework/Objects/Player.cpp
 }
 
 void Player::UpdateBodyAnimationMoving()
@@ -304,7 +311,7 @@ void Player::UpdateExecution(float dt)
 	case Weapon::WeaponType::Knife:
 		UpdateExecutionKnife(dt);
 		break;
-	} 	
+	}
 }
 
 void Player::UpdateExecutionDefualt(float dt)
@@ -396,40 +403,25 @@ void Player::FixedUpdate(float dt)
 		{
 			if (enemy != nullptr)
 			{
-				if (enemy->GetStatus() != Enemy::Status::Die && enemy->GetStatus() != Enemy::Status::Stun)
+				if (!enemy->isDie() && !enemy->isStun() && !enemy->isStunOnWall())
 				{
 					if (attackHitBoxCheck.getGlobalBounds().intersects(enemy->GetGlobalBounds()))
 					{
+<<<<<<< HEAD:HotLine_Miami/Player.cpp
 						enemy->OnHit(weaponStatus, look);
 						std::string sfxFilePath = "sound/Attack/sndWeaponHit.wav";
 						if (weaponStatus.weaponType == Weapon::WeaponType::Knife)
 							sfxFilePath = "sound/Attack/sndHit.wav";
 						SOUND_MGR.PlaySfx(sfxFilePath);
+=======
+						if(!Utils::RayCast(position,Utils::GetNormal(enemy->GetPosition() - position),100.f,enemy))
+							enemy->OnHit(weaponStatus, look);
+>>>>>>> origin/Dev_K:HotLine_Miami/Framework/Objects/Player.cpp
 					}
 				}
 			}
 		}
 	}
-
-	for (auto wall : walls)
-	{
-		auto wallBounds = wall->GetGlobalBounds();
-		if (wallBounds.intersects(collisionBox.getGlobalBounds()))
-		{
-			position = prevPos;
-		}
-	}
-
-	for (auto deco : decorations)
-	{
-		auto decoBounds = deco->GetGlobalBounds();
-		if (decoBounds.intersects(collisionBox.getGlobalBounds()))
-		{
-
-			position = prevPos;
-		}
-	}
-	SetPosition(position);
 }
 
 void Player::UpdateOnDie(float dt)
@@ -456,6 +448,7 @@ void Player::Draw(sf::RenderWindow& window)
 	{
 		window.draw(attackHitBoxCheck);
 		window.draw(collisionBox);
+		window.draw(noiseCircle);
 	}
 }
 
@@ -666,7 +659,7 @@ void Player::Execute()
 
 void Player::ExecuteDefault()
 {
-	executionCount = Utils::RandomRange(3,4);
+	executionCount = Utils::RandomRange(3, 4);
 	isExecuting = false;
 }
 
@@ -782,9 +775,10 @@ void Player::AttackMachinegun()
 		sceneGame->SpawnBullet()->Fire(Utils::AngleSpread(look, 10), this, weaponStatus);
 		for (auto enemy : enemies)
 		{
-			if (enemy->GetGlobalBounds().intersects(noiseCircle.getGlobalBounds()) && !enemy->isDie() && !enemy->isStun())
+			if (enemy->GetGlobalBounds().intersects(noiseCircle.getGlobalBounds()) && !enemy->isDie() && !enemy->isStun() && !enemy->isStunOnWall())
 			{
-				enemy->SetStatus(Enemy::Status::Aggro);
+				if (Utils::RandomRange(0, 1))
+					enemy->SetStatus(Enemy::Status::Aggro);
 			}
 		}
 		weaponStatus.remainingBullet--;
@@ -807,9 +801,10 @@ void Player::AttackShotgun()
 
 		for (auto enemy : enemies)
 		{
-			if (enemy->GetGlobalBounds().intersects(noiseCircle.getGlobalBounds()) && !enemy->isDie() && !enemy->isStun())
+			if (enemy->GetGlobalBounds().intersects(noiseCircle.getGlobalBounds()) && !enemy->isDie() && !enemy->isStun() && !enemy->isStunOnWall())
 			{
-				enemy->SetStatus(Enemy::Status::Aggro);
+				if (Utils::RandomRange(0, 1))
+					enemy->SetStatus(Enemy::Status::Aggro);
 			}
 		}
 		weaponStatus.remainingBullet--;

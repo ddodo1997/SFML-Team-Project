@@ -149,10 +149,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Bullet.cpp" />
-    <ClCompile Include="Decoration.cpp" />
+    <ClCompile Include="Framework\Objects\Bullet.cpp" />
+    <ClCompile Include="Framework\Objects\Decoration.cpp" />
     <ClCompile Include="Framework\Tables\DecorationTable.cpp" />
-    <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="Framework\Objects\Enemy.cpp" />
     <ClCompile Include="Framework\Tables\EnemyTable.cpp" />
     <ClCompile Include="Framework\Animation\Animator.cpp" />
     <ClCompile Include="Framework\Animation\AnimationClip.cpp" />
@@ -176,27 +176,27 @@
     <ClCompile Include="Framework\Objects\Text\TextGo.cpp" />
     <ClCompile Include="Framework\Managers\SoundMgr.cpp" />
     <ClCompile Include="Framework\Tables\StringTable.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="SceneDevL.cpp" />
-    <ClCompile Include="SceneDev_K.cpp" />
-    <ClCompile Include="SceneDevS.cpp" />
+    <ClCompile Include="Framework\Objects\Player.cpp" />
+    <ClCompile Include="Framework\Scenes\SceneDevL.cpp" />
+    <ClCompile Include="Framework\Scenes\SceneDev_K.cpp" />
+    <ClCompile Include="Framework\Scenes\SceneDevS.cpp" />
     <ClCompile Include="Framework\Tables\StageTable.cpp" />
-    <ClCompile Include="SceneGame.cpp" />
-    <ClCompile Include="TileMap.cpp" />
-    <ClCompile Include="TileMapEditor.cpp" />
-    <ClCompile Include="UiHudL.cpp" />
-    <ClCompile Include="ViewMgr.cpp" />
-    <ClCompile Include="Wall2.cpp" />
-    <ClCompile Include="Weapon.cpp" />
-    <ClCompile Include="WeaponTable.cpp" />
-    <ClCompile Include="Wall.cpp" />
+    <ClCompile Include="Framework\Scenes\SceneGame.cpp" />
+    <ClCompile Include="Framework\Objects\TileMap.cpp" />
+    <ClCompile Include="Framework\Objects\TileMapEditor.cpp" />
+    <ClCompile Include="Framework\Objects\Text\UiHudL.cpp" />
+    <ClCompile Include="Framework\Managers\ViewMgr.cpp" />
+    <ClCompile Include="Framework\Objects\Wall2.cpp" />
+    <ClCompile Include="Framework\Objects\Weapon.cpp" />
+    <ClCompile Include="Framework\Tables\WeaponTable.cpp" />
+    <ClCompile Include="Framework\Objects\Wall.cpp" />
     <ClCompile Include="Framework\Tables\WallTable.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Bullet.h" />
-    <ClInclude Include="Decoration.h" />
+    <ClInclude Include="Framework\Objects\Bullet.h" />
+    <ClInclude Include="Framework\Objects\Decoration.h" />
     <ClInclude Include="Framework\Tables\DecorationTable.h" />
-    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="Framework\Objects\Enemy.h" />
     <ClInclude Include="Framework\Tables\EnemyTable.h" />
     <ClInclude Include="Framework\Animation\Animator.h" />
     <ClInclude Include="Framework\Animation\AnimationClip.h" />
@@ -222,20 +222,20 @@
     <ClInclude Include="Framework\Objects\Text\TextGo.h" />
     <ClInclude Include="Framework\Managers\SoundMgr.h" />
     <ClInclude Include="Framework\Tables\StringTable.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="SceneDevL.h" />
-    <ClInclude Include="SceneDev_K.h" />
-    <ClInclude Include="SceneDevS.h" />
+    <ClInclude Include="Framework\Objects\Player.h" />
+    <ClInclude Include="Framework\Scenes\SceneDevL.h" />
+    <ClInclude Include="Framework\Scenes\SceneDev_K.h" />
+    <ClInclude Include="Framework\Scenes\SceneDevS.h" />
     <ClInclude Include="Framework\Tables\StageTable.h" />
-    <ClInclude Include="SceneGame.h" />
-    <ClInclude Include="TileMap.h" />
-    <ClInclude Include="TileMapEditor.h" />
-    <ClInclude Include="UiHudL.h" />
-    <ClInclude Include="ViewMgr.h" />
-    <ClInclude Include="Wall2.h" />
-    <ClInclude Include="Weapon.h" />
-    <ClInclude Include="WeaponTable.h" />
-    <ClInclude Include="Wall.h" />
+    <ClInclude Include="Framework\Scenes\SceneGame.h" />
+    <ClInclude Include="Framework\Objects\TileMap.h" />
+    <ClInclude Include="Framework\Objects\TileMapEditor.h" />
+    <ClInclude Include="Framework\Objects\Text\UiHudL.h" />
+    <ClInclude Include="Framework\Managers\ViewMgr.h" />
+    <ClInclude Include="Framework\Objects\Wall2.h" />
+    <ClInclude Include="Framework\Objects\Weapon.h" />
+    <ClInclude Include="Framework\Tables\WeaponTable.h" />
+    <ClInclude Include="Framework\Objects\Wall.h" />
     <ClInclude Include="Framework\Tables\WallTable.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

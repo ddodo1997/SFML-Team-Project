@@ -43,10 +43,10 @@ void Weapon::Update(float dt)
 {
 	hitBox.UpdateTr(weaponSprite, weaponSprite.getLocalBounds());
 
-	if(onDropTimer > 0.f)
+	if (onDropTimer > 0.f)
 		onDropTimer -= dt;
 	onDropTimer = Utils::Clamp(onDropTimer, 0.f, 3.f);
-	if(onThrowTimer > 0.f)
+	if (onThrowTimer > 0.f)
 		onThrowTimer -= dt;
 	onThrowTimer = Utils::Clamp(onThrowTimer, 0.f, 3.f);
 
@@ -64,7 +64,7 @@ void Weapon::Update(float dt)
 void Weapon::FixedUpdate(float dt)
 {
 	// 플레이어에게 던져진 무기의 경우 아래 코드로 적들과 충돌처리	
-	
+
 	if (!(onThrowTimer > 0.f))
 	{
 		return;
@@ -72,7 +72,7 @@ void Weapon::FixedUpdate(float dt)
 	auto eList = scenePointer->GetEnemies();
 	for (auto enemy : eList)
 	{
-		if (weaponSprite.getGlobalBounds().intersects(enemy->GetGlobalBounds()) && !enemy->isDie() && !enemy->isStun())
+		if (weaponSprite.getGlobalBounds().intersects(enemy->GetGlobalBounds()) && !enemy->isDie() && !enemy->isStun() && !enemy->isStunOnWall())
 		{
 			onThrowTimer = 0.f;
 			enemy->OnHit(weaponStatus, direction, true);
@@ -82,7 +82,10 @@ void Weapon::FixedUpdate(float dt)
 				scenePointer->ReturnWeapon(this);
 				sfxFilePath = "sound/Attack/sndHit.wav";
 			}
+<<<<<<< HEAD:HotLine_Miami/Weapon.cpp
 			SOUND_MGR.PlaySfx(sfxFilePath);
+=======
+>>>>>>> origin/Dev_K:HotLine_Miami/Framework/Objects/Weapon.cpp
 		}
 	}
 }
@@ -108,7 +111,7 @@ void Weapon::SetRotation(float angle)
 void Weapon::SetOrigin(Origins origin)
 {
 	originPreset = origin;
-	if(origin != Origins::Custom)
+	if (origin != Origins::Custom)
 		this->origin = Utils::SetOrigin(weaponSprite, originPreset);
 }
 
@@ -155,7 +158,7 @@ void Weapon::OnDrop(sf::Vector2f direction)
 	onThrowTimer = 0.f;
 	onDropTimer = 1.f;
 	onDropTimer = Utils::RandomRange(0.2f, 1.0f);
-	this->direction = Utils::DegreeToNormal(Utils::RandomRange(0,360));
+	this->direction = Utils::DegreeToNormal(Utils::RandomRange(0, 360));
 }
 
 void Weapon::OnHitWall()

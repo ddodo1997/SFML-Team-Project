@@ -1,11 +1,17 @@
 #pragma once
-
+class SceneGame;
+class Player;
+class Enemy;
 class Decoration : public GameObject
 {
 protected:
 	sf::Sprite body;
 	std::string textureId;
 	sf::Vector2f pos;
+
+	SceneGame* sceneGame;
+	Player* player;
+	std::vector<Enemy*> enemies;
 public:
 	Decoration(const std::string& name = "");
 	~Decoration() = default;
@@ -23,6 +29,7 @@ public:
 	void Release() override;
 	void Reset() override;
 	void Update(float dt) override;
+	void FixedUpdate(float dt)override;
 	void Draw(sf::RenderWindow& window) override;
 
 	sf::FloatRect GetLocalBounds() const { return body.getLocalBounds(); }
