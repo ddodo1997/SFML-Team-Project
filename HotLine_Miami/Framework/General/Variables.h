@@ -6,4 +6,3 @@ public:
 	static bool devMode;
 	static Languages currentLang;
 };
-

@@ -217,11 +217,8 @@ void Player::Update(float dt)
 		TryExecute();
 	}
 
-
-
 	SetPosition(position + direction * speed * dt);
 	hitBox.UpdateTr(body, body.getLocalBounds());
-
 }
 
 void Player::UpdateBodyAnimationMoving()
@@ -312,7 +309,8 @@ void Player::UpdateExecutionDefualt(float dt)
 		if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
 		{
 			isExecuting = true;
-			executionTimer = 0.4f;
+			executionTimer = 0.25f;
+			SOUND_MGR.PlaySfx("sound/Attack/sndWeaponHit.wav");
 		}
 	}
 }
@@ -341,7 +339,8 @@ void Player::UpdateExecutionBat(float dt)
 		if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
 		{
 			isExecuting = true;
-			executionTimer = 0.4f;
+			executionTimer = 0.25f;
+			SOUND_MGR.PlaySfx("sound/Attack/sndWeaponHit.wav");
 		}
 	}
 }
@@ -360,6 +359,7 @@ void Player::UpdateExecutionKnife(float dt)
 		{
 			executionCount--;
 			isExecuting = false;
+			SOUND_MGR.PlaySfx("sound/Attack/sndHit.wav");
 		}
 	}
 }
@@ -378,6 +378,10 @@ void Player::FixedUpdate(float dt)
 					if (attackHitBoxCheck.getGlobalBounds().intersects(enemy->GetGlobalBounds()))
 					{
 						enemy->OnHit(weaponStatus, look);
+						std::string sfxFilePath = "sound/Attack/sndWeaponHit.wav";
+						if (weaponStatus.weaponType == Weapon::WeaponType::Knife)
+							sfxFilePath = "sound/Attack/sndHit.wav";
+						SOUND_MGR.PlaySfx(sfxFilePath);
 					}
 				}
 			}
@@ -522,6 +526,7 @@ void Player::TryPickUpWeapon()
 
 void Player::WeaponPickUp(Weapon::WeaponStatus weapon)
 {
+	SOUND_MGR.PlaySfx("sound/Attack/sndPickupWeapon.wav");
 	weaponStatus = weapon;
 	noiseCircle.setRadius(weapon.noiseRadius);
 	Utils::SetOrigin(noiseCircle, Origins::MC);
@@ -572,6 +577,7 @@ void Player::ThrowWeapon(sf::Vector2f lookDir)
 	Utils::SetOrigin(noiseCircle, Origins::MC);
 	SetWeaponStatus();
 	noiseCircle.setRadius(weaponStatus.noiseRadius);
+	SOUND_MGR.PlaySfx("sound/Attack/sndThrow.wav");
 }
 
 void Player::DropWeapon(sf::Vector2f hitDir)
@@ -702,6 +708,10 @@ void Player::AttackDefault()
 	{
 		body.setScale(1.f, 1.f);
 	}
+	int filePathIndex = Utils::RandomRange(1, 2);
+	std::string filePath = "sound/Attack/sndSwing" + std::to_string(filePathIndex) + ".wav";
+	
+	SOUND_MGR.PlaySfx(filePath);
 }
 
 void Player::AttackBat()
@@ -717,6 +727,10 @@ void Player::AttackBat()
 	{
 		body.setScale(1.f, 1.f);
 	}
+	int filePathIndex = Utils::RandomRange(1, 2);
+	std::string filePath = "sound/Attack/sndSwing" + std::to_string(filePathIndex) + ".wav";
+
+	SOUND_MGR.PlaySfx(filePath);
 }
 
 void Player::AttackKnife()
@@ -732,6 +746,10 @@ void Player::AttackKnife()
 	{
 		body.setScale(1.f, 1.f);
 	}
+	int filePathIndex = Utils::RandomRange(1, 2);
+	std::string filePath = "sound/Attack/sndSwing" + std::to_string(filePathIndex) + ".wav";
+
+	SOUND_MGR.PlaySfx(filePath);
 }
 
 void Player::AttackMachinegun()
@@ -748,6 +766,7 @@ void Player::AttackMachinegun()
 		}
 		weaponStatus.remainingBullet--;
 		animatorBody.Play("animations/Player/Attack/pAttackMachinegun.json");
+		SOUND_MGR.PlaySfx("sound/Attack/sndEM16.wav");
 		isAttacking = true;
 	}
 	else
@@ -772,6 +791,7 @@ void Player::AttackShotgun()
 		}
 		weaponStatus.remainingBullet--;
 		animatorBody.Play("animations/Player/Attack/pAttackShotgun.json");
+		SOUND_MGR.PlaySfx("sound/Attack/sndShotgun.wav");
 		isAttacking = true;
 	}
 	else

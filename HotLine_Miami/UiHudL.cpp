@@ -95,12 +95,19 @@ void UiHudL::Reset()
 	currentWeaponStatus.setString(std::to_string(InputMgr::GetMousePosition().y));
 	currentWeaponStatus.setPosition({ 30.f,30.f });
 	Utils::SetOrigin(currentWeaponStatus, Origins::TL);
+
+	volumeDisplayer.setFont(FONT_MGR.Get("fonts/DS-DIGI.ttf"));
+	volumeDisplayer.setCharacterSize(30.f);
+	volumeDisplayer.setFillColor(sf::Color::White);
+	volumeDisplayer.setString(std::to_string(InputMgr::GetMousePosition().y));
+	volumeDisplayer.setPosition({ 30.f,280.f });
+	Utils::SetOrigin(volumeDisplayer, Origins::TL);
 }
 
 void UiHudL::Update(float dt)
 {
 	UpdateMPos(dt);
-
+	UpdateVolumeDisplay(dt);
 
 }
 
@@ -163,6 +170,14 @@ void UiHudL::UpdateWeaponStatus(Weapon::WeaponStatus weaponStatus, int remaining
 	Utils::SetOrigin(currentWeaponStatus, Origins::TL);
 }
 
+void UiHudL::UpdateVolumeDisplay(float dt)
+{
+	std::string bgmVol = std::to_string((int)SOUND_MGR.GetBgmVolume());
+	std::string sfxVol = std::to_string((int)SOUND_MGR.GetSfxVolume());
+	
+	volumeDisplayer.setString("Bgm Vol : " + bgmVol + "\nSfx Vol : " + sfxVol);
+}
+
 void UiHudL::Draw(sf::RenderWindow& window)
 {
 	//window.draw(mPosX);
@@ -172,6 +187,7 @@ void UiHudL::Draw(sf::RenderWindow& window)
 	//window.draw(lookDirectionText);
 	//window.draw(lookDirection);
 	window.draw(currentWeaponStatus);
+	window.draw(volumeDisplayer);
 	if (weaponTypeIndex != -1)
 	{
 		window.draw(currentWeaponStatus);

@@ -76,11 +76,13 @@ void Weapon::FixedUpdate(float dt)
 		{
 			onThrowTimer = 0.f;
 			enemy->OnHit(weaponStatus, direction, true);
+			std::string sfxFilePath = "sound/Attack/sndWeaponHit.wav";
 			if (weaponStatus.weaponType == WeaponType::Knife)
 			{
 				scenePointer->ReturnWeapon(this);
+				sfxFilePath = "sound/Attack/sndHit.wav";
 			}
-				
+			SOUND_MGR.PlaySfx(sfxFilePath);
 		}
 	}
 }

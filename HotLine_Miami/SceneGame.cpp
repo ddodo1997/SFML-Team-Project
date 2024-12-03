@@ -50,6 +50,10 @@ void SceneGame::Enter()
 
 	uiView.setSize(windowSize);
 	uiView.setCenter(windowSize * 0.5f);
+
+	SOUND_MGR.PlayBgm("sound/bgm/Paris2.ogg");
+	SOUND_MGR.SetBgmVolume(50);
+	SOUND_MGR.SetSfxVolume(50);
 }
 
 void SceneGame::Exit()
@@ -120,19 +124,31 @@ void SceneGame::Update(float dt)
 	}
 	if (InputMgr::GetKey(sf::Keyboard::Numpad7))
 	{
-		directionX -= 1.f;
+		int newVol = SOUND_MGR.GetBgmVolume();
+		newVol--;
+		newVol = Utils::Clamp(newVol, 0, 100);
+		SOUND_MGR.SetBgmVolume(newVol);
 	}
 	if (InputMgr::GetKey(sf::Keyboard::Numpad8))
 	{
-		directionX += 1.f;
+		int newVol = SOUND_MGR.GetBgmVolume();
+		newVol++;
+		newVol = Utils::Clamp(newVol, 0, 100);
+		SOUND_MGR.SetBgmVolume(newVol);
 	}
 	if (InputMgr::GetKey(sf::Keyboard::Numpad4))
 	{
-		directionY -= 1.f;
+		int newVol = SOUND_MGR.GetSfxVolume();
+		newVol--;
+		newVol = Utils::Clamp(newVol, 0, 100);
+		SOUND_MGR.SetSfxVolume(newVol);
 	}
 	if (InputMgr::GetKey(sf::Keyboard::Numpad5))
 	{
-		directionY += 1.f;
+		int newVol = SOUND_MGR.GetSfxVolume();
+		newVol++;
+		newVol = Utils::Clamp(newVol, 0, 100);
+		SOUND_MGR.SetSfxVolume(newVol);
 	}
 
 	float randPosX = Utils::RandomRange(20.f, 200.f);
