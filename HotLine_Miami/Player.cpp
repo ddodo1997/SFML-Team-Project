@@ -599,12 +599,16 @@ void Player::TryExecute()
 			{
 				enemy->SetStatus(Enemy::Status::Pounded); // ��⿡ ó������ �������� ���� // Status �߰���
 				look = enemy->GetDirection();
+				SetRotation(Utils::Angle(look));
 				SetPosition(enemy->GetPosition());
 				executingEnemy = enemy;
 				Execute();
+				return;
 			}
 		}
 	}
+
+	
 }
 
 void Player::Execute()

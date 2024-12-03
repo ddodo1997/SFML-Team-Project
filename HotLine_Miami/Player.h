@@ -39,6 +39,7 @@ protected:
 
 	sf::Sprite body;
 	sf::Sprite leg;
+	sf::Sprite mask;
 
 	Animator animatorBody;
 	Animator animatorLeg;
