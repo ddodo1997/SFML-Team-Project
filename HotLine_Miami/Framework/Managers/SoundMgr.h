@@ -39,6 +39,9 @@ public:
 
 	void SetSfxVolume(float v);
 	void StopAllSfx();
+
+	float GetBgmVolume() { return bgmVolume; }
+	float GetSfxVolume() { return sfxVolume; }
 };
 
 #define SOUND_MGR (SoundMgr::Instance())

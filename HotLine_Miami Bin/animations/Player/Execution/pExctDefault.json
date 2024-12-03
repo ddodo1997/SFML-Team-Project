@@ -1,13 +1,13 @@
 {
     "ID": "pExctDefault",
     "LoopType": 0,
-    "FPS": 10,
+    "FPS": 16,
     "texId": "graphics/player/Attack/Pound/pAttackBash.png",
     "Frames":
     [
-        [222,0,74,48],
-        [0,0,74,48],
-        [74,0,74,48],
-        [148,0,74,48]
+        [222,0,74,32],
+        [0,0,74,32],
+        [74,0,74,32],
+        [148,0,74,32]
     ]
 }

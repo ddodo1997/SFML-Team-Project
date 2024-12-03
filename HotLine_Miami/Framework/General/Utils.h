@@ -70,4 +70,7 @@ public:
 
 	static sf::Vector2f GetTransratedPoint(const sf::Vector2f& origin, const sf::Vector2f& direction, float maxDistance);
 	static bool RayCast(const sf::Vector2f& origin, const sf::Vector2f& direction, float maxDistance, GameObject* target);
+
+	// 이미지 내 Pixel 감지
+	static sf::Vector2i FindPixelByColor(const sf::Sprite& sprite, bool fromCenter = false);
 };

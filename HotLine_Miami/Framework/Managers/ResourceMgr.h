@@ -42,7 +42,7 @@ public:
 	}
 
 	bool Load(const std::string& id, bool notUnloadAll = false)
-	{
+	{		
 		if (resources.find(id) != resources.end())
 			return false;
 
@@ -51,7 +51,7 @@ public:
 		if (success)
 		{
 			resources.insert({ id, resource });
-			if(notUnloadAll)
+			if (notUnloadAll)
 				notUnloadAllResources.insert(id);
 		}
 		else

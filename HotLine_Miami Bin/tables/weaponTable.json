@@ -7,7 +7,7 @@
         "DamageOnThrow": 0,
         "isRangedWeapon" : false,
         "MaxBullet": 0,
-        "AttackInterval": 0.5,
+        "AttackInterval": 0.33,
         "HitBoxWidth": 22.0,
         "HitBoxHeight": 30.0,
 		"NoiseRadius" : 0
@@ -19,7 +19,7 @@
         "DamageOnThrow": 0,
         "isRangedWeapon" : false,
         "MaxBullet": 0,
-        "AttackInterval": 0.5,
+        "AttackInterval": 0.4,
         "HitBoxWidth": 30.0,
         "HitBoxHeight": 40.0,
 		"NoiseRadius" : 0        
@@ -31,7 +31,7 @@
         "DamageOnThrow": 1,
         "isRangedWeapon" : false,
         "MaxBullet": 0,
-        "AttackInterval": 0.25,
+        "AttackInterval": 0.18,
         "HitBoxWidth": 25.0,
         "HitBoxHeight": 40.0,
 		"NoiseRadius" : 0  

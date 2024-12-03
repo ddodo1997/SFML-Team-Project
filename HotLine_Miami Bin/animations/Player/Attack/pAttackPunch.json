@@ -1,7 +1,7 @@
 {
     "ID": "pAttackPunch",
     "LoopType": 0,
-    "FPS": 14,
+    "FPS": 21,
     "texId": "graphics/player/Attack/pAttackPunch_1Line.png",
     "Frames":
     [

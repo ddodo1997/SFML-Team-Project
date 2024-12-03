@@ -14,7 +14,12 @@ protected:
 
 	sf::Text currentWeaponStatus;
 
+	sf::Text volumeDisplayer;
+
 	int weaponTypeIndex = -1;
+
+	int bgmVol;
+	
 
 public:
 	UiHudL(const std::string& name = "");
@@ -35,5 +40,7 @@ public:
 	void UpdateHitDir(sf::Vector2f hitDir);
 	void UpdateLookDir(sf::Vector2f lookDir);
 	void UpdateWeaponStatus(Weapon::WeaponStatus weaponStatus, int remainingBullet);
+	void UpdateVolumeDisplay(float dt);
+
 	void Draw(sf::RenderWindow& window) override;
 };

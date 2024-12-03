@@ -18,12 +18,16 @@ public:
 
 	enum class Mask
 	{
-
-
+		None,
+		Chicken,
+		Tiger,
+		Rabbit,
+		Wolf
 	};
 
 protected:
 	Weapon::WeaponStatus weaponStatus;
+	Mask currentMask = Mask::Chicken;
 
 	float attackTimer;
 
@@ -39,6 +43,9 @@ protected:
 
 	sf::Sprite body;
 	sf::Sprite leg;
+	sf::Sprite mask;
+
+	sf::RenderStates maskRenderState;
 
 	Animator animatorBody;
 	Animator animatorLeg;
@@ -89,6 +96,7 @@ public:
 	void Reset() override;
 	void Update(float dt) override;
 	void UpdateBodyAnimationMoving();
+	void UpdateMask(float dt);
 	void UpdateExecution(float dt);
 
 	void UpdateExecutionDefualt(float dt);
