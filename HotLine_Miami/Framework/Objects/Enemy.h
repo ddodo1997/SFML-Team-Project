@@ -50,6 +50,7 @@ public:
 		Aggro,
 		SearchWeapon,
 		Stun,
+		StunOnWall,
 		GetUp,
 		Die,
 		Pounded
@@ -103,8 +104,11 @@ public:
 	void SetOrigin(Origins preset) override;
 	void SetOrigin(const sf::Vector2f& newOrigin) override;
 
-	sf::FloatRect GetLocalBounds()const { return legs.getLocalBounds(); }
-	sf::FloatRect GetGlobalBounds()const { return legs.getGlobalBounds(); }
+	void SetDirection(sf::Vector2f dir) { direction = dir; }
+	const sf::Vector2f& GetDirection() { return direction; }
+
+	sf::FloatRect GetLocalBounds()const override { return collisionBox.getLocalBounds(); }
+	sf::FloatRect GetGlobalBounds()const override { return collisionBox.getGlobalBounds(); }
 
 	void Init() override;
 	void Release() override;
@@ -118,6 +122,7 @@ public:
 	void UpdateAggro(float dt);
 	void UpdateSearchWeapon(float dt);
 	void UpdateStun(float dt);
+	void UpdateStunOnWall(float dt);
 	void UpdateGetUp(float dt);
 	void UpdateDie(float dt);
 	void UpdatePounded(float dt);
@@ -133,6 +138,7 @@ public:
 
 	Status GetStatus() const { return currentStatus; }
 	sf::Vector2f GetDirection() const { return direction; }
+	sf::Vector2f GetPrevPos() { return prevPos; }
 
 	void PickupWeapon(Weapon* weapon);
 	void OnHit(Weapon::WeaponStatus weaponStatus, sf::Vector2f direction, bool isThrow = false);
@@ -141,6 +147,6 @@ public:
 
 	bool isDie() const{ return currentStatus == Status::Die ? true : false; }
 	bool isStun() const { return currentStatus == Status::Stun ? true : false; }
-
+	bool isStunOnWall() const { return currentStatus == Status::StunOnWall ? true : false; }
 	void Attack();
 };

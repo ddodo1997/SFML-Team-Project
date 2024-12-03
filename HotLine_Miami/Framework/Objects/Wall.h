@@ -1,6 +1,8 @@
 #pragma once
 #include "StageTable.h"
-
+class SceneGame;
+class Player;
+class Enemy;
 class Wall : public GameObject, public sf::Transformable
 {
 public:
@@ -12,6 +14,9 @@ public:
 protected:
 	sf::VertexArray va;
 	std::vector<const sf::Texture*> textures;
+	SceneGame* sceneGame;
+	Player* player;
+	std::vector<Enemy*> enemies;
 	
 	float length;
 	DataWall data;
@@ -29,6 +34,7 @@ public:
 	void Release() override;
 	void Reset() override;
 	void Update(float dt) override;
+	void FixedUpdate(float dt)override;
 	void Draw(sf::RenderWindow& window) override;
 
 	void SetType(Types type);

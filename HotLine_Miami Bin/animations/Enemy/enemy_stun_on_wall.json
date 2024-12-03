@@ -1,0 +1,10 @@
+{
+    "ID": "EnemyStunOnWall",
+    "LoopType": 0,
+    "FPS": 1,
+    "texId": "graphics/Enemy/Stunning/eGetUpLean.png",
+    "Frames":
+    [
+        [48,0,48,32]
+    ]
+}

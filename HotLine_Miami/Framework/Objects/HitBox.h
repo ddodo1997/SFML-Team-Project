@@ -2,8 +2,20 @@
 
 class HitBox
 {
+private:
+	struct Points
+	{
+		float top;
+		float left;
+		float bottom;
+		float right;
+		sf::Vector2f center;
+	};
+
 public:
 	HitBox();
+
+	Points points;
 
 	sf::RectangleShape rect;
 

@@ -52,23 +52,23 @@ protected:
 
 	bool isMoving = false;
 	bool isAlive = true;
-	
+
 	sf::FloatRect attackHitBox;
 	sf::RectangleShape attackHitBoxCheck;
 	sf::CircleShape noiseCircle;
 
 	bool isFlipped = false;
 	bool isAttacking = false;
-	
+
 	bool isOnPound = false;
 	bool isExecuting = false;
 	float executionTimer = 0.f;
 	int executionCount = 0;
-	
+
 	std::map<std::string, AnimationClip> aniClipMap;
 
 	std::string dieSpriteDirectory = "graphics/player/Die/";
-	
+
 public:
 	Player(const std::string& name = "Player");
 	~Player() = default;
@@ -81,7 +81,7 @@ public:
 	void SetOrigin(const sf::Vector2f& newOrigin) override;
 
 	void SetScene(SceneGame* sceneDevL);
-	
+
 	bool IsDead() { return !isAlive; }
 
 	void Init() override;
@@ -106,6 +106,11 @@ public:
 	void OnHitByKnife(sf::Vector2f hitDir);
 	void OnHitByMachinegun(sf::Vector2f hitDir);
 	void OnHitByShotgun(sf::Vector2f hitDir);
+
+	void SetDirection(sf::Vector2f dir) { direction = dir; }
+	const sf::Vector2f& GetDirection() { return direction; }
+	sf::Vector2f GetPrevPos() { return prevPos; }
+
 	sf::FloatRect GetGlobalBounds() { return leg.getGlobalBounds(); }
 	sf::FloatRect GetLocalBounds() { return leg.getLocalBounds(); }
 

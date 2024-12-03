@@ -87,7 +87,7 @@ void Enemy::Reset()
 	viewAngle.setPointCount(3);
 	viewAngle.setPoint(0, { 0.f, 0.f });
 
-	viewAngle.setFillColor(sf::Color(255,0,0,140));
+	viewAngle.setFillColor(sf::Color(255, 0, 0, 140));
 
 	viewAngle.setPoint(1, { 100.f, -30.f });
 	viewAngle.setPoint(2, { 100.f, 30.f });
@@ -100,6 +100,7 @@ void Enemy::Reset()
 	SetStatus(Status::Patrol);
 	direction = { 0.f, 0.f };
 	SetPatterns();
+	speed = 30.f;
 	attackTimer = weaponStatus.attackInterval;
 	hp = 1;
 }
@@ -117,12 +118,14 @@ void Enemy::SetPatterns()
 	patrol.originPoint.setRadius(0.1f);
 	Utils::SetOrigin(patrol.originPoint, Origins::MC);
 	patrol.originPoint.setFillColor(sf::Color::Blue);
+
+	stunTimer = 0.f;
 }
 
 void Enemy::Update(float dt)
 {
 	SetOrigin(Origins::MC);
-	hitBox.UpdateTr(body, body.getLocalBounds());
+	hitBox.UpdateTr(collisionBox, collisionBox.getLocalBounds());
 	animatorBody.Update(dt);
 	animatorLegs.Update(dt);
 
@@ -150,6 +153,9 @@ void Enemy::Update(float dt)
 		break;
 	case Status::Stun:
 		UpdateStun(dt);
+		break;
+	case Status::StunOnWall:
+		UpdateStunOnWall(dt);
 		break;
 	case Status::GetUp:
 		UpdateGetUp(dt);
@@ -299,11 +305,17 @@ void Enemy::UpdateSearchWeapon(float dt)
 		closetWeaponPos.insert({ Utils::Distance(position, weapon->GetPosition()), weapon });
 		closetWeapon = closetWeaponPos.begin()->second;
 	}
-	if (closetWeapon == nullptr)
+	if (closetWeapon == nullptr || Utils::Distance(closetWeapon->GetPosition(), position) > 100.f)
 	{
 		//루팅할 무기가 없는 경우...
+		direction = Utils::GetNormal(player->GetPosition() - position);
+		if (Utils::Distance(position, player->GetPosition()) > 80.f)
+			speed = 50.f;
+		else
+			speed = -50.f;
 		return;
 	}
+	speed = 50.f;
 	direction = Utils::GetNormal(closetWeapon->GetPosition() - position);
 
 	if (closetWeapon->GetGlobalBounds().intersects(legs.getGlobalBounds()) && closetWeapon->GetIsPickupable())
@@ -328,9 +340,19 @@ void Enemy::UpdateStun(float dt)
 	}
 }
 
+void Enemy::UpdateStunOnWall(float dt)
+{
+	stunTimer += dt;
+	if (stunTimer >= stunDelay)
+	{
+		stunTimer = 0.f;
+		SetStatus(Status::GetUp);
+	}
+}
+
 void Enemy::UpdateGetUp(float dt)
 {
-	if (animatorBody.GetCurrentClipId() != "EnemyGetUp")
+	if (animatorBody.GetCurrentClipId() != "EnemyGetUp" && animatorBody.GetCurrentClipId() != "EnemyGetUpOnWall")
 		SetStatus(Status::SearchWeapon);
 }
 
@@ -354,28 +376,8 @@ void Enemy::FixedUpdate(float dt)
 	if (isDie() || currentStatus == Status::Stun || currentStatus == Status::GetUp || currentStatus == Status::Pounded)
 		return;
 
-	for (auto wall : walls)
-	{
-		auto wallBounds = wall->GetGlobalBounds();
-		if (wallBounds.intersects(collisionBox.getGlobalBounds()))
-		{
-			position = prevPos;
-		}
-	}
-
-	for (auto deco : decorations)
-	{
-		auto decoBounds = deco->GetGlobalBounds();
-		if (decoBounds.intersects(collisionBox.getGlobalBounds()))
-		{
-
-			position = prevPos;
-		}
-	}
-	SetPosition(position);
-
 	if (viewAngle.getGlobalBounds().intersects(player->GetHitBox().rect.getGlobalBounds()) && currentStatus != Status::Aggro && weaponStatus.weaponType != Weapon::WeaponType::None)
-		if (!Utils::RayCast(position, direction, viewAngle.getLocalBounds().width, player))
+		if (!Utils::RayCast(position, Utils::GetNormal(player->GetPosition()- position), viewAngle.getLocalBounds().width, player))
 			SetStatus(Status::Aggro);
 }
 
@@ -385,7 +387,7 @@ void Enemy::SetStatus(Status stat)
 	currentStatus = stat;
 	animatorLegs.Play("animations/Enemy/enemy_legs.json");
 	isWalking = true;
-	speed = 30.f;
+	stunTimer = 0.f;
 	switch (currentStatus)
 	{
 	case Status::Normal:
@@ -475,15 +477,22 @@ void Enemy::SetStatus(Status stat)
 		}
 		break;
 	case Status::SearchWeapon:
-		speed = 50.f;
 		animatorBody.Play("animations/Enemy/enemy_none_walk.json");
 		break;
 	case Status::Stun:
 		animatorBody.Play("animations/Enemy/enemy_stun.json");
 		isWalking = false;
 		break;
+	case Status::StunOnWall:
+		animatorBody.Play("animations/Enemy/enemy_stun_on_wall.json");
+		speed = 0.f;
+		isWalking = false;
+		break;
 	case Status::GetUp:
-		animatorBody.Play("animations/Enemy/enemy_getup.json");
+		if (prevStatus == Status::StunOnWall)
+			animatorBody.Play("animations/Enemy/enemy_getup_on_wall.json");
+		else
+			animatorBody.Play("animations/Enemy/enemy_getup.json");
 		animatorBody.PlayQueue("animations/Enemy/enemy_none_sneak.json");
 		isWalking = false;
 		break;
