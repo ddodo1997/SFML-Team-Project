@@ -74,6 +74,12 @@ void Player::Release()
 
 void Player::Reset()
 {
+	// Mask Test용
+	mask.setTexture(TEXTURE_MGR.Get("graphics/player/Masks/sprMasks_0.png"));
+	Utils::SetOrigin(mask, Origins::MC);
+
+	// ~Mask Test용
+
 	isAlive = true;
 	isOnPound = false;
 	isExecuting = false;
@@ -135,6 +141,10 @@ void Player::Update(float dt)
 
 	animatorBody.Update(dt);
 	animatorLeg.Update(dt);
+	//if (isMoving)
+	//{
+	//	UpdateMask(dt);
+	//}
 
 	if (isOnPound)
 	{
@@ -269,6 +279,18 @@ void Player::UpdateBodyAnimationMoving()
 	}
 }
 
+void Player::UpdateMask(float dt)
+{
+	sf::Transform bodyTrans = body.getTransform();
+
+
+
+	maskRenderState = bodyTrans.translate((sf::Vector2f)Utils::FindPixelByColor(body));
+
+	//mask.setPosition(position);
+	//mask.setRotation(Utils::Angle(look));
+}
+
 void Player::UpdateExecution(float dt)
 {
 	switch (weaponStatus.weaponType)
@@ -306,6 +328,7 @@ void Player::UpdateExecutionDefualt(float dt)
 	{
 		executionTimer = 10.f;
 		animatorBody.Play("animations/Player/Execution/pExctDefault.json");
+		Utils::SetOrigin(body, Origins::MC);
 		if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
 		{
 			isExecuting = true;
@@ -427,6 +450,7 @@ void Player::Draw(sf::RenderWindow& window)
 	else if (isMoving && !isOnPound)
 		window.draw(leg);
 	window.draw(body);
+	window.draw(mask, maskRenderState);
 	hitBox.Draw(window);
 	if (Variables::isDrawHitBox)
 	{
@@ -607,14 +631,13 @@ void Player::TryExecute()
 				look = enemy->GetDirection();
 				SetRotation(Utils::Angle(look));
 				SetPosition(enemy->GetPosition());
+				Utils::SetOrigin(body, Origins::MC);
 				executingEnemy = enemy;
 				Execute();
 				return;
 			}
 		}
-	}
-
-	
+	}	
 }
 
 void Player::Execute()

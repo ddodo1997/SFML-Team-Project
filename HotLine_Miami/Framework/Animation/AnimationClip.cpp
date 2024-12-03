@@ -22,7 +22,6 @@ bool AnimationClip::loadFromFile(const std::string& filePath)
 		});
 	}
 
-
 	///////////////////////////////////////////////////
 	/// animation json parsing test code
 	/// print all to consol

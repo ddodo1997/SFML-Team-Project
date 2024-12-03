@@ -117,6 +117,8 @@ void Enemy::SetPatterns()
 	patrol.originPoint.setRadius(0.1f);
 	Utils::SetOrigin(patrol.originPoint, Origins::MC);
 	patrol.originPoint.setFillColor(sf::Color::Blue);
+
+	stunTimer = 0.f;
 }
 
 void Enemy::Update(float dt)

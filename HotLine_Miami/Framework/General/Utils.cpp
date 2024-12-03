@@ -441,3 +441,50 @@ bool Utils::RayCast(const sf::Vector2f& origin, const sf::Vector2f& direction, f
     }
     return result;
 }
+
+sf::Vector2i Utils::FindPixelByColor(const sf::Sprite& sprite, bool fromCenter)
+{    
+    sf::Vector2i position;
+
+    sf::Vector2i spriteSize = sprite.getTextureRect().getSize();
+    sf::Vector2i spriteTarget = sprite.getTextureRect().getPosition();
+    const sf::Texture texture = *sprite.getTexture();
+
+    sf::Image image = texture.copyToImage();
+    sf::Color targetColor = sf::Color(123, 134, 156);
+
+    // 나중에 찾을 색상 값 Customizing 필요
+
+    //for (int i = spriteTarget.y; i < spriteTarget.y + spriteSize.y; ++i)
+    //{
+    //    for (int j = spriteTarget.x; j < spriteTarget.x + spriteSize.x; ++j)
+    //    {
+    //        if (image.getPixel(j, i) == targetColor)
+    //        { 
+    //            position = {j - spriteTarget.x, i - spriteTarget.y};
+    //            return position;
+    //        }
+    //    }
+    //}
+
+    int isDownward = 1;
+    int isRightward = 1;
+    for (int i = 0; i < spriteSize.y/4; ++i)
+    {
+        for (int j = 0; j <= i; ++j)
+        {
+            if (image.getPixel((int)spriteSize.x / 2 + j * isRightward, (int)spriteSize.y / 2 + i * isDownward) == targetColor)
+            {
+                return position = { j,i };
+            }
+        }
+        isRightward *= -1;
+        isDownward *= -1;
+    }
+
+
+
+    if(fromCenter)
+        return {position.x - spriteSize.x, position.y - spriteSize.y};
+    return position;        
+}
