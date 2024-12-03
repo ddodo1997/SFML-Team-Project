@@ -140,11 +140,8 @@ public:
 
 	Status GetStatus() const { return currentStatus; }
 	sf::Vector2f GetDirection() const { return direction; }
-<<<<<<< HEAD:HotLine_Miami/Enemy.h
 	Weapon::WeaponType GetWeaponType() const { return weaponStatus.weaponType; }
-=======
 	sf::Vector2f GetPrevPos() { return prevPos; }
->>>>>>> origin/Dev_K:HotLine_Miami/Framework/Objects/Enemy.h
 
 	void PickupWeapon(Weapon* weapon);
 	void OnHit(Weapon::WeaponStatus weaponStatus, sf::Vector2f direction, bool isThrow = false);

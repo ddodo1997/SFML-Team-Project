@@ -82,10 +82,7 @@ void Weapon::FixedUpdate(float dt)
 				scenePointer->ReturnWeapon(this);
 				sfxFilePath = "sound/Attack/sndHit.wav";
 			}
-<<<<<<< HEAD:HotLine_Miami/Weapon.cpp
 			SOUND_MGR.PlaySfx(sfxFilePath);
-=======
->>>>>>> origin/Dev_K:HotLine_Miami/Framework/Objects/Weapon.cpp
 		}
 	}
 }

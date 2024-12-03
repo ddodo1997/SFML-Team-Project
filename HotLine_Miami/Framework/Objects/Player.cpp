@@ -230,12 +230,7 @@ void Player::Update(float dt)
 	}
 
 	SetPosition(position + direction * speed * dt);
-<<<<<<< HEAD:HotLine_Miami/Player.cpp
-	hitBox.UpdateTr(body, body.getLocalBounds());
-=======
 	hitBox.UpdateTr(collisionBox, collisionBox.getLocalBounds());
-
->>>>>>> origin/Dev_K:HotLine_Miami/Framework/Objects/Player.cpp
 }
 
 void Player::UpdateBodyAnimationMoving()
@@ -407,16 +402,14 @@ void Player::FixedUpdate(float dt)
 				{
 					if (attackHitBoxCheck.getGlobalBounds().intersects(enemy->GetGlobalBounds()))
 					{
-<<<<<<< HEAD:HotLine_Miami/Player.cpp
-						enemy->OnHit(weaponStatus, look);
-						std::string sfxFilePath = "sound/Attack/sndWeaponHit.wav";
-						if (weaponStatus.weaponType == Weapon::WeaponType::Knife)
-							sfxFilePath = "sound/Attack/sndHit.wav";
-						SOUND_MGR.PlaySfx(sfxFilePath);
-=======
-						if(!Utils::RayCast(position,Utils::GetNormal(enemy->GetPosition() - position),100.f,enemy))
+						if (!Utils::RayCast(position, Utils::GetNormal(enemy->GetPosition() - position), 100.f, enemy))
+						{
 							enemy->OnHit(weaponStatus, look);
->>>>>>> origin/Dev_K:HotLine_Miami/Framework/Objects/Player.cpp
+							std::string sfxFilePath = "sound/Attack/sndWeaponHit.wav";
+							if (weaponStatus.weaponType == Weapon::WeaponType::Knife)
+								sfxFilePath = "sound/Attack/sndHit.wav";
+							SOUND_MGR.PlaySfx(sfxFilePath);
+						}
 					}
 				}
 			}
