@@ -79,11 +79,20 @@ void TileMapEditor::Reset()
 	selectedTileSprite.setScale(1.f, 1.f);
 
 	const auto& wallDataList = WALL_TABLE->GetTable();
-	for (const auto& wallData : wallDataList)
+	for (const auto& wallData : WALL_TABLE->GetHorizontalTable())
 	{
 		sf::Sprite wallSprite;
 		wallSprite.setTexture(TEXTURE_MGR.Get(WALL_TABLE->GetFilePath() + wallData.second));
 		wallSprite.setScale(2.f, 2.f);  
+		wallSprite.setPosition(10.f + wallSprites.size() * 84.f, 10.f);
+
+		wallSprites.insert({ wallData.first, wallSprite });
+	}
+	for (const auto& wallData : WALL_TABLE->GetVerticalTable())
+	{
+		sf::Sprite wallSprite;
+		wallSprite.setTexture(TEXTURE_MGR.Get(WALL_TABLE->GetFilePath() + wallData.second));
+		wallSprite.setScale(2.f, 2.f);
 		wallSprite.setPosition(10.f + wallSprites.size() * 84.f, 10.f);
 
 		wallSprites.insert({ wallData.first, wallSprite });

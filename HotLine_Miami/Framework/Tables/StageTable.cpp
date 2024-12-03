@@ -64,8 +64,16 @@ bool StageTable::Load()
 		wallData.end = { wall["end"]["x"], wall["end"]["y"] };
 		for (const auto& textureId : wall["ids"].get<std::vector<std::string>>())
 		{
-			std::string wallTexId = WALL_TABLE->GetWall(textureId);
-			wallData.textureIds.push_back(wallTexId);
+			const auto& wallTypeData = WALL_TABLE->GetWall(textureId);
+
+			if (wallTypeData.type == Wall::Types::Horizontal)
+			{
+				wallData.textureIds.push_back(WALL_TABLE->GetHorizontalWallTextureId(textureId));
+			}
+			else if (wallTypeData.type == Wall::Types::Vertical)
+			{
+				wallData.textureIds.push_back(WALL_TABLE->GetVerticalWallTextureId(textureId));
+			}
 		}
 		wallTable.insert({ wallData.id, wallData });
 	}
