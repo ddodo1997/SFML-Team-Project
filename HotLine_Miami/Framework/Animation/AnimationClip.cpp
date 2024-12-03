@@ -39,3 +39,29 @@ bool AnimationClip::loadFromFile(const std::string& filePath)
 	fStream.close();
 	return true;
 }
+
+bool AnimationClipPlayer::loadFromFile(const std::string& filePath)
+{
+	std::ifstream fStream(filePath);
+	json data = json::parse(fStream);
+	clip.id = data["ID"];
+	clip.loopType = data["LoopType"];
+	clip.fps = data["FPS"];
+
+	for (int i = 0; i < data["Frames"].size(); i++)
+	{
+		clip.frames.push_back({ data["texId"],
+			sf::IntRect{
+				data["Frames"][i][0],
+				data["Frames"][i][1],
+				data["Frames"][i][2],
+				data["Frames"][i][3],
+			}
+		});
+		maskPixelCoords.push_back({ data["Frames"][i][4],
+				data["Frames"][i][5] });
+	}
+
+	fStream.close();
+	return true;
+}

@@ -97,3 +97,4 @@ T ResourceMgr<T>::Empty;
 #define FONT_MGR (ResourceMgr<sf::Font>::Instance())
 #define SOUNDBUFFER_MGR (ResourceMgr<sf::SoundBuffer>::Instance())
 #define ANI_CLIP_MGR (ResourceMgr<AnimationClip>::Instance())
+#define ANI_CLIP_MGR_P (ResourceMgr<AnimationClipPlayer>::Instance())

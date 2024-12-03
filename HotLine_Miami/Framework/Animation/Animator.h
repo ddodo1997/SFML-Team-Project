@@ -27,6 +27,7 @@ protected:
 	std::queue<std::string> playQueue;
 
 	AnimationClip* currentClip;
+	AnimationClipPlayer* currentClipP;
 	sf::Sprite* sprite = nullptr;
 
 	bool isPlaying = false;
@@ -52,6 +53,9 @@ public:
 
 	void Play(const std::string& clipId, bool clearQueue = true);
 	void Play(AnimationClip* clip, bool clearQueue = true);
+	void PlayP(const std::string& clipPId, bool clearQueue = true);
+	void PlayP(AnimationClipPlayer* clip, bool clearQueue = true);
+	sf::Vector2i GetCurrentMaskPos();
 
 	void RePlay() { isPlaying = true; }
 	void PlayQueue(const std::string& clipId);
