@@ -100,6 +100,8 @@ public:
 	void Init() override;
 	void Release() override;
 	void Reset() override;
+	void ResetMask(bool ifInitialSetting = false);
+
 	void Update(float dt) override;
 	void UpdateBodyAnimationMoving();
 	void UpdateMask(float dt);

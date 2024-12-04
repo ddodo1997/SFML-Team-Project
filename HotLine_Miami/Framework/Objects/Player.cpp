@@ -75,9 +75,7 @@ void Player::Release()
 void Player::Reset()
 {
 	// Mask Test용
-	mask.setTexture(TEXTURE_MGR.Get("graphics/player/Masks/sprMasks_0.png"));
-	Utils::SetOrigin(mask, Origins::MC);
-
+	ResetMask();	
 	// ~Mask Test용
 
 	isAlive = true;
@@ -116,8 +114,90 @@ void Player::Reset()
 	attackHitBoxCheck.setSize({ weaponStatus.hitBoxWidth, weaponStatus.hitBoxHeight });
 }
 
+void Player::ResetMask(bool ifInitialSetting)
+{
+	switch (currentMask)
+	{
+	case Mask::None:
+		mask.setTexture(TEXTURE_MGR.Get("graphics/player/Masks/sprMasks_x.png"));
+		break;
+	case Mask::Chicken:
+		mask.setTexture(TEXTURE_MGR.Get("graphics/player/Masks/sprMasks_0.png"));
+		break;
+	case Mask::Tiger:
+		mask.setTexture(TEXTURE_MGR.Get("graphics/player/Masks/sprMasks_2.png"));
+		break;
+	case Mask::Rabbit:
+		mask.setTexture(TEXTURE_MGR.Get("graphics/player/Masks/sprMasks_5.png"));
+		break;
+	case Mask::Wolf:
+		mask.setTexture(TEXTURE_MGR.Get("graphics/player/Masks/sprMasks_6.png"));
+		break;
+	case Mask::Giraffe:
+		mask.setTexture(TEXTURE_MGR.Get("graphics/player/Masks/sprMasks_7.png"));
+		break;
+	case Mask::Elephant:
+		mask.setTexture(TEXTURE_MGR.Get("graphics/player/Masks/sprMasks_9.png"));
+		break;
+	case Mask::Walrus:
+		mask.setTexture(TEXTURE_MGR.Get("graphics/player/Masks/sprMasks_21.png"));
+		break;
+	}
+	Utils::SetOrigin(mask, Origins::MC);
+
+	if (ifInitialSetting)
+	{
+		switch (currentMask)
+		{
+		case Mask::None:
+
+			break;
+		case Mask::Chicken:
+			
+			break;
+		case Mask::Tiger:
+			
+			break;
+		case Mask::Rabbit:
+			
+			break;
+		case Mask::Wolf:
+			weaponStatus.weaponType = Weapon::WeaponType::Knife;
+			SetWeaponStatus();
+			break;
+		case Mask::Giraffe:
+			
+			break;
+		case Mask::Elephant:
+			bulletProofCount = 1;
+			break;
+		case Mask::Walrus:
+			bulletProofCount = 2;
+			break;
+		}
+	}
+}
+
 void Player::Update(float dt)
 {
+	if (InputMgr::GetKeyDown(sf::Keyboard::Semicolon))
+	{
+		int currentMaskIndex = (int)currentMask;
+		currentMaskIndex--;
+		currentMaskIndex = Utils::Clamp(currentMaskIndex, 0, 7);
+		currentMask = (Mask)currentMaskIndex;
+		ResetMask();
+	}
+	if (InputMgr::GetKeyDown(sf::Keyboard::Apostrophe))
+	{
+		int currentMaskIndex = (int)currentMask;
+		currentMaskIndex++;
+		currentMaskIndex = Utils::Clamp(currentMaskIndex, 0, 7);
+		currentMask = (Mask)currentMaskIndex;
+		ResetMask();
+	}
+
+
 	if (attackTimer < weaponStatus.attackInterval)
 	{
 		attackTimer += dt;
