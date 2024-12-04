@@ -18,7 +18,6 @@ protected:
 	sf::View* worldViewCurrentScene;
 	sf::View* uiViewCurrentScene;
 
-
 	Player* player;
 	sf::Vector2f playerPos;
 	sf::Vector2f look;
@@ -34,7 +33,6 @@ protected:
 	sf::Vector2f worldViewDirection;
 
 	const float defaultViewDistance = 5.f;
-	float furtherViewDistance;
 
 	float distanceToTargetView = 0;
 

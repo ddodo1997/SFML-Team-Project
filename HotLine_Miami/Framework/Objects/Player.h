@@ -22,7 +22,8 @@ public:
 		Chicken,
 		Tiger,
 		Rabbit,
-		Wolf
+		Wolf,
+		Giraffe,
 	};
 
 protected:

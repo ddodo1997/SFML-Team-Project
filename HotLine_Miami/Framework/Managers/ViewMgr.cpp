@@ -78,12 +78,15 @@ void ViewMgr::UpdateFurtherViewMousePos(float dt)
 	mouseSpritePos.x = Utils::Clamp(mouseSpritePos.x, mPosBound.left, mPosBound.width);
 	mouseSpritePos.y = Utils::Clamp(mouseSpritePos.y, mPosBound.top, mPosBound.height);
 
+	sf::Vector2i mouseCenterPos = { 960, 540 };
+	sf::Vector2f viewScale = { 0.2f,0.2f };
+
+	worldViewTargetPos.x = playerPos.x + (((float)mouseSpritePos.x - (float)mouseCenterPos.x)/760)*960*viewScale.x;
+	worldViewTargetPos.y = playerPos.y + (((float)mouseSpritePos.y - (float)mouseCenterPos.y)/340)*540*viewScale.y;
+
 	direction = look;
 	if (Utils::SqrMagnitude(look) > 1.f)
 		direction = Utils::GetNormal(look);
-
-	worldViewTargetPos = ((sf::Vector2f(playerPos.x + direction.x * defaultViewDistance,
-		playerPos.y + direction.y * defaultViewDistance)));
 
 	worldViewDirection = Utils::GetNormal(worldViewTargetPos - worldViewCenterPos);
 

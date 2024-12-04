@@ -9,6 +9,9 @@ bool WeaponTable::Load()
 	Release();
 	std::ifstream fStream(filePath);
 
+	std::cout << "File path: " << filePath << std::endl;
+
+
 	if (!fStream.is_open())
 	{
 		std::cerr << "Weapon Table File Open Error!!" << std::endl;
