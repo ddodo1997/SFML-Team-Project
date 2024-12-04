@@ -149,6 +149,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Button.cpp" />
     <ClCompile Include="Framework\Objects\Bullet.cpp" />
     <ClCompile Include="Framework\Objects\Decoration.cpp" />
     <ClCompile Include="Framework\Tables\DecorationTable.cpp" />
@@ -191,8 +192,10 @@
     <ClCompile Include="Framework\Tables\WeaponTable.cpp" />
     <ClCompile Include="Framework\Objects\Wall.cpp" />
     <ClCompile Include="Framework\Tables\WallTable.cpp" />
+    <ClCompile Include="WayPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Button.h" />
     <ClInclude Include="Framework\Objects\Bullet.h" />
     <ClInclude Include="Framework\Objects\Decoration.h" />
     <ClInclude Include="Framework\Tables\DecorationTable.h" />
@@ -237,6 +240,7 @@
     <ClInclude Include="Framework\Tables\WeaponTable.h" />
     <ClInclude Include="Framework\Objects\Wall.h" />
     <ClInclude Include="Framework\Tables\WallTable.h" />
+    <ClInclude Include="WayPoint.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -8,6 +8,7 @@
 #include "Enemy.h"
 #include "Wall.h"
 #include "Wall2.h"
+#include "WayPoint.h"
 
 
 SceneDevS::SceneDevS() : SceneGame()
@@ -24,7 +25,6 @@ void SceneDevS::Init()
 	// LoadEnemies();
 
 	Scene::Init();
-
 }
 
 void SceneDevS::Enter()
@@ -40,6 +40,7 @@ void SceneDevS::Enter()
 	uiView.setCenter(windowSize * 0.5f);
 	tileSize = STAGE_TABLE->GetTileSize();
 	tileCount = tileMap->GetTileCount();
+	isWayPointMode = false;
 }
 
 void SceneDevS::Exit()
@@ -52,7 +53,6 @@ void SceneDevS::Update(float dt)
 	float cameraSpeed = 300.f * dt;
 	sf::Vector2i mousePos = InputMgr::GetMousePosition();
 	sf::Vector2f worldPos = ScreenToWorld(mousePos);
-
 	direction.x = InputMgr::GetAxis(Axis::Horizontal);
 	direction.y = InputMgr::GetAxis(Axis::Vertical);
 	float mag = Utils::Magnitude(direction);
@@ -77,59 +77,75 @@ void SceneDevS::Update(float dt)
 	zoomNoun = Utils::Clamp(zoomNoun, 0.2f, 0.5f);
 
 	worldView.setSize(windowSize * zoomNoun);
-
-	if (InputMgr::GetKeyDown(sf::Keyboard::Num1))
+	if(!isWayPointMode)
 	{
-		tileMapEditor->SetMode(TileMapEditor::EditorMode::TileMode);
-	}
-	if (InputMgr::GetKeyDown(sf::Keyboard::Num2))
-	{
-		tileMapEditor->SetMode(TileMapEditor::EditorMode::WallMode);
-	}
-	if (InputMgr::GetKeyDown(sf::Keyboard::Num3))
-	{
-		tileMapEditor->SetMode(TileMapEditor::EditorMode::EnemyMode);
-	}
-	
-	if(InputMgr::GetMouseButton(sf::Mouse::Left))
-	{
-		switch (tileMapEditor->GetMode())
+		if (InputMgr::GetKeyDown(sf::Keyboard::Num1))
 		{
-		case TileMapEditor::EditorMode::TileMode:
-			tileMap->PaintTile(worldPos, tileMapEditor->GetSelectedTileIndex());
-			break;
-		case TileMapEditor::EditorMode::WallMode:
-			if (worldPos.x <  0.f || worldPos.x > tileSize.x * tileCount.x || worldPos.y <  0.f || worldPos.y > tileSize.y * tileCount.y)
+			tileMapEditor->SetMode(TileMapEditor::EditorMode::TileMode);
+		}
+		if (InputMgr::GetKeyDown(sf::Keyboard::Num2))
+		{
+			tileMapEditor->SetMode(TileMapEditor::EditorMode::WallMode);
+		}
+		if (InputMgr::GetKeyDown(sf::Keyboard::Num3))
+		{
+			tileMapEditor->SetMode(TileMapEditor::EditorMode::EnemyMode);
+		}
+
+		if (InputMgr::GetMouseButton(sf::Mouse::Left))
+		{
+			switch (tileMapEditor->GetMode())
 			{
+			case TileMapEditor::EditorMode::TileMode:
+				tileMap->PaintTile(worldPos, tileMapEditor->GetSelectedTileIndex());
+				break;
+			case TileMapEditor::EditorMode::WallMode:
+				if (worldPos.x <  0.f || worldPos.x > tileSize.x * tileCount.x || worldPos.y <  0.f || worldPos.y > tileSize.y * tileCount.y)
+				{
+					break;
+				}
+				CreateWall(worldPos);
+				break;
+			case TileMapEditor::EditorMode::DecorationMode:
+				break;
+			case TileMapEditor::EditorMode::EnemyMode:
+				if (worldPos.x <  0.f || worldPos.x > tileSize.x * tileCount.x || worldPos.y <  0.f || worldPos.y > tileSize.y * tileCount.y)
+				{
+					break;
+				}
+				CreateEnemy(worldPos);
 				break;
 			}
-			CreateWall(worldPos);
-			break;
-		case TileMapEditor::EditorMode::DecorationMode:
-			break;
-		case TileMapEditor::EditorMode::EnemyMode:
-			if (worldPos.x <  0.f || worldPos.x > tileSize.x * tileCount.x || worldPos.y <  0.f || worldPos.y > tileSize.y * tileCount.y)
-			{
-				break;
-			}
-			CreateEnemy(worldPos);
-			break;
+		}
+
+		if (InputMgr::GetKeyDown(sf::Keyboard::F9))
+		{
+			Variables::isDrawHitBox = !Variables::isDrawHitBox;
+		}
+
+		if (InputMgr::GetKeyDown(sf::Keyboard::Delete))
+		{
+			tileMap->InitializeEmpty(STAGE_TABLE->GetTileSize(), { 40, 40 });
+			DeleteWalls();
+			DeleteEnemies();
+			DeleteWaypoints();
+		}
+		if (InputMgr::GetKeyDown(sf::Keyboard::Enter))
+		{
+			SaveMap();
 		}
 	}
-
-	if (InputMgr::GetKeyDown(sf::Keyboard::F9))
+	else
 	{
-		Variables::isDrawHitBox = !Variables::isDrawHitBox;
-	}
-
-	if (InputMgr::GetKeyDown(sf::Keyboard::Delete))
-	{
-		tileMap->InitializeEmpty(STAGE_TABLE->GetTileSize(), { 40, 40 });
-		DeleteWalls();
-	}
-	if (InputMgr::GetKeyDown(sf::Keyboard::Enter))
-	{
-		SaveMap();
+		if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
+		{
+			AddWayPoints(worldPos);
+		}
+		if (InputMgr::GetKeyDown(sf::Keyboard::Enter))
+		{
+			patrolEnemy = nullptr;
+			isWayPointMode = false;
+		}
 	}
 	Scene::Update(dt);
 }
@@ -234,17 +250,82 @@ void SceneDevS::CreateEnemy(const sf::Vector2f& pos)
 {
 	int xIndex = static_cast<int>(pos.x) / tileSize.x;
 	int yIndex = static_cast<int>(pos.y) / tileSize.y;
+
+	sf::Vector2f enemyPosition = { xIndex * tileSize.x + tileSize.x * 0.5f, yIndex * tileSize.y + tileSize.y * 0.5f };
 	Enemy selectedEnemy = tileMapEditor->GetSelectedEnemy();
+
+	for (auto& enemy : savedEnemies)
+	{
+		if (enemyPosition == enemy.second->GetPosition())
+		{
+			enemy.first = tileMapEditor->GetSelectedEnemyStatus();
+			enemy.second->SetRotation(selectedEnemy.GetRotation());
+			enemy.second->SetWeapon(selectedEnemy.GetWeaponType());
+			enemy.second->SetStatus(Enemy::Status::EditorMode);
+			if (enemy.first == Enemy::Status::Patrol)
+			{
+				StartWayPointMode(enemy.second);
+			}
+			return;
+		}
+	}
 
 	Enemy* enemy = new Enemy("Enemy");
 	enemy->Reset();
-	enemy->SetPosition({ xIndex * tileSize.x + tileSize.x * 0.5f, yIndex * tileSize.y + tileSize.y * 0.5f });
+	enemy->SetPosition(enemyPosition);
+	enemy->SetRotation(selectedEnemy.GetRotation());
 	enemy->SetOrigin(Origins::MC);
 	enemy->SetWeapon(selectedEnemy.GetWeaponType());
 	enemy->SetStatus(Enemy::Status::EditorMode);
 
-	enemies.push_back(enemy);
+	savedEnemies.push_back(std::make_pair(tileMapEditor->GetSelectedEnemyStatus(), enemy));
 	AddGo(enemy);
+
+	if (enemy->GetStatus() == Enemy::Status::Patrol)
+	{
+		StartWayPointMode(enemy);
+	}
+}
+
+void SceneDevS::StartWayPointMode(Enemy* enemy)
+{
+	isWayPointMode = true;
+	waypoints.clear();
+	waypointColor = Utils::RandomColor();
+	enemy->AddWayPoint(enemy->GetPosition());
+	WayPoint* waypoint = new WayPoint("WayPoint");
+	waypoint->Reset();
+	waypoint->SetPosition(enemy->GetPosition());
+	waypoint->SetColor(waypointColor);
+	AddGo(waypoint);
+	waypoints.push_back(waypoint);
+	patrolEnemy = enemy;
+}
+
+void SceneDevS::AddWayPoints(const sf::Vector2f& pos)
+{
+	int xIndex = static_cast<int>(pos.x) / tileSize.x;
+	int yIndex = static_cast<int>(pos.y) / tileSize.y;
+	sf::Vector2f pointPosition = { (xIndex * tileSize.x) + tileSize.x * 0.5f, (yIndex * tileSize.y) + tileSize.y * 0.5f };
+
+	for (const auto& waypoint : waypoints)
+	{
+		if (pointPosition == waypoint->GetPosition())
+		{
+			return;
+		}
+	}
+
+	if (patrolEnemy)
+	{
+		WayPoint* waypoint = new WayPoint("WayPoint");
+		waypoint->Reset();
+		waypoint->SetPosition(pointPosition);
+		waypoint->SetColor(waypointColor);
+		patrolEnemy->AddWayPoint(pointPosition);
+		AddGo(waypoint);
+		waypoints.push_back(waypoint);
+	}
 }
 
 void SceneDevS::LoadWalls()
@@ -309,16 +390,34 @@ void SceneDevS::SetStatusEnemies()
 
 void SceneDevS::DeleteWalls()
 {
-	for (auto wall : wallsHorizontal)
+	for (auto& wall : wallsHorizontal)
 	{
 		RemoveGo(wall);
 	}
 	wallsHorizontal.clear();
-	for (auto wall : wallsVertical)
+	for (auto& wall : wallsVertical)
 	{
 		RemoveGo(wall);
 	}
 	wallsVertical.clear();
+}
+
+void SceneDevS::DeleteEnemies()
+{
+	for (auto& enemy : savedEnemies)
+	{
+		RemoveGo(enemy.second);
+	}
+	savedEnemies.clear();
+}
+
+void SceneDevS::DeleteWaypoints()
+{
+	for (auto& waypoint : waypoints)
+	{
+		RemoveGo(waypoint);
+	}
+	waypoints.clear();
 }
 
 void SceneDevS::SaveMap()
@@ -331,7 +430,8 @@ void SceneDevS::SaveMap()
 	const sf::Vector2i& tileCount = tileMap->GetTileCount();
 	const std::vector<int>& floorTiles = tileMap->GetFloorTiles();
 
-	int minX = tileCount.x, minY = tileCount.y;
+	minX = tileCount.x; 
+	minY = tileCount.y;
 	int maxX = -1, maxY = -1;
 
 
@@ -413,6 +513,8 @@ void SceneDevS::SaveMap()
 
 		mapData["wall"]["walls"].push_back(wallData);
 	}
+
+	SaveEnemies(mapData);
 
 	std::ofstream outFile("tables/Test_Save.json");
 	if (outFile.is_open())
@@ -509,6 +611,71 @@ void SceneDevS::SaveWall()
 		}
 
 		mergedVerticalWalls.push_back(wallData);
+	}
+}
+
+void SceneDevS::SaveEnemies(json& mapData)
+{
+	mapData["enemy"]["enemies"] = json::array();
+	int i = 1;
+	for (const auto& enemyPair : savedEnemies)
+	{
+		const auto& enemy = enemyPair.second;
+
+		json enemyData;
+		enemyData["id"] = "enemy_" + std::to_string(i++);
+		enemyData["state"] = "enemy_" + EnemyStatusToString(enemyPair.first) + EnemyWeaponToString(enemy->GetWeaponType());
+		enemyData["x"] = static_cast<int>(enemy->GetPosition().x / tileSize.x) - minX;
+		enemyData["y"] = static_cast<int>(enemy->GetPosition().y / tileSize.y) - minY;
+		enemyData["rotation"] = static_cast<int>(enemy->GetRotation());
+
+		enemyData["waypoint"] = json::array();
+		if (enemyPair.first == Enemy::Status::Patrol) {
+			for (const auto& waypoint : enemy->GetWayPoints()) {
+				json waypointData;
+				waypointData["x"] = static_cast<int>(waypoint.position.x / tileSize.x) - minX;
+				waypointData["y"] = static_cast<int>(waypoint.position.y / tileSize.y) - minY;
+				enemyData["waypoint"].push_back(waypointData);
+			}
+		}
+
+		mapData["enemy"]["enemies"].push_back(enemyData);
+	}
+}
+
+std::string SceneDevS::EnemyStatusToString(const Enemy::Status& state)
+{
+	if (state == Enemy::Status::Normal)
+	{
+		return "N";
+	}
+	else if (state == Enemy::Status::Idle)
+	{
+		return "I";
+	}
+	else if (state == Enemy::Status::Patrol)
+	{
+		return "P";
+	}
+}
+
+std::string SceneDevS::EnemyWeaponToString(const Weapon::WeaponType& type)
+{
+	if (type == Weapon::WeaponType::Bat)
+	{
+		return "B";
+	}
+	else if (type == Weapon::WeaponType::Knife)
+	{
+		return "K";
+	}
+	else if (type == Weapon::WeaponType::Machinegun)
+	{
+		return "M";
+	}
+	else if (type == Weapon::WeaponType::Shotgun)
+	{
+		return "S";
 	}
 }
 

@@ -110,6 +110,7 @@ public:
 
 	sf::FloatRect GetLocalBounds()const override { return collisionBox.getLocalBounds(); }
 	sf::FloatRect GetGlobalBounds()const override { return collisionBox.getGlobalBounds(); }
+	sf::FloatRect GetSelectBounds() const { return legs.getGlobalBounds(); }
 
 	void Init() override;
 	void Release() override;
@@ -152,4 +153,7 @@ public:
 	bool isStun() const { return currentStatus == Status::Stun ? true : false; }
 	bool isStunOnWall() const { return currentStatus == Status::StunOnWall ? true : false; }
 	void Attack();
+
+	void AddWayPoint(const sf::Vector2f& pos);
+	const std::vector<Patrol::WayPoint>& GetWayPoints() const { return patrol.wayPoints; }
 };

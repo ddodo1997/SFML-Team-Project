@@ -121,6 +121,12 @@
     <ClCompile Include="Framework\Objects\Weapon.cpp">
       <Filter>Framework\Objects\Entity</Filter>
     </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Framework\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="WayPoint.cpp">
+      <Filter>Framework\Map</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Framework\Animation\AnimationClip.h">
@@ -254,6 +260,12 @@
     </ClInclude>
     <ClInclude Include="Framework\Objects\Weapon.h">
       <Filter>Framework\Objects\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Framework\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="WayPoint.h">
+      <Filter>Framework\Map</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
