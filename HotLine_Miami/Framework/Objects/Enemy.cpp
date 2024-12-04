@@ -539,6 +539,7 @@ void Enemy::SetWeapon(Weapon::WeaponType type)
 
 void Enemy::SetWayPoints(std::vector<sf::Vector2f> pos)
 {
+	clearWayPoints();
 	for (auto& vec2f : pos)
 	{
 		Patrol::WayPoint temp(vec2f);
@@ -559,11 +560,16 @@ void Enemy::Draw(sf::RenderWindow& window)
 {
 	if (isWalking)
 		window.draw(legs);
-	window.draw(body);
+
+	if(currentStatus != Status::Pounded)
+		window.draw(body);
+
 	for (auto& point : patrol.wayPoints)
 		window.draw(point.point);
+
 	window.draw(patrol.originPoint);
 	hitBox.Draw(window);
+
 	if (Variables::isDrawHitBox)
 	{
 		window.draw(viewAngle);

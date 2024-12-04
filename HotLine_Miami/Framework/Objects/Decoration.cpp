@@ -3,6 +3,7 @@
 #include "SceneGame.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "Boss1.h"
 Decoration::Decoration(const std::string& name)
 	: GameObject(name)
 {
@@ -63,7 +64,7 @@ void Decoration::Reset()
     sceneGame = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene());
     player = sceneGame->GetPlayer();
     enemies = sceneGame->GetEnemies();
-
+    boss1 = sceneGame->GetBoss1();
 	SetOrigin(Origins::MC);
 	SetScale({ 1.f, 1.f });
 	hitBox.UpdateTr(body, body.getLocalBounds());
@@ -151,6 +152,46 @@ void Decoration::FixedUpdate(float dt)
             }
         }
     }
+
+
+    if (boss1 == nullptr)
+        return;
+
+    auto& boss1HitBox = boss1->GetHitBox();
+    if (boss1HitBox.rect.getGlobalBounds().intersects(hitBox.rect.getGlobalBounds()))
+    {
+        auto& boss1Dir = boss1->GetDirection();
+        auto boss1Pos = boss1->GetPosition();
+        auto boss1HitBoxHalf = boss1HitBox.rect.getLocalBounds().width * 0.5f;
+
+        if (hitBox.points.top < boss1HitBox.points.center.y && hitBox.points.bottom > boss1HitBox.points.center.y)
+        {
+            if (boss1HitBox.points.left < hitBox.points.right && boss1HitBox.points.left > hitBox.points.center.x)
+            {
+                //벽 우측 충돌
+                boss1->SetPosition({ hitBox.points.right + boss1HitBoxHalf, boss1Pos.y + boss1Dir.y * 0.5f });
+            }
+            else if (boss1HitBox.points.right > hitBox.points.left && boss1HitBox.points.right < hitBox.points.center.x)
+            {
+                //벽 좌측 충돌
+                boss1->SetPosition({ hitBox.points.left - boss1HitBoxHalf, boss1Pos.y + boss1Dir.y * 0.5f });
+            }
+        }
+        else
+        {
+            if (boss1HitBox.points.bottom > hitBox.points.top && boss1HitBox.points.bottom < hitBox.points.center.y)
+            {
+                //벽 상부 충돌
+                boss1->SetPosition({ boss1Pos.x + boss1Dir.x * 0.5f, hitBox.points.top - boss1HitBoxHalf });
+            }
+            else if (boss1HitBox.points.top < hitBox.points.bottom && boss1HitBox.points.top > hitBox.points.center.y)
+            {
+                //벽 하부 충돌
+                boss1->SetPosition({ boss1Pos.x + boss1Dir.x * 0.5f, hitBox.points.bottom + boss1HitBoxHalf });
+            }
+        }
+    }
+
 }
 
 void Decoration::Draw(sf::RenderWindow& window)

@@ -149,6 +149,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Framework\Objects\Boss1.cpp" />
+    <ClCompile Include="Framework\Objects\Boss2.cpp" />
+    <ClCompile Include="Framework\Objects\Cleaver.cpp" />
     <ClCompile Include="Framework\Objects\Bullet.cpp" />
     <ClCompile Include="Framework\Objects\Decoration.cpp" />
     <ClCompile Include="Framework\Tables\DecorationTable.cpp" />
@@ -182,8 +185,8 @@
     <ClCompile Include="Framework\Scenes\SceneDevS.cpp" />
     <ClCompile Include="Framework\Tables\StageTable.cpp" />
     <ClCompile Include="Framework\Scenes\SceneGame.cpp" />
-    <ClCompile Include="Framework\Objects\TileMap.cpp" />
-    <ClCompile Include="Framework\Objects\TileMapEditor.cpp" />
+    <ClCompile Include="Framework\Map\TileMap.cpp" />
+    <ClCompile Include="Framework\Map\TileMapEditor.cpp" />
     <ClCompile Include="Framework\Objects\Text\UiHudL.cpp" />
     <ClCompile Include="Framework\Managers\ViewMgr.cpp" />
     <ClCompile Include="Framework\Objects\Wall2.cpp" />
@@ -193,6 +196,9 @@
     <ClCompile Include="Framework\Tables\WallTable.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Framework\Objects\Boss1.h" />
+    <ClInclude Include="Framework\Objects\Boss2.h" />
+    <ClInclude Include="Framework\Objects\Cleaver.h" />
     <ClInclude Include="Framework\Objects\Bullet.h" />
     <ClInclude Include="Framework\Objects\Decoration.h" />
     <ClInclude Include="Framework\Tables\DecorationTable.h" />
@@ -228,8 +234,8 @@
     <ClInclude Include="Framework\Scenes\SceneDevS.h" />
     <ClInclude Include="Framework\Tables\StageTable.h" />
     <ClInclude Include="Framework\Scenes\SceneGame.h" />
-    <ClInclude Include="Framework\Objects\TileMap.h" />
-    <ClInclude Include="Framework\Objects\TileMapEditor.h" />
+    <ClInclude Include="Framework\Map\TileMap.h" />
+    <ClInclude Include="Framework\Map\TileMapEditor.h" />
     <ClInclude Include="Framework\Objects\Text\UiHudL.h" />
     <ClInclude Include="Framework\Managers\ViewMgr.h" />
     <ClInclude Include="Framework\Objects\Wall2.h" />

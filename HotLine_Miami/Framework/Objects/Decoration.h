@@ -2,6 +2,7 @@
 class SceneGame;
 class Player;
 class Enemy;
+class Boss1;
 class Decoration : public GameObject
 {
 protected:
@@ -12,6 +13,7 @@ protected:
 	SceneGame* sceneGame;
 	Player* player;
 	std::vector<Enemy*> enemies;
+	Boss1* boss1;
 public:
 	Decoration(const std::string& name = "");
 	~Decoration() = default;

@@ -106,12 +106,6 @@
     <ClCompile Include="Framework\Objects\Decoration.cpp">
       <Filter>Framework\Objects\Entity</Filter>
     </ClCompile>
-    <ClCompile Include="Framework\Objects\TileMap.cpp">
-      <Filter>Framework\Objects\Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\Objects\TileMapEditor.cpp">
-      <Filter>Framework\Objects\Entity</Filter>
-    </ClCompile>
     <ClCompile Include="Framework\Objects\Wall.cpp">
       <Filter>Framework\Objects\Entity</Filter>
     </ClCompile>
@@ -119,6 +113,17 @@
       <Filter>Framework\Objects\Entity</Filter>
     </ClCompile>
     <ClCompile Include="Framework\Objects\Weapon.cpp">
+      <Filter>Framework\Objects\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\Map\TileMap.cpp">
+      <Filter>Framework\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\Map\TileMapEditor.cpp">
+      <Filter>Framework\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\Objects\Boss1.cpp" />
+    <ClCompile Include="Framework\Objects\Boss2.cpp" />
+    <ClCompile Include="Framework\Objects\Cleaver.cpp">
       <Filter>Framework\Objects\Entity</Filter>
     </ClCompile>
   </ItemGroup>
@@ -240,12 +245,6 @@
     <ClInclude Include="Framework\Objects\Decoration.h">
       <Filter>Framework\Objects\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="Framework\Objects\TileMap.h">
-      <Filter>Framework\Objects\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Objects\TileMapEditor.h">
-      <Filter>Framework\Objects\Entity</Filter>
-    </ClInclude>
     <ClInclude Include="Framework\Objects\Wall.h">
       <Filter>Framework\Objects\Entity</Filter>
     </ClInclude>
@@ -253,6 +252,17 @@
       <Filter>Framework\Objects\Entity</Filter>
     </ClInclude>
     <ClInclude Include="Framework\Objects\Weapon.h">
+      <Filter>Framework\Objects\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\Map\TileMap.h">
+      <Filter>Framework\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\Map\TileMapEditor.h">
+      <Filter>Framework\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\Objects\Boss1.h" />
+    <ClInclude Include="Framework\Objects\Boss2.h" />
+    <ClInclude Include="Framework\Objects\Cleaver.h">
       <Filter>Framework\Objects\Entity</Filter>
     </ClInclude>
   </ItemGroup>

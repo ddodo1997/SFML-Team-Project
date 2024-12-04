@@ -3,6 +3,9 @@
 class SceneGame;
 class Player;
 class Enemy;
+class Boss1;
+class Cleaver;
+
 class Wall : public GameObject, public sf::Transformable
 {
 public:
@@ -16,6 +19,8 @@ protected:
 	std::vector<const sf::Texture*> textures;
 	SceneGame* sceneGame;
 	Player* player;
+	Boss1* boss1;
+	Cleaver* cleaver;
 	std::vector<Enemy*> enemies;
 	
 	float length;

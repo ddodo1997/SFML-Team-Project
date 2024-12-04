@@ -10,7 +10,8 @@
 #include "Player.h"
 #include "TileMap.h"
 #include "UiHudL.h"
-
+#include "Boss1.h"
+#include "Cleaver.h"
 SceneGame::SceneGame() : Scene(SceneIds::SceneGame)
 {
 
@@ -21,6 +22,9 @@ void SceneGame::Init()
 	player = AddGo(new Player("Player"));
 	tileMap = AddGo(new TileMap("Tile Map"));
 	uiHud = AddGo(new UiHudL());
+	boss = AddGo(new Boss1("Boss1"));
+	cleaver = AddGo(new Cleaver("Cleaver"));
+
 	LoadWalls(); // 통짜 벽 쓸때만 사용하기
 	LoadDecorations();
 	LoadEnemies();

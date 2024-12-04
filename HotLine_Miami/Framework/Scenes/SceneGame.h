@@ -10,6 +10,8 @@ class Wall;
 class Wall2;
 class Bullet;
 class UiHudL;
+class Boss1;
+class Cleaver;
 
 class SceneGame :
     public Scene
@@ -18,6 +20,8 @@ protected:
 	Player* player;
 	TileMap* tileMap;
 	UiHudL* uiHud;
+	Boss1* boss;
+	Cleaver* cleaver;
 
 	sf::Vector2f directionXY;
 	float directionX = 0.f;
@@ -54,6 +58,8 @@ public:
 	void SetDecorations();
 	void SetEnemies();
 	Player* GetPlayer() { return player; }
+	Boss1* GetBoss1() { return boss; }
+	Cleaver* GetCleaver() { return cleaver; }
 
 	std::vector<Enemy*> GetEnemies() const { return enemies; }
 	std::vector<Decoration*> GetDecorations() const { return decorations; }
