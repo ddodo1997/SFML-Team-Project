@@ -98,4 +98,6 @@ public:
 	void OnHit(sf::Vector2f dir);
 	void OnDie();
 	bool IsCanAttack() const{ return currentPattern == Patterns::None; }
+
+	bool isAttackable() const { return currentPattern == Patterns::PickUpCleaver; }
 };
