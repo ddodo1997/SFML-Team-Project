@@ -24,6 +24,8 @@ public:
 		Rabbit,
 		Wolf,
 		Giraffe,
+		Elephant,
+		Walrus,
 	};
 
 protected:
@@ -73,6 +75,8 @@ protected:
 	bool isExecutionOnWall = false;
 	float executionTimer = 0.f;
 	int executionCount = 0;
+
+	int bulletProofCount = 0;
 
 	std::map<std::string, AnimationClip> aniClipMap;
 
@@ -125,6 +129,7 @@ public:
 
 	sf::FloatRect GetGlobalBounds() { return leg.getGlobalBounds(); }
 	sf::FloatRect GetLocalBounds() { return leg.getLocalBounds(); }
+	Mask GetCurrentMask() { return currentMask; }
 
 	void TryPickUpWeapon();
 	void WeaponPickUp(Weapon::WeaponStatus weapon);

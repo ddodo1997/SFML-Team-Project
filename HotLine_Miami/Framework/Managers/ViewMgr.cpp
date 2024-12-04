@@ -72,17 +72,19 @@ void ViewMgr::UpdateDefaultView(float dt)
 void ViewMgr::UpdateFurtherViewMousePos(float dt)
 {
 	mouseSpritePos = InputMgr::GetMousePosition();
-	//mouseSpritePos.x = Utils::Clamp(mouseSpritePos.x, mPosBound.left, mPosBound.width + mPosBound.left);
-	//mouseSpritePos.y = Utils::Clamp(mouseSpritePos.y, mPosBound.top, mPosBound.height + mPosBound.top);
+
+	float viewDistanceMultiplier = 1.f;
+	if (player->GetCurrentMask() == Player::Mask::Giraffe)
+		viewDistanceMultiplier = 2.f;
 
 	mouseSpritePos.x = Utils::Clamp(mouseSpritePos.x, mPosBound.left, mPosBound.width);
 	mouseSpritePos.y = Utils::Clamp(mouseSpritePos.y, mPosBound.top, mPosBound.height);
 
-	sf::Vector2i mouseCenterPos = { 960, 540 };
+	sf::Vector2f halfWindowSize = { 960.f, 540.f };
 	sf::Vector2f viewScale = { 0.2f,0.2f };
 
-	worldViewTargetPos.x = playerPos.x + (((float)mouseSpritePos.x - (float)mouseCenterPos.x)/760)*960*viewScale.x;
-	worldViewTargetPos.y = playerPos.y + (((float)mouseSpritePos.y - (float)mouseCenterPos.y)/340)*540*viewScale.y;
+	worldViewTargetPos.x = playerPos.x + (((float)mouseSpritePos.x - halfWindowSize.x) / (halfWindowSize.x - boundEdgeCut)) * halfWindowSize.x * viewScale.x * viewDistanceMultiplier;
+	worldViewTargetPos.y = playerPos.y + (((float)mouseSpritePos.y - halfWindowSize.y) / (halfWindowSize.y - boundEdgeCut)) * halfWindowSize.y * viewScale.y * viewDistanceMultiplier;
 
 	direction = look;
 	if (Utils::SqrMagnitude(look) > 1.f)
@@ -92,7 +94,7 @@ void ViewMgr::UpdateFurtherViewMousePos(float dt)
 
 	distanceToTargetView = Utils::Magnitude(worldViewTargetPos - worldViewCenterPos);
 
-	worldViewCenterPos = worldViewCenterPos + worldViewDirection * distanceToTargetView * viewMoveSpeed * dt;
+	worldViewCenterPos = worldViewCenterPos + worldViewDirection * distanceToTargetView * viewMoveSpeed * dt * (1.f/ viewDistanceMultiplier);
 	if (Utils::SqrMagnitude(worldViewTargetPos - worldViewCenterPos) > 1.f)
 		worldViewCurrentScene->setCenter(worldViewCenterPos);
 }
