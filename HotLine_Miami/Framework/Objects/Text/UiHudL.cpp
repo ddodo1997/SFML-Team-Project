@@ -102,13 +102,18 @@ void UiHudL::Reset()
 	volumeDisplayer.setString(std::to_string(InputMgr::GetMousePosition().y));
 	volumeDisplayer.setPosition({ 30.f,280.f });
 	Utils::SetOrigin(volumeDisplayer, Origins::TL);
+
+	cursorAnimator.SetTarget(&mouseSprite);
+	cursorAnimator.Play("animations/cursor.json");
+	mouseSprite.setScale(3.f, 3.f);
+	Utils::SetOrigin(mouseSprite, Origins::MC);
 }
 
 void UiHudL::Update(float dt)
 {
 	UpdateMPos(dt);
 	UpdateVolumeDisplay(dt);
-
+	UpdateMouseSprite(dt);
 }
 
 void UiHudL::UpdateMPos(float dt)
@@ -118,6 +123,15 @@ void UiHudL::UpdateMPos(float dt)
 
 	mPosY.setString(std::to_string(InputMgr::GetMousePosition().y));
 	Utils::SetOrigin(mPosY, Origins::TL);
+}
+
+void UiHudL::UpdateMouseSprite(float dt)
+{
+	if(!(cursorAnimator.IsPlaying()))
+		cursorAnimator.Play("animations/cursor.json");
+	mouseSprite.setPosition(VIEW_MGR.GetMouseSpritePos());
+	Utils::SetOrigin(mouseSprite, Origins::MC);
+	cursorAnimator.Update(dt);
 }
 
 void UiHudL::UpdateHitDir(sf::Vector2f hitDir)
@@ -192,4 +206,5 @@ void UiHudL::Draw(sf::RenderWindow& window)
 	{
 		window.draw(currentWeaponStatus);
 	}
+	window.draw(mouseSprite);
 }

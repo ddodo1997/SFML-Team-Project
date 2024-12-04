@@ -294,18 +294,26 @@ void Player::UpdateMask(float dt)
 
 void Player::UpdateExecution(float dt)
 {
-	switch (weaponStatus.weaponType)
+	if (!isExecutionOnWall)
 	{
-	case Weapon::WeaponType::None:
-		UpdateExecutionDefualt(dt);
-		break;
-	case Weapon::WeaponType::Bat:
-		UpdateExecutionBat(dt);
-		break;
-	case Weapon::WeaponType::Knife:
-		UpdateExecutionKnife(dt);
-		break;
+		switch (weaponStatus.weaponType)
+		{
+		case Weapon::WeaponType::None:
+			UpdateExecutionDefualt(dt);
+			break;
+		case Weapon::WeaponType::Bat:
+			UpdateExecutionBat(dt);
+			break;
+		case Weapon::WeaponType::Knife:
+			UpdateExecutionKnife(dt);
+			break;
+		}
 	}
+	else
+	{
+		UpdateExecutionWall(dt);
+	}
+
 }
 
 void Player::UpdateExecutionDefualt(float dt)
@@ -360,6 +368,7 @@ void Player::UpdateExecutionBat(float dt)
 	{
 		executionTimer = 10.f;
 		animatorBody.PlayP("animations/Player/Execution/pExctBat.json");
+		Utils::SetOrigin(body, Origins::MC);
 		if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
 		{
 			isExecuting = true;
@@ -383,6 +392,26 @@ void Player::UpdateExecutionKnife(float dt)
 		{
 			executionCount--;
 			isExecuting = false;
+			SOUND_MGR.PlaySfx("sound/Attack/sndHit.wav");
+		}
+	}
+}
+
+void Player::UpdateExecutionWall(float dt)
+{
+	if (isExecuting)
+	{
+		if (executionTimer > 0)
+		{
+			executionTimer -= dt;
+			executionTimer = Utils::Clamp(executionTimer, 0.f, 10.f);
+			//animatorBody.Play("animations/Player/Execution/pExctKnife.json");
+		}
+		else
+		{
+			executionCount--;
+			isExecuting = false;
+			isExecutionOnWall = false;
 			SOUND_MGR.PlaySfx("sound/Attack/sndHit.wav");
 		}
 	}
@@ -612,13 +641,27 @@ void Player::TryExecute()
 		{
 			if (GetHitBox().rect.getGlobalBounds().intersects(enemy->GetHitBox().rect.getGlobalBounds()))
 			{
-				enemy->SetStatus(Enemy::Status::Pounded); // ��⿡ ó������ �������� ���� // Status �߰���
+				enemy->SetStatus(Enemy::Status::Pounded); 
 				look = enemy->GetDirection();
 				SetRotation(Utils::Angle(look));
 				SetPosition(enemy->GetPosition());
 				Utils::SetOrigin(body, Origins::MC);
 				executingEnemy = enemy;
 				Execute();
+				return;
+			}
+		}
+		if (enemy->GetStatus() == Enemy::Status::StunOnWall)
+		{
+			if (GetHitBox().rect.getGlobalBounds().intersects(enemy->GetHitBox().rect.getGlobalBounds()))
+			{
+				enemy->SetStatus(Enemy::Status::Pounded);
+				look = enemy->GetDirection();
+				SetRotation(Utils::Angle(look));
+				SetPosition(enemy->GetPosition());
+				Utils::SetOrigin(body, Origins::MC);
+				executingEnemy = enemy;
+				ExecuteAgainstWall();
 				return;
 			}
 		}
@@ -649,6 +692,18 @@ void Player::Execute()
 	executionTimer = 0.4f;
 }
 
+void Player::ExecuteAgainstWall()
+{
+	DropWeapon();
+	isOnPound = true;
+	executionCount = 1;
+	isExecuting = true;
+	isExecutionOnWall = true;
+	executionTimer = 0.4f;
+	animatorBody.PlayP("animations/Player/Execution/pExctWallKick.json");
+	Utils::SetOrigin(body, Origins::MC);
+}
+
 void Player::ExecuteDefault()
 {
 	executionCount = Utils::RandomRange(3, 4);
@@ -667,6 +722,7 @@ void Player::ExecuteKnife()
 	isExecuting = true;
 	executionTimer = 0.4f;
 	animatorBody.PlayP("animations/Player/Execution/pExctKnife.json");
+	Utils::SetOrigin(body, Origins::MC);
 }
 
 void Player::ExecuteMachinegun()

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "ViewMgr.h"
-
+#include "Player.h"
 
 void ViewMgr::Init()
 {
@@ -15,11 +15,83 @@ void ViewMgr::Reset()
 
 	worldView.setCenter(0.f, 0.f);
 	uiView.setCenter(wSize / 2.f);
+
+	mPosBound.left = boundEdgeCut;
+	mPosBound.top = boundEdgeCut;
+	mPosBound.width = 1920 - boundEdgeCut;
+	mPosBound.height = 1080 - boundEdgeCut;
 }
 
 void ViewMgr::Update(float dt)
 {
-	
+	look = player->GetLook();
+	playerPos = player->GetPosition();
+
+	if (InputMgr::GetKey(sf::Keyboard::LShift))
+	{
+		UpdateFurtherView(dt);
+	}
+	else
+	{
+		UpdateDefaultView(dt);
+	}
+	if (InputMgr::GetKeyDown(sf::Keyboard::Grave))
+	{
+		isCursorVisible = !isCursorVisible;
+		FRAMEWORK.GetWindow().setMouseCursorVisible(isCursorVisible);
+	}
+
+}
+
+void ViewMgr::UpdateFurtherView(float dt)
+{
+	UpdateFurtherViewMousePos(dt);
+
+
+}
+
+void ViewMgr::UpdateDefaultView(float dt)
+{
+	mouseSpritePos = InputMgr::GetMousePosition();
+	direction = look;
+	if(Utils::SqrMagnitude(look) > 1.f)
+		direction = Utils::GetNormal(look);
+
+	worldViewTargetPos = ((sf::Vector2f(playerPos.x + direction.x * defaultViewDistance, 
+		playerPos.y + direction.y * defaultViewDistance)));
+
+	worldViewDirection = Utils::GetNormal(worldViewTargetPos - worldViewCenterPos);
+
+	distanceToTargetView = Utils::Magnitude(worldViewTargetPos - worldViewCenterPos);
+
+	worldViewCenterPos = worldViewCenterPos + worldViewDirection * distanceToTargetView * viewMoveSpeed * dt;
+	if(Utils::SqrMagnitude(worldViewTargetPos-worldViewCenterPos) > 1.f)
+		worldViewCurrentScene->setCenter(worldViewCenterPos);	
+}
+
+void ViewMgr::UpdateFurtherViewMousePos(float dt)
+{
+	mouseSpritePos = InputMgr::GetMousePosition();
+	//mouseSpritePos.x = Utils::Clamp(mouseSpritePos.x, mPosBound.left, mPosBound.width + mPosBound.left);
+	//mouseSpritePos.y = Utils::Clamp(mouseSpritePos.y, mPosBound.top, mPosBound.height + mPosBound.top);
+
+	mouseSpritePos.x = Utils::Clamp(mouseSpritePos.x, mPosBound.left, mPosBound.width);
+	mouseSpritePos.y = Utils::Clamp(mouseSpritePos.y, mPosBound.top, mPosBound.height);
+
+	direction = look;
+	if (Utils::SqrMagnitude(look) > 1.f)
+		direction = Utils::GetNormal(look);
+
+	worldViewTargetPos = ((sf::Vector2f(playerPos.x + direction.x * defaultViewDistance,
+		playerPos.y + direction.y * defaultViewDistance)));
+
+	worldViewDirection = Utils::GetNormal(worldViewTargetPos - worldViewCenterPos);
+
+	distanceToTargetView = Utils::Magnitude(worldViewTargetPos - worldViewCenterPos);
+
+	worldViewCenterPos = worldViewCenterPos + worldViewDirection * distanceToTargetView * viewMoveSpeed * dt;
+	if (Utils::SqrMagnitude(worldViewTargetPos - worldViewCenterPos) > 1.f)
+		worldViewCurrentScene->setCenter(worldViewCenterPos);
 }
 
 sf::Vector2f ViewMgr::ScreenToWorld(sf::Vector2i screenPos)

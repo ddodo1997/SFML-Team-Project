@@ -3,6 +3,8 @@
 class SceneGame;
 class Player;
 class Enemy;
+class Weapon;
+
 class Wall : public GameObject, public sf::Transformable
 {
 public:
@@ -17,10 +19,13 @@ protected:
 	SceneGame* sceneGame;
 	Player* player;
 	std::vector<Enemy*> enemies;
+	std::list<Weapon*> weapons;
 	
 	float length;
 	DataWall data;
 	HitBox hitBox;
+
+
 public:
 	Wall(const std::string& name = "");
 	~Wall() = default;

@@ -30,7 +30,6 @@ struct AnimationClip
 struct AnimationClipPlayer
 {
 	AnimationClip clip;
-	AnimationClip* clipPtr = &clip;
 	
 	std::vector<sf::Vector2i> maskPixelCoords;
 

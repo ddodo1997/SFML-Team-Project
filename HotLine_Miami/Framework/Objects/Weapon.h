@@ -74,6 +74,11 @@ public:
 	void SetOrigin(const sf::Vector2f& newOrigin) override;
 	void SetScale(const sf::Vector2f& scale) override;
 
+	sf::Vector2f& GetDirection() { return direction; }
+	void SetDirection(sf::Vector2f newDirection);
+	void FlipDirectionX() { direction.x *= -1; }
+	void FlipDirectionY() { direction.y *= -1; }
+
 	const WeaponStatus& GetStatus() { return weaponStatus; }
 	void SetStatus(const WeaponStatus& status);
 

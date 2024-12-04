@@ -559,7 +559,8 @@ void Enemy::Draw(sf::RenderWindow& window)
 {
 	if (isWalking)
 		window.draw(legs);
-	window.draw(body);
+	if(currentStatus != Status::Pounded)
+		window.draw(body);
 	for (auto& point : patrol.wayPoints)
 		window.draw(point.point);
 	window.draw(patrol.originPoint);

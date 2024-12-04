@@ -69,6 +69,7 @@ protected:
 
 	bool isOnPound = false;
 	bool isExecuting = false;
+	bool isExecutionOnWall = false;
 	float executionTimer = 0.f;
 	int executionCount = 0;
 
@@ -102,6 +103,7 @@ public:
 	void UpdateExecutionDefualt(float dt);
 	void UpdateExecutionBat(float dt);
 	void UpdateExecutionKnife(float dt);
+	void UpdateExecutionWall(float dt);
 
 	void FixedUpdate(float dt) override;
 	void UpdateOnDie(float dt);
@@ -117,6 +119,7 @@ public:
 
 	void SetDirection(sf::Vector2f dir) { direction = dir; }
 	const sf::Vector2f& GetDirection() { return direction; }
+	const sf::Vector2f& GetLook() { return look; }
 	sf::Vector2f GetPrevPos() { return prevPos; }
 
 	sf::FloatRect GetGlobalBounds() { return leg.getGlobalBounds(); }
@@ -135,6 +138,8 @@ public:
 
 	void TryExecute();
 	void Execute();
+
+	void ExecuteAgainstWall();
 
 	void ExecuteDefault();
 	void ExecuteBat();

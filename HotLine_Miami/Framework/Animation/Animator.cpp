@@ -149,7 +149,7 @@ void Animator::PlayP(AnimationClipPlayer* clip, bool clearQueue)
 	isPlaying = true;
 
 	//현재 클립을 매개변수 클립으로 바꾸고
-	currentClip = clip->clipPtr;
+	currentClip = &(clip->clip);
 	//첫 프레임으로 바꾸고
 	currentFrame = 0;
 	//총 프레임 수를 현재 클립의 사이즈로 바꾼다

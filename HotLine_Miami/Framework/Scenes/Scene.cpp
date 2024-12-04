@@ -53,6 +53,7 @@ void Scene::Update(float dt)
 			continue;
 		obj->Update(dt);
 	}
+	VIEW_MGR.Update(dt);
 }
 
 void Scene::LateUpdate(float dt)
