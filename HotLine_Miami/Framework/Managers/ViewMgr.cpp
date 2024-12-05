@@ -20,6 +20,16 @@ void ViewMgr::Reset()
 	mPosBound.top = boundEdgeCut;
 	mPosBound.width = 1920 - boundEdgeCut;
 	mPosBound.height = 1080 - boundEdgeCut;
+
+	vaBackground.setPrimitiveType(sf::PrimitiveType::Quads);
+	vaBackground.resize(4);
+
+	vaBackground[0].position = { 0.f,0.f };
+	vaBackground[1].position = { 1920.f,0.f };
+	vaBackground[2].position = { 1920.f,1080.f };
+	vaBackground[3].position = { 0.f,1080.f };
+
+	FRAMEWORK.GetWindow().setMouseCursorVisible(isCursorVisible);
 }
 
 void ViewMgr::Update(float dt)
@@ -28,6 +38,7 @@ void ViewMgr::Update(float dt)
 	playerPos = player->GetPosition();
 
 	UpdateViewRotation(dt);
+	UpdateBackground(dt);
 
 	if (InputMgr::GetKey(sf::Keyboard::LShift))
 	{
@@ -106,7 +117,7 @@ void ViewMgr::UpdateFurtherView(float dt)
 {
 	UpdateFurtherViewMousePos(dt);
 
-
+	
 }
 
 void ViewMgr::UpdateDefaultView(float dt)
@@ -156,6 +167,48 @@ void ViewMgr::UpdateFurtherViewMousePos(float dt)
 	worldViewCenterPos = worldViewCenterPos + worldViewDirection * distanceToTargetView * viewMoveSpeed * dt * (1.f/ viewDistanceMultiplier);
 	if (Utils::SqrMagnitude(worldViewTargetPos - worldViewCenterPos) > 1.f)
 		worldViewCurrentScene->setCenter(worldViewCenterPos);
+}
+
+void ViewMgr::UpdateBackground(float dt)
+{
+	colorRotator += dt;
+	if (colorRotator > colorCyclingDuration)
+		colorRotator -= colorCyclingDuration;
+
+	float valR = 0.f;
+	float valG = 0.f;
+		
+	if (colorRotator < colorCyclingDuration / 3.f)
+	{
+		valR = 1.f - (colorRotator / (colorCyclingDuration / 3.f));
+		valG = colorRotator / (colorCyclingDuration / 3.f);
+	}
+	else if (colorRotator < colorCyclingDuration * 2.f / 3.f)
+	{
+		valR = 0.f;
+		valG = 1.f - (colorRotator - colorCyclingDuration/3.f) / (colorCyclingDuration / 3.f);
+	}
+	else
+	{
+		valR = (colorRotator - colorCyclingDuration * 2.f / 3.f) / (colorCyclingDuration / 3.f);
+		valG = 0.f;
+	}	
+
+	sf::Color brightSideColor = { (sf::Uint8)(bscb.x + (bscb.y - bscb.x) * valR), (sf::Uint8)(bscb.x + (bscb.y - bscb.x) * valG), (sf::Uint8)bscb.y };
+	sf::Color darkSideColor = { (sf::Uint8)(dscb.x + (dscb.y - dscb.x) * valR), (sf::Uint8)(dscb.x + (dscb.y - dscb.x) * valG), (sf::Uint8)dscb.y };
+
+	vaBackground[0].color = brightSideColor;
+	vaBackground[1].color = brightSideColor;
+	vaBackground[2].color = darkSideColor;
+	vaBackground[3].color = darkSideColor;		
+}
+
+void ViewMgr::DrawBackground()
+{
+	auto tempView = FRAMEWORK.GetWindow().getView();
+	FRAMEWORK.GetWindow().setView(*uiViewCurrentScene);
+	FRAMEWORK.GetWindow().draw(vaBackground);
+	FRAMEWORK.GetWindow().setView(tempView);
 }
 
 sf::Vector2f ViewMgr::ScreenToWorld(sf::Vector2i screenPos)

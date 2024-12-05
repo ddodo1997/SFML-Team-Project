@@ -409,5 +409,6 @@ void SceneGame::RemoveAllObjPool()
 
 void SceneGame::Draw(sf::RenderWindow& window)
 {
+	VIEW_MGR.DrawBackground();
 	Scene::Draw(window);
 }

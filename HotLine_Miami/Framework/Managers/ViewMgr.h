@@ -12,7 +12,7 @@ private:
 	ViewMgr& operator=(const ViewMgr& other) = delete;
 
 protected:
-
+	sf::VertexArray vaBackground;
 
 	sf::View worldView;
 	sf::View uiView;
@@ -40,7 +40,12 @@ protected:
 
 	float viewMoveSpeed = 10.f;
 
-	bool isCursorVisible = true;
+	sf::Vector2f bscb = { 54, 173 };
+	sf::Vector2f dscb = { 13, 41 };
+	float colorRotator = 0.f;
+	float colorCyclingDuration = 10.f;
+
+	bool isCursorVisible = false;
 
 	const sf::Vector2f defaultFHDSize = { 1920.f, 1080.f };
 	sf::Vector2f worldViewScale;
@@ -60,6 +65,10 @@ public:
 
 	void UpdateFurtherViewMousePos(float dt);
 
+	void UpdateBackground(float dt);
+
+	void DrawBackground();
+
 	const sf::Vector2f& GetMouseSpritePos() { return (sf::Vector2f)mouseSpritePos; }
 
 	sf::Vector2f ScreenToWorld(sf::Vector2i screenPos);
@@ -78,6 +87,8 @@ public:
 
 	void SetUiViewSize(sf::Vector2f size);
 	sf::Vector2f GetUiViewSize();
+
+	sf::Vector2f GetWorldViewCenterPos() { return worldViewCenterPos; }
 };
 
 #define VIEW_MGR (ViewMgr::Instance())

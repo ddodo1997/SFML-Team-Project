@@ -1,322 +1,101 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Framework\Animation\AnimationClip.cpp">
-      <Filter>Framework\Animation</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\Animation\Animator.cpp">
-      <Filter>Framework\Animation</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\Managers\DataTableMgr.cpp">
-      <Filter>Framework\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\Managers\InputMgr.cpp">
-      <Filter>Framework\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\Managers\SaveLoadMgr.cpp">
-      <Filter>Framework\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\Managers\SceneMgr.cpp">
-      <Filter>Framework\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\Managers\SoundMgr.cpp">
-      <Filter>Framework\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\Objects\GameObject.cpp">
-      <Filter>Framework\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\Objects\HitBox.cpp">
-      <Filter>Framework\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\Objects\SpriteGo.cpp">
-      <Filter>Framework\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\Scenes\Scene.cpp">
-      <Filter>Framework\Scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\Tables\DataTable.cpp">
-      <Filter>Framework\Tables</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\Tables\StringTable.cpp">
-      <Filter>Framework\Tables</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\Objects\Text\TextGo.cpp">
-      <Filter>Framework\Objects\Text</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\General\Framework.cpp">
-      <Filter>Framework\General</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\General\main.cpp">
-      <Filter>Framework\General</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\General\SaveData.cpp">
-      <Filter>Framework\General</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\General\Utils.cpp">
-      <Filter>Framework\General</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\General\Variables.cpp">
-      <Filter>Framework\General</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\General\stdafx.cpp">
-      <Filter>Framework\General</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\Objects\Enemy.cpp">
-      <Filter>Framework\Objects\Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\Objects\Player.cpp">
-      <Filter>Framework\Objects\Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\Objects\Text\UiHudL.cpp">
-      <Filter>Framework\Objects\Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\Scenes\SceneDevL.cpp">
-      <Filter>Framework\Scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\Tables\DecorationTable.cpp">
-      <Filter>Framework\Tables</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\Tables\EnemyTable.cpp">
-      <Filter>Framework\Tables</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\Tables\WallTable.cpp">
-      <Filter>Framework\Tables</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\Tables\WeaponTable.cpp">
-      <Filter>Framework\Tables</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\Tables\StageTable.cpp">
-      <Filter>Framework\Tables</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\Managers\ViewMgr.cpp">
-      <Filter>Framework\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\Scenes\SceneDev_K.cpp">
-      <Filter>Framework\Scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\Scenes\SceneDevS.cpp">
-      <Filter>Framework\Scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\Scenes\SceneGame.cpp">
-      <Filter>Framework\Scenes\Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\Objects\Bullet.cpp">
-      <Filter>Framework\Objects\Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\Objects\Decoration.cpp">
-      <Filter>Framework\Objects\Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\Objects\Wall.cpp">
-      <Filter>Framework\Objects\Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\Objects\Wall2.cpp">
-      <Filter>Framework\Objects\Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\Objects\Weapon.cpp">
-      <Filter>Framework\Objects\Entity</Filter>
-    </ClCompile>
-<<<<<<< HEAD
-    <ClCompile Include="Framework\Map\TileMap.cpp">
-      <Filter>Framework\Map</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\Map\TileMapEditor.cpp">
-      <Filter>Framework\Map</Filter>
-    </ClCompile>
     <ClCompile Include="Framework\Objects\Boss1.cpp" />
     <ClCompile Include="Framework\Objects\Boss2.cpp" />
-    <ClCompile Include="Framework\Objects\Cleaver.cpp">
-      <Filter>Framework\Objects\Entity</Filter>
-    </ClCompile>
-=======
-    <ClCompile Include="Button.cpp">
-      <Filter>Framework\Map</Filter>
-    </ClCompile>
-    <ClCompile Include="WayPoint.cpp">
-      <Filter>Framework\Map</Filter>
-    </ClCompile>
->>>>>>> origin/Dev_S
+    <ClCompile Include="Framework\Objects\Cleaver.cpp" />
+    <ClCompile Include="Button.cpp" />
+    <ClCompile Include="Framework\Objects\Bullet.cpp" />
+    <ClCompile Include="Framework\Objects\Decoration.cpp" />
+    <ClCompile Include="Framework\Tables\DecorationTable.cpp" />
+    <ClCompile Include="Framework\Objects\Enemy.cpp" />
+    <ClCompile Include="Framework\Tables\EnemyTable.cpp" />
+    <ClCompile Include="Framework\Animation\Animator.cpp" />
+    <ClCompile Include="Framework\Animation\AnimationClip.cpp" />
+    <ClCompile Include="Framework\General\SaveData.cpp" />
+    <ClCompile Include="Framework\General\stdafx.cpp" />
+    <ClCompile Include="Framework\General\Utils.cpp" />
+    <ClCompile Include="Framework\General\Variables.cpp" />
+    <ClCompile Include="Framework\Managers\DataTableMgr.cpp" />
+    <ClCompile Include="Framework\Managers\SaveLoadMgr.cpp" />
+    <ClCompile Include="Framework\Objects\HitBox.cpp" />
+    <ClCompile Include="Framework\Tables\DataTable.cpp" />
+    <ClCompile Include="Framework\General\Framework.cpp" />
+    <ClCompile Include="Framework\Objects\GameObject.cpp" />
+    <ClCompile Include="Framework\Managers\InputMgr.cpp" />
+    <ClCompile Include="Framework\Scenes\Scene.cpp" />
+    <ClCompile Include="Framework\Managers\SceneMgr.cpp" />
+    <ClCompile Include="Framework\General\main.cpp" />
+    <ClCompile Include="Framework\Objects\SpriteGo.cpp" />
+    <ClCompile Include="Framework\Objects\Text\TextGo.cpp" />
+    <ClCompile Include="Framework\Managers\SoundMgr.cpp" />
+    <ClCompile Include="Framework\Tables\StringTable.cpp" />
+    <ClCompile Include="Framework\Objects\Player.cpp" />
+    <ClCompile Include="Framework\Scenes\SceneDevL.cpp" />
+    <ClCompile Include="Framework\Scenes\SceneDev_K.cpp" />
+    <ClCompile Include="Framework\Scenes\SceneDevS.cpp" />
+    <ClCompile Include="Framework\Tables\StageTable.cpp" />
+    <ClCompile Include="Framework\Scenes\SceneGame.cpp" />
+    <ClCompile Include="Framework\Map\TileMap.cpp" />
+    <ClCompile Include="Framework\Map\TileMapEditor.cpp" />
+    <ClCompile Include="Framework\Objects\Text\UiHudL.cpp" />
+    <ClCompile Include="Framework\Managers\ViewMgr.cpp" />
+    <ClCompile Include="Framework\Objects\Wall2.cpp" />
+    <ClCompile Include="Framework\Objects\Weapon.cpp" />
+    <ClCompile Include="Framework\Tables\WeaponTable.cpp" />
+    <ClCompile Include="Framework\Objects\Wall.cpp" />
+    <ClCompile Include="Framework\Tables\WallTable.cpp" />
+    <ClCompile Include="WayPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Framework\Animation\AnimationClip.h">
-      <Filter>Framework\Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Animation\Animator.h">
-      <Filter>Framework\Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Managers\DataTableMgr.h">
-      <Filter>Framework\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Managers\InputMgr.h">
-      <Filter>Framework\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Managers\ResourceMgr.h">
-      <Filter>Framework\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Managers\SaveLoadMgr.h">
-      <Filter>Framework\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Managers\SceneMgr.h">
-      <Filter>Framework\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Managers\SoundMgr.h">
-      <Filter>Framework\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Managers\Singleton.h">
-      <Filter>Framework\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Objects\GameObject.h">
-      <Filter>Framework\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Objects\HitBox.h">
-      <Filter>Framework\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Objects\ObjectPool.h">
-      <Filter>Framework\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Objects\SpriteGo.h">
-      <Filter>Framework\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Scenes\Scene.h">
-      <Filter>Framework\Scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Tables\DataTable.h">
-      <Filter>Framework\Tables</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Tables\StringTable.h">
-      <Filter>Framework\Tables</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Objects\Text\TextGo.h">
-      <Filter>Framework\Objects\Text</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\General\Variables.h">
-      <Filter>Framework\General</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\General\Defines.h">
-      <Filter>Framework\General</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\General\Framework.h">
-      <Filter>Framework\General</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\General\json.hpp">
-      <Filter>Framework\General</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\General\SaveData.h">
-      <Filter>Framework\General</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\General\Utils.h">
-      <Filter>Framework\General</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\General\stdafx.h">
-      <Filter>Framework\General</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Objects\Enemy.h">
-      <Filter>Framework\Objects\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Objects\Player.h">
-      <Filter>Framework\Objects\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Objects\Text\UiHudL.h">
-      <Filter>Framework\Objects\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Scenes\SceneDevL.h">
-      <Filter>Framework\Scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Tables\DecorationTable.h">
-      <Filter>Framework\Tables</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Tables\EnemyTable.h">
-      <Filter>Framework\Tables</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Tables\WallTable.h">
-      <Filter>Framework\Tables</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Tables\WeaponTable.h">
-      <Filter>Framework\Tables</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Tables\StageTable.h">
-      <Filter>Framework\Tables</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Managers\ViewMgr.h">
-      <Filter>Framework\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Scenes\SceneDev_K.h">
-      <Filter>Framework\Scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Scenes\SceneDevS.h">
-      <Filter>Framework\Scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Scenes\SceneGame.h">
-      <Filter>Framework\Scenes\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Objects\Bullet.h">
-      <Filter>Framework\Objects\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Objects\Decoration.h">
-      <Filter>Framework\Objects\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Objects\Wall.h">
-      <Filter>Framework\Objects\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Objects\Wall2.h">
-      <Filter>Framework\Objects\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Objects\Weapon.h">
-      <Filter>Framework\Objects\Entity</Filter>
-    </ClInclude>
-<<<<<<< HEAD
-    <ClInclude Include="Framework\Map\TileMap.h">
-      <Filter>Framework\Map</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Map\TileMapEditor.h">
-      <Filter>Framework\Map</Filter>
-    </ClInclude>
     <ClInclude Include="Framework\Objects\Boss1.h" />
     <ClInclude Include="Framework\Objects\Boss2.h" />
-    <ClInclude Include="Framework\Objects\Cleaver.h">
-      <Filter>Framework\Objects\Entity</Filter>
-    </ClInclude>
-=======
-    <ClInclude Include="Button.h">
-      <Filter>Framework\Map</Filter>
-    </ClInclude>
-    <ClInclude Include="WayPoint.h">
-      <Filter>Framework\Map</Filter>
-    </ClInclude>
->>>>>>> origin/Dev_S
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="Framework">
-      <UniqueIdentifier>{98813b8f-1167-4aa7-a3ca-96ac456819b4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\Animation">
-      <UniqueIdentifier>{1777a109-66c9-47ab-85b7-389d95fc2190}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\General">
-      <UniqueIdentifier>{a2b7eeb0-2c84-4597-8bda-82ea7b9b0455}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\Managers">
-      <UniqueIdentifier>{788fc88f-1795-4749-a482-dc46073c2e80}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\Objects">
-      <UniqueIdentifier>{54aa7906-ed0f-4be7-9c74-39f0f7fd440d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\Scenes">
-      <UniqueIdentifier>{019ca674-1325-47ff-a7ed-44a984073775}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\Map">
-      <UniqueIdentifier>{7b45a759-eee7-460f-a37f-10ba5fb76264}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\Tables">
-      <UniqueIdentifier>{08091a04-a3ef-4d3b-b870-b40a5bd758eb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\Objects\Text">
-      <UniqueIdentifier>{0f2e7863-90da-42fc-a144-3fa4511fe0e5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\Scenes\Game">
-      <UniqueIdentifier>{d5e78268-4a30-45fd-b94e-e9076047743e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\Objects\Entity">
-      <UniqueIdentifier>{b0191bd5-111b-4a80-b7cc-7b1e6b79545f}</UniqueIdentifier>
-    </Filter>
+    <ClInclude Include="Framework\Objects\Cleaver.h" />
+    <ClInclude Include="Button.h" />
+    <ClInclude Include="Framework\Objects\Bullet.h" />
+    <ClInclude Include="Framework\Objects\Decoration.h" />
+    <ClInclude Include="Framework\Tables\DecorationTable.h" />
+    <ClInclude Include="Framework\Objects\Enemy.h" />
+    <ClInclude Include="Framework\Tables\EnemyTable.h" />
+    <ClInclude Include="Framework\Animation\Animator.h" />
+    <ClInclude Include="Framework\Animation\AnimationClip.h" />
+    <ClInclude Include="Framework\General\Defines.h" />
+    <ClInclude Include="Framework\General\json.hpp" />
+    <ClInclude Include="Framework\General\SaveData.h" />
+    <ClInclude Include="Framework\General\stdafx.h" />
+    <ClInclude Include="Framework\General\Utils.h" />
+    <ClInclude Include="Framework\General\Variables.h" />
+    <ClInclude Include="Framework\Managers\DataTableMgr.h" />
+    <ClInclude Include="Framework\Managers\SaveLoadMgr.h" />
+    <ClInclude Include="Framework\Objects\HitBox.h" />
+    <ClInclude Include="Framework\Tables\DataTable.h" />
+    <ClInclude Include="Framework\General\Framework.h" />
+    <ClInclude Include="Framework\Objects\GameObject.h" />
+    <ClInclude Include="Framework\Managers\InputMgr.h" />
+    <ClInclude Include="Framework\Objects\ObjectPool.h" />
+    <ClInclude Include="Framework\Managers\ResourceMgr.h" />
+    <ClInclude Include="Framework\Scenes\Scene.h" />
+    <ClInclude Include="Framework\Managers\SceneMgr.h" />
+    <ClInclude Include="Framework\Managers\Singleton.h" />
+    <ClInclude Include="Framework\Objects\SpriteGo.h" />
+    <ClInclude Include="Framework\Objects\Text\TextGo.h" />
+    <ClInclude Include="Framework\Managers\SoundMgr.h" />
+    <ClInclude Include="Framework\Tables\StringTable.h" />
+    <ClInclude Include="Framework\Objects\Player.h" />
+    <ClInclude Include="Framework\Scenes\SceneDevL.h" />
+    <ClInclude Include="Framework\Scenes\SceneDev_K.h" />
+    <ClInclude Include="Framework\Scenes\SceneDevS.h" />
+    <ClInclude Include="Framework\Tables\StageTable.h" />
+    <ClInclude Include="Framework\Scenes\SceneGame.h" />
+    <ClInclude Include="Framework\Map\TileMap.h" />
+    <ClInclude Include="Framework\Map\TileMapEditor.h" />
+    <ClInclude Include="Framework\Objects\Text\UiHudL.h" />
+    <ClInclude Include="Framework\Managers\ViewMgr.h" />
+    <ClInclude Include="Framework\Objects\Wall2.h" />
+    <ClInclude Include="Framework\Objects\Weapon.h" />
+    <ClInclude Include="Framework\Tables\WeaponTable.h" />
+    <ClInclude Include="Framework\Objects\Wall.h" />
+    <ClInclude Include="Framework\Tables\WallTable.h" />
+    <ClInclude Include="WayPoint.h" />
   </ItemGroup>
 </Project>
