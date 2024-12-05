@@ -89,6 +89,9 @@ public:
 	sf::Vector2f GetUiViewSize();
 
 	sf::Vector2f GetWorldViewCenterPos() { return worldViewCenterPos; }
+
+	void LockCursor(sf::RenderWindow& window);
+	void UnlockCursor();
 };
 
 #define VIEW_MGR (ViewMgr::Instance())

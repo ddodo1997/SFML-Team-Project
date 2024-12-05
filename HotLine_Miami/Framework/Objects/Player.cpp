@@ -234,16 +234,22 @@ void Player::Update(float dt)
 
 	if (isOnPound)
 	{
-
-		if (executionCount > 0)
-		{
-			UpdateExecution(dt);
+		if (isPoundingBoss)
+		{			
+			UpdateExecutionBoss1(dt);
 		}
 		else
 		{
-			executingEnemy->SetStatus(Enemy::Status::Die);
-			executingEnemy = nullptr;
-			isOnPound = false;
+			if (executionCount > 0)
+			{
+				UpdateExecution(dt);
+			}
+			else
+			{
+				executingEnemy->SetStatus(Enemy::Status::Die);
+				executingEnemy = nullptr;
+				isOnPound = false;
+			}
 		}
 		return;
 	}
@@ -377,11 +383,6 @@ void Player::UpdateMask(float dt)
 
 void Player::UpdateExecution(float dt)
 {
-	if (isPoundingBoss)
-	{
-		UpdateExecutionBoss1(dt);
-		return;
-	}
 	if (!isExecutionOnWall)
 	{
 		switch (weaponStatus.weaponType)

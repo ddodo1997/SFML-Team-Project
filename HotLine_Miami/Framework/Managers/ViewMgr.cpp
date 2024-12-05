@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "ViewMgr.h"
 #include "Player.h"
+#include <Windows.h>
 
 void ViewMgr::Init()
 {
@@ -52,6 +53,15 @@ void ViewMgr::Update(float dt)
 	{
 		isCursorVisible = !isCursorVisible;
 		FRAMEWORK.GetWindow().setMouseCursorVisible(isCursorVisible);
+
+		if (isCursorVisible)
+		{
+			UnlockCursor();
+		}
+		else
+		{
+			LockCursor(FRAMEWORK.GetWindow());
+		}
 	}
 }
 
@@ -258,3 +268,17 @@ sf::Vector2f ViewMgr::GetUiViewSize()
 	return uiView.getSize();
 }
 
+void ViewMgr::LockCursor(sf::RenderWindow& window)
+{
+	RECT rect;
+	HWND hwnd = window.getSystemHandle(); // SFML 창의 핸들을 가져옵니다.
+
+	GetClientRect(hwnd, &rect);           // 창 내부의 클라이언트 영역을 가져옵니다.
+	MapWindowPoints(hwnd, nullptr, reinterpret_cast<POINT*>(&rect), 2); // 화면 좌표로 변환
+	ClipCursor(&rect);                    // 커서를 해당 영역에 제한합니다.
+}
+
+void ViewMgr::UnlockCursor()
+{
+	ClipCursor(nullptr);                  // 제한을 해제합니다.
+}

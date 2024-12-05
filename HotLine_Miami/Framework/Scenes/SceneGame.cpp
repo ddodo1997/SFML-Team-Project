@@ -107,26 +107,6 @@ void SceneGame::Update(float dt)
 	Scene::Update(dt);
 	VIEW_MGR.Update(dt);
 
-	Weapon::WeaponType tempIndex = Weapon::WeaponType::Bat;
-	if (InputMgr::GetKeyDown(sf::Keyboard::Numpad0))
-	{
-		player->OnHit(WEAPON_TABLE->Get(tempIndex), directionXY);
-	}
-	if (InputMgr::GetKeyDown(sf::Keyboard::Numpad1))
-	{
-		tempIndex = Weapon::WeaponType::Knife;
-		player->OnHit(WEAPON_TABLE->Get(tempIndex), directionXY);
-	}
-	if (InputMgr::GetKeyDown(sf::Keyboard::Numpad2))
-	{
-		tempIndex = Weapon::WeaponType::Machinegun;
-		player->OnHit(WEAPON_TABLE->Get(tempIndex), directionXY);
-	}
-	if (InputMgr::GetKeyDown(sf::Keyboard::Numpad3))
-	{
-		tempIndex = Weapon::WeaponType::Shotgun;
-		player->OnHit(WEAPON_TABLE->Get(tempIndex), directionXY);
-	}
 	if (InputMgr::GetKeyDown(sf::Keyboard::R))
 	{
 		SCENE_MGR.ChangeScene(SceneIds::SceneGame);
@@ -195,7 +175,6 @@ void SceneGame::Update(float dt)
 
 	directionXY = { directionX, directionY };
 
-	uiHud->UpdateHitDir(directionXY);
 	uiHud->UpdateWeaponStatus(player->GetWeaponStatus(), player->GetRemainingBullet());
 
 	//worldView.setCenter(player->GetPosition());
