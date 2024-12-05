@@ -27,6 +27,8 @@ void ViewMgr::Update(float dt)
 	look = player->GetLook();
 	playerPos = player->GetPosition();
 
+	UpdateViewRotation(dt);
+
 	if (InputMgr::GetKey(sf::Keyboard::LShift))
 	{
 		UpdateFurtherView(dt);
@@ -40,7 +42,64 @@ void ViewMgr::Update(float dt)
 		isCursorVisible = !isCursorVisible;
 		FRAMEWORK.GetWindow().setMouseCursorVisible(isCursorVisible);
 	}
+}
 
+void ViewMgr::UpdateViewRotation(float dt)
+{
+	sf::Vector2f distanceFromDefaultPos;
+	distanceFromDefaultPos = defaultPlayerPos - playerPos;
+
+	float rotationCycle = 600.f;
+
+	if (distanceFromDefaultPos.x > rotationCycle)
+	{
+		distanceFromDefaultPos.x -= rotationCycle;
+	}
+	if (distanceFromDefaultPos.x < -rotationCycle)
+	{
+		distanceFromDefaultPos.x += rotationCycle;
+	}
+	if (distanceFromDefaultPos.y > rotationCycle)
+	{
+		distanceFromDefaultPos.y -= rotationCycle;
+	}
+	if (distanceFromDefaultPos.y < -rotationCycle)
+	{
+		distanceFromDefaultPos.y += rotationCycle;
+	}
+	
+	float rotationX = 0.f;
+	float rotationY = 0.f;
+
+	if (distanceFromDefaultPos.x >= rotationCycle*0.5f)
+	{
+		rotationX = rotationCycle - distanceFromDefaultPos.x; // 100 ~ 0
+	}
+	else if (distanceFromDefaultPos.x <= -rotationCycle * 0.5f) // -100 ~ 0
+	{
+		rotationX = -rotationCycle - distanceFromDefaultPos.x;
+	}
+	else
+	{
+		rotationX = distanceFromDefaultPos.x; // -100 ~ 100
+	}
+
+	if (distanceFromDefaultPos.y >= rotationCycle * 0.5f)
+	{
+		rotationY = rotationCycle - distanceFromDefaultPos.y; // 100 ~ 0
+	}
+	else if (distanceFromDefaultPos.y <= -rotationCycle * 0.5f) // -100 ~ 0
+	{
+		rotationY = -rotationCycle - distanceFromDefaultPos.y;
+	}
+	else
+	{
+		rotationY = distanceFromDefaultPos.y; // -100 ~ 100
+	}
+
+	viewRotation = (rotationX + rotationY)*0.006f;	
+	
+	worldViewCurrentScene->setRotation(viewRotation);
 }
 
 void ViewMgr::UpdateFurtherView(float dt)
