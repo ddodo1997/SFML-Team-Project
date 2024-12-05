@@ -14,6 +14,7 @@ public:
 		PickUpCleaver,
 		Stun,
 		Crawl,
+		Pounded,
 		Die,
 	};
 
@@ -114,4 +115,5 @@ public:
 	void OnDie();
 	bool IsCanAttack() const{ return currentPattern == Patterns::None; }
 	bool IsExcutable() const { return currentPattern == Patterns::Crawl; }
+	bool IsDead() const { return !isAlive; }
 };

@@ -86,17 +86,19 @@ void Boss1::SetPatterns()
 {
 	pattern.attackTimer = 0.f;
 	pattern.attackingTimer = 0.f;
+	pattern.crawlTimer = 0.f;
+	pattern.crawlingTimer = 0.f;
 	pattern.patternCnt = 0;
 	pattern.patternTimer = 0.f;
 	pattern.prepareAttackTimer = 0.f;
 	pattern.pryTimer = 0.f;
 	pattern.stunTimer = 0.f;
-	pattern.crawlTimer = 0.f;
 
 	pattern.isCrawling = false;
 	pattern.isAttacking = false;
 	pattern.isOnAttack = false;
 	isPhase2 = false;
+	isAlive = true;
 }
 
 void Boss1::SetWeaponStatus()
@@ -107,10 +109,13 @@ void Boss1::SetWeaponStatus()
 
 void Boss1::Update(float dt)
 {
+	if (InputMgr::GetKeyDown(sf::Keyboard::M))
+		OnDie();
+
 	animatorBody.Update(dt);
 	if (isWalking)
 		animatorLegs.Update(dt);
-	if (player->IsDead())
+	if (player->IsDead() || currentPattern == Patterns::Pounded || IsDead())
 	{
 		
 		return;
@@ -121,11 +126,11 @@ void Boss1::Update(float dt)
 
 	if (Utils::Distance(position, player->GetPosition()) > 80.f)
 	{
-		speed = isPhase2 ? 120.f : 100.f;
+		speed = isPhase2 ? 140.f : 120.f;
 	}
 	else
 	{
-		speed = isPhase2 ? -120.f : -100.f;
+		speed = isPhase2 ? -140.f : -120.f;
 	}
 	if (!IsExcutable())
 	{
@@ -198,6 +203,7 @@ void Boss1::Pattern1(float dt)
 			animatorBody.Play("animations/Boss1/boss1_attack.json");
 			animatorBody.PlayQueue("animations/Boss1/boss1_walk.json");
 			SetOrigin(Origins::MC);
+			SOUND_MGR.PlaySfx("sound/Attack/sndSwing1.wav");
 		}
 	}
 }
@@ -274,6 +280,7 @@ void Boss1::OnCrawl(float dt)
 			pattern.isCrawling = false;
 			animatorBody.Stop();
 		}
+		pattern.targetDirection = Utils::GetNormal(player->GetPosition() - position);
 		SetPosition(position + (-pattern.targetDirection) * pattern.crawlingSpeed * dt);
 		SetRotation(Utils::Angle(-pattern.targetDirection) + 90.f);
 	}
@@ -304,6 +311,7 @@ void Boss1::ChangePattern(Patterns pattern)
 	case Patterns::Pattern1:
 	case Patterns::Pattern2:
 		animatorBody.Stop();
+		SOUND_MGR.PlaySfx("sound/Enemy/sndDrawKnife.wav");
 		this->pattern.targetDirection = Utils::GetNormal(player->GetPosition() - position);
 		SetRotation(Utils::Angle(this->pattern.targetDirection));
 		break;
@@ -320,6 +328,13 @@ void Boss1::ChangePattern(Patterns pattern)
 		animatorBody.Play("animations/Boss1/boss1_start_crawl.json");
 		animatorBody.PlayQueue("animations/Boss1/boss1_crawl.json");
 		isWalking = false;
+		break;
+	case Patterns::Pounded:
+		speed = 0.f;
+		animatorBody.Stop();
+		isWalking = false;
+		this->pattern.targetDirection = Utils::GetNormal(player->GetPosition() - position);
+		SetRotation(Utils::Angle(-this->pattern.targetDirection));
 		break;
 	case Patterns::Die:
 		OnDie();
@@ -363,5 +378,9 @@ void Boss1::OnHit(sf::Vector2f dir)
 void Boss1::OnDie()
 {
 	isWalking = false;
-	isAlive = true;
+	isAlive = false;
+	animatorBody.Play("animations/Boss1/boss1_head_boom.json");
+	SetOrigin(Origins::MC);
+	SetRotation(Utils::Angle(-pattern.targetDirection));
+	//anima
 }

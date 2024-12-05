@@ -83,6 +83,7 @@ void Player::Reset()
 	isAlive = true;
 	isOnPound = false;
 	isExecuting = false;
+	isControlable = true;
 	executionTimer = 10.f;
 	executionCount = 10;
 	speed = 100.f;
@@ -183,6 +184,8 @@ void Player::ResetMask(bool ifInitialSetting)
 
 void Player::Update(float dt)
 {
+	if (!IsControlable())
+		speed = 0.f;
 	if (InputMgr::GetKeyDown(sf::Keyboard::Semicolon))
 	{
 		int currentMaskIndex = (int)currentMask;
@@ -535,7 +538,7 @@ void Player::FixedUpdate(float dt)
 		{
 			if (weaponStatus.weaponType == Weapon::WeaponType::Bat)
 			{	
-				if (attackHitBoxCheck.getGlobalBounds().intersects(boss1->GetGlobalBounds()))
+				if (attackHitBoxCheck.getGlobalBounds().intersects(boss1->GetCollisionBox().getGlobalBounds()))
 				{
 					boss1->OnHit(look);
 				}

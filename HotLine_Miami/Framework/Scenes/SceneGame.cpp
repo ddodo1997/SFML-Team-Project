@@ -11,6 +11,7 @@
 #include "TileMap.h"
 #include "UiHudL.h"
 #include "Boss1.h"
+#include "Boss2.h"
 #include "Cleaver.h"
 SceneGame::SceneGame() : Scene(SceneIds::SceneGame)
 {
@@ -23,6 +24,7 @@ void SceneGame::Init()
 	tileMap = AddGo(new TileMap("Tile Map"));
 	uiHud = AddGo(new UiHudL());
 	boss = AddGo(new Boss1("Boss1"));
+	boss2 = AddGo(new Boss2("Boss2"));
 	cleaver = AddGo(new Cleaver("Cleaver"));
 
 	LoadWalls(); // 통짜 벽 쓸때만 사용하기
@@ -45,6 +47,8 @@ void SceneGame::Enter()
 	// SetWalls_2(); // 개별 벽 사용할 때 
 	SetEnemies();
 	SetDecorations();
+
+	boss2->SetPosition({ -1000.f, -1000.f, });
 
 	tileMap->SetTexture(&TEXTURE_MGR.Get(STAGE_TABLE->GetTileTextureId()));
 	tileMap->Initialize(STAGE_TABLE->GetTileSize(), STAGE_TABLE->GetTileCount(), STAGE_TABLE->GetFloorTiles());

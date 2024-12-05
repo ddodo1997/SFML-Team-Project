@@ -94,7 +94,8 @@ void Weapon::Draw(sf::RenderWindow& window)
 {
 	window.draw(weaponSprite);
 	hitBox.Draw(window);
-	window.draw(collisionBox);
+	if(Variables::isDrawHitBox)
+		window.draw(collisionBox);
 }
 
 void Weapon::SetPosition(sf::Vector2f pos)
