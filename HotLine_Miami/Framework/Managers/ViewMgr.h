@@ -52,6 +52,7 @@ protected:
 
 	sf::Vector2f defaultPlayerPos = { 50.f, 150.f };
 	float viewRotation;
+	float pausedViewTimer;
 
 public:
 	void Init();
@@ -62,6 +63,7 @@ public:
 
 	void UpdateFurtherView(float dt);
 	void UpdateDefaultView(float dt);
+	void UpdatePausedView(float realDt);
 
 	void UpdateFurtherViewMousePos(float dt);
 

@@ -39,7 +39,7 @@ void ViewMgr::Update(float dt)
 	playerPos = player->GetPosition();
 
 	UpdateViewRotation(dt);
-	UpdateBackground(dt);
+	UpdateBackground(FRAMEWORK.GetRealDeltaTime());
 
 	if (InputMgr::GetKey(sf::Keyboard::LShift))
 	{
@@ -126,8 +126,6 @@ void ViewMgr::UpdateViewRotation(float dt)
 void ViewMgr::UpdateFurtherView(float dt)
 {
 	UpdateFurtherViewMousePos(dt);
-
-	
 }
 
 void ViewMgr::UpdateDefaultView(float dt)
@@ -147,6 +145,17 @@ void ViewMgr::UpdateDefaultView(float dt)
 	worldViewCenterPos = worldViewCenterPos + worldViewDirection * distanceToTargetView * viewMoveSpeed * dt;
 	if(Utils::SqrMagnitude(worldViewTargetPos-worldViewCenterPos) > 1.f)
 		worldViewCurrentScene->setCenter(worldViewCenterPos);	
+}
+
+void ViewMgr::UpdatePausedView(float realDt)
+{
+	pausedViewTimer += realDt * 2.f;
+
+	if (pausedViewTimer > 2 * Utils::PI)
+		pausedViewTimer -= 2 * Utils::PI;
+
+	//worldViewCenterPos += Utils::RadianToNormal(std::sin(pausedViewTimer));
+	worldViewCurrentScene->setCenter(worldViewCenterPos + Utils::RadianToNormal(std::sin(pausedViewTimer)));
 }
 
 void ViewMgr::UpdateFurtherViewMousePos(float dt)

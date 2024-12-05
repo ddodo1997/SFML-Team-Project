@@ -4,9 +4,10 @@ class Utils
 {
 private:
 	static std::mt19937 generator;
-	static const float PI;
 
 public:
+	static const float PI;
+
 	static void Init();
 
 	static int RandomRange(int min, int max);

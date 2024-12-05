@@ -24,6 +24,7 @@ void SceneGame::Init()
 	uiHud = AddGo(new UiHudL());
 	boss = AddGo(new Boss1("Boss1"));
 	cleaver = AddGo(new Cleaver("Cleaver"));
+	uiHud->SetPlayer(player);
 
 	LoadWalls(); // 통짜 벽 쓸때만 사용하기
 	LoadDecorations();
@@ -104,8 +105,14 @@ void SceneGame::ClearInactivePoolObjects()
 
 void SceneGame::Update(float dt)
 {
-	Scene::Update(dt);
 	VIEW_MGR.Update(dt);
+	if (uiHud->IsPaused())
+	{
+		uiHud->Update(dt);
+		return;
+	}
+
+	Scene::Update(dt);
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::R))
 	{
