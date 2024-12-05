@@ -127,25 +127,26 @@ void Boss1::Update(float dt)
 	{
 		speed = isPhase2 ? -120.f : -100.f;
 	}
-
-	pattern.attackTimer += dt;
-	if ((Utils::Distance(position, player->GetPosition()) < meleeHitBox.getLocalBounds().width) && pattern.attackDelay <= pattern.attackTimer)
+	if (!IsExcutable())
 	{
-		pattern.attackTimer = 0.f;
-		Attack();
-	}
-
-	if (!pattern.isAttacking)
-	{
-		pattern.patternTimer += dt;
-		if (pattern.patternTimer >= pattern.patternDelay)
+		pattern.attackTimer += dt;
+		if ((Utils::Distance(position, player->GetPosition()) < meleeHitBox.getLocalBounds().width) && pattern.attackDelay <= pattern.attackTimer)
 		{
-			pattern.patternTimer = 0.f;
-			pattern.isAttacking = true;
-			pattern.patternCnt < 2 ? ChangePattern(Patterns::Pattern1) : ChangePattern(Patterns::Pattern2);
+			pattern.attackTimer = 0.f;
+			Attack();
+		}
+
+		if (!pattern.isAttacking)
+		{
+			pattern.patternTimer += dt;
+			if (pattern.patternTimer >= pattern.patternDelay)
+			{
+				pattern.patternTimer = 0.f;
+				pattern.isAttacking = true;
+				pattern.patternCnt < 2 ? ChangePattern(Patterns::Pattern1) : ChangePattern(Patterns::Pattern2);
+			}
 		}
 	}
-
 	switch (currentPattern)
 	{
 	case Patterns::Pattern1:
@@ -159,6 +160,9 @@ void Boss1::Update(float dt)
 		break;
 	case Patterns::Stun:
 		OnStun(dt);
+		break;
+	case Patterns::Crawl:
+		OnCrawl(dt);
 		break;
 	default:
 		SetRotation(Utils::Angle(direction));
@@ -271,7 +275,7 @@ void Boss1::OnCrawl(float dt)
 			animatorBody.Stop();
 		}
 		SetPosition(position + (-pattern.targetDirection) * pattern.crawlingSpeed * dt);
-		SetRotation(Utils::Angle(-pattern.targetDirection));
+		SetRotation(Utils::Angle(-pattern.targetDirection) + 90.f);
 	}
 	else
 	{

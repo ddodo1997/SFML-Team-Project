@@ -48,7 +48,7 @@ public:
 
 		sf::Vector2f targetDirection;
 		float speed = 200.f;
-		float crawlingSpeed = 50.f;
+		float crawlingSpeed = 20.f;
 
 		bool isAttacking = false;
 		bool isOnAttack = false;
