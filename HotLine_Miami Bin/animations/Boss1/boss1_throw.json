@@ -1,0 +1,15 @@
+{
+    "ID": "Boss1Throw",
+    "LoopType": 0,
+    "FPS": 10,
+    "texId": "graphics/Enemy/Boss1/boss1_throw_cleaver.png",
+    "Frames":
+    [
+        [0,0,36,32],
+		[36,0,36,32],
+		[72,0,36,32],
+		[0,32,36,32],
+		[36,32,36,32],
+		[72,32,36,32]
+    ]
+}

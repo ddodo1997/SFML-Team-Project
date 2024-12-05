@@ -1,0 +1,10 @@
+{
+    "ID": "Boss1Stun",
+    "LoopType": 0,
+    "FPS": 10,
+    "texId": "graphics/Enemy/Boss1/boss1_cleaver_getup.png",
+    "Frames":
+    [
+        [0,0,60,60]
+    ]
+}

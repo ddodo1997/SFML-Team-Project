@@ -1,0 +1,15 @@
+{
+    "ID": "Boss1GetUp",
+    "LoopType": 0,
+    "FPS": 10,
+    "texId": "graphics/Enemy/Boss1/boss1_cleaver_getup.png",
+    "Frames":
+    [
+        [0,0,60,60],
+		[60,0,60,60],
+		[120,0,60,60],
+		[0,60,60,60],
+		[60,60,60,60],
+		[120,60,60,60]
+    ]
+}

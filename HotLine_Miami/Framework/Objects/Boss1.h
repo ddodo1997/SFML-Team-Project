@@ -13,6 +13,7 @@ public:
 		Pattern2,
 		PickUpCleaver,
 		Stun,
+		Crawl,
 		Die,
 	};
 
@@ -35,8 +36,19 @@ public:
 		float pryTimer = 0.f;
 		float pryDelay = 2.2f;
 
+		float stunTimer = 0.f;
+		float stunDelay = 1.5f;
+
+		float crawlTimer = 0.f;
+		float crawlDelay = 0.9f;
+
+		float crawlingTimer = 0.f;
+		float crawlingDelay = 1.f;
+		bool isCrawling = false;
+
 		sf::Vector2f targetDirection;
 		float speed = 200.f;
+		float crawlingSpeed = 50.f;
 
 		bool isAttacking = false;
 		bool isOnAttack = false;
@@ -65,6 +77,7 @@ protected:
 	
 	bool isPhase2 = false;
 	bool isWalking;
+	bool isAlive = true;
 public:
 	Boss1(const std::string& name = "");
 	~Boss1() = default;
@@ -89,6 +102,8 @@ public:
 	void Pattern1(float dt);
 	void Pattern2(float dt);
 	void OnPry(float dt);
+	void OnStun(float dt);
+	void OnCrawl(float dt);
 
 	void ChangePattern(Patterns pattern);
 
@@ -98,6 +113,5 @@ public:
 	void OnHit(sf::Vector2f dir);
 	void OnDie();
 	bool IsCanAttack() const{ return currentPattern == Patterns::None; }
-
-	bool isAttackable() const { return currentPattern == Patterns::PickUpCleaver; }
+	bool IsExcutable() const { return currentPattern == Patterns::Crawl; }
 };

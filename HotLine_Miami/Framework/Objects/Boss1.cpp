@@ -69,11 +69,12 @@ void Boss1::Reset()
 	cleaver = sceneGame->GetCleaver();
 	animatorBody.SetTarget(&body);
 	animatorLegs.SetTarget(&legs);
+	animatorLegs.Play("animations/Boss1/boss1_legs.json");
 	collisionBox.setSize({ 10.f, 10.f });
 	meleeHitBox.setFillColor(sf::Color::Transparent);
 	meleeHitBox.setOutlineColor(sf::Color::Green);
 	meleeHitBox.setOutlineThickness(1.f);
-	meleeHitBox.setSize({ 20.f,30.f });
+	meleeHitBox.setSize({ 20.f,20.f });
 	Utils::SetOrigin(meleeHitBox, Origins::ML);
 	SetPosition(sf::Vector2f(100.f, 100.f));
 	SetPatterns();
@@ -89,7 +90,10 @@ void Boss1::SetPatterns()
 	pattern.patternTimer = 0.f;
 	pattern.prepareAttackTimer = 0.f;
 	pattern.pryTimer = 0.f;
+	pattern.stunTimer = 0.f;
+	pattern.crawlTimer = 0.f;
 
+	pattern.isCrawling = false;
 	pattern.isAttacking = false;
 	pattern.isOnAttack = false;
 	isPhase2 = false;
@@ -108,6 +112,7 @@ void Boss1::Update(float dt)
 		animatorLegs.Update(dt);
 	if (player->IsDead())
 	{
+		
 		return;
 	}
 	hitBox.UpdateTr(collisionBox, collisionBox.getLocalBounds());
@@ -152,6 +157,9 @@ void Boss1::Update(float dt)
 	case Patterns::PickUpCleaver:
 		OnPry(dt);
 		break;
+	case Patterns::Stun:
+		OnStun(dt);
+		break;
 	default:
 		SetRotation(Utils::Angle(direction));
 		SetPosition(position + direction * speed * dt);
@@ -173,7 +181,7 @@ void Boss1::Pattern1(float dt)
 			pattern.patternCnt++;
 			ChangePattern(Patterns::None);
 		}
-		if (meleeHitBox.getGlobalBounds().intersects(player->GetGlobalBounds()))
+		if (meleeHitBox.getGlobalBounds().intersects(player->GetCollisionBox().getGlobalBounds()))
 			player->OnHit(weaponStatus, direction);
 	}
 	else
@@ -185,6 +193,7 @@ void Boss1::Pattern1(float dt)
 			pattern.isOnAttack = true;
 			animatorBody.Play("animations/Boss1/boss1_attack.json");
 			animatorBody.PlayQueue("animations/Boss1/boss1_walk.json");
+			SetOrigin(Origins::MC);
 		}
 	}
 }
@@ -218,6 +227,9 @@ void Boss1::Pattern2(float dt)
 			pattern.prepareAttackTimer = 0.f;
 			pattern.isOnAttack = true;
 			cleaver->Throw(pattern.targetDirection, position);
+			animatorBody.Play("animations/Boss1/boss1_throw.json");
+			animatorBody.PlayQueue("animations/Boss1/boss1_walk.json");
+			SetOrigin(Origins::MC);
 		}
 	}
 
@@ -233,6 +245,46 @@ void Boss1::OnPry(float dt)
 	}
 }
 
+void Boss1::OnStun(float dt)
+{
+	pattern.stunTimer += dt;
+	if (pattern.stunDelay <= pattern.stunTimer)
+	{
+		pattern.stunTimer = 0.f;
+		animatorBody.Play("animations/Boss1/boss1_getup.json");
+		animatorBody.PlayQueue("animations/Boss1/boss1_walk.json");
+		SetOrigin(Origins::MC);
+		isPhase2 = true;
+		ChangePattern(Patterns::None);
+	}
+}
+
+void Boss1::OnCrawl(float dt)
+{
+	if (pattern.isCrawling)
+	{
+		pattern.crawlingTimer += dt;
+		if (pattern.crawlingDelay <= pattern.crawlingTimer)
+		{
+			pattern.crawlingTimer = 0.f;
+			pattern.isCrawling = false;
+			animatorBody.Stop();
+		}
+		SetPosition(position + (-pattern.targetDirection) * pattern.crawlingSpeed * dt);
+		SetRotation(Utils::Angle(-pattern.targetDirection));
+	}
+	else
+	{
+		pattern.crawlTimer += dt;
+		if (pattern.crawlDelay <= pattern.crawlTimer)
+		{
+			pattern.crawlTimer = 0.f;
+			pattern.isCrawling = true;
+			animatorBody.RePlay();
+		}
+	}
+}
+
 void Boss1::ChangePattern(Patterns pattern)
 {
 	Patterns prevPattern = currentPattern;
@@ -241,6 +293,8 @@ void Boss1::ChangePattern(Patterns pattern)
 	switch (currentPattern)
 	{
 	case Patterns::None:
+		if (prevPattern == Patterns::PickUpCleaver)
+			break;
 		animatorBody.Play("animations/Boss1/boss1_walk.json");
 		break;
 	case Patterns::Pattern1:
@@ -251,11 +305,20 @@ void Boss1::ChangePattern(Patterns pattern)
 		break;
 	case Patterns::PickUpCleaver:
 		animatorBody.Play("animations/Boss1/boss1_pry.json");
+		animatorBody.PlayQueue("animations/Boss1/boss1_walk.json");
+		isWalking = false;
 		break;
 	case Patterns::Stun:
+		animatorBody.Play("animations/Boss1/boss1_stun.json");
+		isWalking = false;
+		break;
+	case Patterns::Crawl:
+		animatorBody.Play("animations/Boss1/boss1_start_crawl.json");
+		animatorBody.PlayQueue("animations/Boss1/boss1_crawl.json");
 		isWalking = false;
 		break;
 	case Patterns::Die:
+		OnDie();
 		break;
 	}
 	SetOrigin(Origins::MC);
@@ -263,9 +326,9 @@ void Boss1::ChangePattern(Patterns pattern)
 
 void Boss1::Draw(sf::RenderWindow& window)
 {
-	window.draw(body);
 	if (isWalking)
 		window.draw(legs);
+	window.draw(body);
 	if (Variables::isDrawHitBox)
 	{
 		window.draw(collisionBox);
@@ -281,7 +344,7 @@ void Boss1::Attack()
 	animatorBody.Play("animations/Boss1/boss1_attack.json");
 	animatorBody.PlayQueue("animations/Boss1/boss1_walk.json");
 	SetOrigin(Origins::MC);
-	if (meleeHitBox.getGlobalBounds().intersects(player->GetGlobalBounds()))
+	if (meleeHitBox.getGlobalBounds().intersects(player->GetCollisionBox().getGlobalBounds()))
 		player->OnHit(weaponStatus, direction);
 }
 
@@ -289,16 +352,12 @@ void Boss1::OnHit(sf::Vector2f dir)
 {
 	if (currentPattern != Patterns::PickUpCleaver)
 		return;
-	if (isPhase2)
-	{
-		ChangePattern(Patterns::Stun);
-	}
-	else
-	{
-		isPhase2 = !isPhase2;
-	}
+
+	!isPhase2 ? ChangePattern(Patterns::Stun) : ChangePattern(Patterns::Crawl);
 }
 
 void Boss1::OnDie()
 {
+	isWalking = false;
+	isAlive = true;
 }

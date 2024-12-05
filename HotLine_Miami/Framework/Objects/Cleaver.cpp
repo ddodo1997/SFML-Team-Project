@@ -68,7 +68,7 @@ void Cleaver::Update(float dt)
 	if (!isStuck)
 	{
 		SetPosition(position + direction * speed * dt);
-		SetRotation(rotation + 1000.f * dt);
+		SetRotation(rotation + 3000.f * dt);
 	}
 
 	if (player->GetCollisionBox().getGlobalBounds().intersects(body.getGlobalBounds()))
