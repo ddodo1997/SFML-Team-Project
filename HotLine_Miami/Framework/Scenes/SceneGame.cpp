@@ -105,6 +105,7 @@ void SceneGame::ClearInactivePoolObjects()
 void SceneGame::Update(float dt)
 {
 	Scene::Update(dt);
+	VIEW_MGR.Update(dt);
 
 	Weapon::WeaponType tempIndex = Weapon::WeaponType::Bat;
 	if (InputMgr::GetKeyDown(sf::Keyboard::Numpad0))
