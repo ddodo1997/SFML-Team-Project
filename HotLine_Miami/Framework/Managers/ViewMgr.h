@@ -12,6 +12,8 @@ private:
 	ViewMgr& operator=(const ViewMgr& other) = delete;
 
 protected:
+
+
 	sf::View worldView;
 	sf::View uiView;
 

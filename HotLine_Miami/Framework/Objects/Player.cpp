@@ -534,8 +534,11 @@ void Player::FixedUpdate(float dt)
 		if (boss1 != nullptr)
 		{
 			if (weaponStatus.weaponType == Weapon::WeaponType::Bat)
-			{
-				boss1->OnHit(look);
+			{	
+				if (attackHitBoxCheck.getGlobalBounds().intersects(boss1->GetGlobalBounds()))
+				{
+					boss1->OnHit(look);
+				}
 			}
 		}
 	}
