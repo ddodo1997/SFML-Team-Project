@@ -6,6 +6,8 @@
 #include "Wall.h"
 #include "Wall2.h"
 #include "Decoration.h"
+#include "Boss1.h"
+#include "Boss2.h"
 
 Player::Player(const std::string& name)
 	: GameObject(name)
@@ -94,6 +96,7 @@ void Player::Reset()
 	sceneGame = (SceneGame*)SCENE_MGR.GetCurrentScene();
 	walls = sceneGame->GetWalls();
 	decorations = sceneGame->GetDecorations();
+	boss1 = sceneGame->GetBoss1();
 
 	enemies = sceneGame->GetEnemies();
 	collisionBox.setSize({ 10.f,10.f });
@@ -515,11 +518,24 @@ void Player::FixedUpdate(float dt)
 							enemy->OnHit(weaponStatus, look);
 							std::string sfxFilePath = "sound/Attack/sndWeaponHit.wav";
 							if (weaponStatus.weaponType == Weapon::WeaponType::Knife)
-								sfxFilePath = "sound/Attack/sndHit.wav";
+								sfxFilePath = "sound/Attack/sndHit.wav";							
+							if (currentMask == Mask::Tiger)
+							{
+								auto tempWeaponStatus = Weapon::WeaponType::Bat;
+								enemy->OnHit(WEAPON_TABLE->Get(tempWeaponStatus), look);
+							}
 							SOUND_MGR.PlaySfx(sfxFilePath);
 						}
 					}
 				}
+			}
+		}
+
+		if (boss1 != nullptr)
+		{
+			if (weaponStatus.weaponType == Weapon::WeaponType::Bat)
+			{
+				boss1->OnHit(look);
 			}
 		}
 	}

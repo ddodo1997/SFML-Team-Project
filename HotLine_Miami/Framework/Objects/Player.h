@@ -6,6 +6,8 @@ class Weapon;
 class Enemy;
 class Wall;
 class Decoration;
+class Boss1;
+class Boss2;
 
 class Player : public GameObject
 {
@@ -39,6 +41,7 @@ protected:
 	std::vector<Decoration*> decorations;
 
 	Enemy* executingEnemy;
+	Boss1* boss1;
 
 	std::vector<Enemy*> enemies;
 

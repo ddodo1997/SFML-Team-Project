@@ -43,10 +43,15 @@ protected:
 	const sf::Vector2f defaultFHDSize = { 1920.f, 1080.f };
 	sf::Vector2f worldViewScale;
 
+	sf::Vector2f defaultPlayerPos = { 50.f, 150.f };
+	float viewRotation;
+
 public:
 	void Init();
 	void Reset();
 	void Update(float dt);
+
+	void UpdateViewRotation(float dt);
 
 	void UpdateFurtherView(float dt);
 	void UpdateDefaultView(float dt);
