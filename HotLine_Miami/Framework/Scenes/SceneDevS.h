@@ -7,7 +7,7 @@
 using json = nlohmann::json;
 class TileMap;
 class TileMapEditor;
-
+class WayPoint;
 class Player;
 class Enemy;
 class Decoration;
@@ -16,10 +16,12 @@ class Wall2;
 class SceneDevS : public SceneGame
 {
 protected:
+	int minX, minY;
+
 	Player* player;
 	TileMap* tileMap;
 	TileMapEditor* tileMapEditor;
-
+	Enemy* patrolEnemy;
 	std::vector<Enemy*> enemies;
 	std::vector<Decoration*> decorations;
 
@@ -31,11 +33,16 @@ protected:
 	std::vector<DataWall> mergedHorizontalWalls;
 	std::vector<DataWall> mergedVerticalWalls;
 
+	std::vector<std::pair<Enemy::Status, Enemy*>> savedEnemies;
+	std::vector<WayPoint*> waypoints;
 	sf::Vector2f direction;
 
 	float zoomNoun = 0.5f;
+	bool isWayPointMode;
+	sf::Color waypointColor;
 	sf::Vector2i tileSize;
 	sf::Vector2i tileCount;
+
 public:
 	SceneDevS();
 	~SceneDevS() = default;
@@ -48,7 +55,10 @@ public:
 	void Draw(sf::RenderWindow& window) override;
 
 	void CreateWall(const sf::Vector2f& pos);
+
 	void CreateEnemy(const sf::Vector2f& pos);
+	void StartWayPointMode(Enemy* enemy);
+	void AddWayPoints(const sf::Vector2f& pos);
 
 	void LoadWalls();
 	void LoadDecorations();
@@ -62,7 +72,14 @@ public:
 	std::vector<Wall*> GetWalls() const { return walls; }
 
 	void DeleteWalls();
+	void DeleteEnemies();
+	void DeleteWaypoints();
+
 	void SaveMap();
 	void SaveWall();
+	void SaveEnemies(json& mapData);
+
+	std::string EnemyStatusToString(const Enemy::Status& state);
+	std::string EnemyWeaponToString(const Weapon::WeaponType& type);
 };
 

@@ -1,5 +1,7 @@
 #pragma once
 #include "Enemy.h"
+
+class Button;
 class TileMapEditor : public GameObject
 {
 public:
@@ -24,6 +26,11 @@ protected:
 	std::vector<Enemy*> enemiesUI;
 	int selectedEnemyIndex = -1;
 	Enemy selectedEnemy;
+	Enemy::Status selectedEnemyStatus;
+	Button* normalButton;
+	Button* idleButton;
+	Button* patrolButton;
+
 
 	EditorMode currentMode;
 	sf::RectangleShape background;
@@ -47,6 +54,7 @@ public:
 	void UpdateDecoMode(float dt);
 	void UpdateEnemyMode(float dt);
 	void UpdateSelectedSpritePosition();
+	void UpdateEnemyModeButtons(sf::Vector2f worldPos);
 	void Draw(sf::RenderWindow& window) override;
 
 	int GetSelectTileIndex(const sf::Vector2f& position);
@@ -58,6 +66,7 @@ public:
 	std::string GetSelectedWallTextureId() const { return selectedWallTextureId; }
 
 	Enemy GetSelectedEnemy() const { return selectedEnemy; }
+	Enemy::Status GetSelectedEnemyStatus() const { return selectedEnemyStatus; }
 
 	void SetMode(EditorMode mode);
 	EditorMode GetMode() const { return currentMode; }

@@ -654,3 +654,8 @@ void Enemy::Attack()
 		}
 	}
 }
+
+void Enemy::AddWayPoint(const sf::Vector2f& pos)
+{
+	patrol.wayPoints.push_back(pos);
+}

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "TileMapEditor.h"
 #include "WallTable.h"
+#include "Button.h"
 TileMapEditor::TileMapEditor(const std::string& name)
 	: GameObject(name)
 {
@@ -109,6 +110,25 @@ void TileMapEditor::Reset()
 		enemy->SetStatus(Enemy::Status::EditorMode);
 		enemiesUI.push_back(enemy);
 	}
+	selectedEnemyIndex = -1;
+
+	normalButton = new Button("Normar Button");
+	normalButton->Reset();
+	normalButton->SetPosition({ 200.f, 250.f });
+	normalButton->SetString("Normal");
+
+	idleButton = new Button("Idle Button");
+	idleButton->Reset();
+	idleButton->SetPosition({ 500.f, 250.f });
+	idleButton->SetString("Idle");
+
+	patrolButton = new Button("patrol Button");
+	patrolButton->Reset();
+	patrolButton->SetPosition({ 800.f, 250.f });
+	patrolButton->SetString("Patrol");
+
+	normalButton->OnClick(true);
+	selectedEnemyStatus = Enemy::Status::Normal;
 
 	background.setSize(FRAMEWORK.GetWindowSizeF() * 0.4f);
 	background.setFillColor(sf::Color(150, 150, 150, 100));
@@ -177,9 +197,10 @@ void TileMapEditor::UpdateEnemyMode(float dt)
 
 	if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
 	{
+		UpdateEnemyModeButtons(worldPos);
 		for (int i = 0; i < enemiesUI.size(); ++i)
 		{
-			if (enemiesUI[i]->GetGlobalBounds().contains(worldPos))
+			if (enemiesUI[i]->GetSelectBounds().contains(worldPos))
 			{
 				selectedEnemyIndex = i;
 				selectedEnemy = *enemiesUI[selectedEnemyIndex];
@@ -187,11 +208,6 @@ void TileMapEditor::UpdateEnemyMode(float dt)
 				break;
 			}
 		}
-	}
-
-	if (selectedEnemyIndex != -1)
-	{
-		selectedEnemy.SetPosition({ mousePos.x - 10.f, mousePos.y - 10.f });
 	}
 
 	for (auto& enemy : enemiesUI)
@@ -218,6 +234,15 @@ void TileMapEditor::UpdateSelectedSpritePosition()
 			selectedWallSprite.setPosition({ mousePos.x - 10.f, mousePos.y - 5.f });
 		}
 		break;
+	case EditorMode::EnemyMode:
+		if (selectedEnemyIndex != -1)
+		{
+			selectedEnemy.SetPosition({ mousePos.x - 10.f, mousePos.y - 10.f });
+			if (InputMgr::GetMouseButtonDown(sf::Mouse::Right))
+			{
+				selectedEnemy.SetRotation(selectedEnemy.GetRotation() + 90.f);
+			}
+		}
 	}
 }
 
@@ -253,11 +278,13 @@ void TileMapEditor::Draw(sf::RenderWindow& window)
 		break;
 	case EditorMode::EnemyMode:
 		window.draw(background);
+		normalButton->Draw(window);
+		idleButton->Draw(window);
+		patrolButton->Draw(window);
 		for (auto& enemy : enemiesUI)
 		{
 			enemy->Draw(window);
 		}
-
 		if (selectedEnemyIndex != -1)
 		{
 			selectedEnemy.Draw(window);
@@ -265,6 +292,31 @@ void TileMapEditor::Draw(sf::RenderWindow& window)
 		break;
 	}
 	
+}
+
+void TileMapEditor::UpdateEnemyModeButtons(sf::Vector2f worldPos)
+{
+	if (normalButton->GetGlobalBounds().contains(worldPos))
+	{
+		selectedEnemyStatus = Enemy::Status::Normal;
+		normalButton->OnClick(true);
+		idleButton->OnClick(false);
+		patrolButton->OnClick(false);
+	}
+	else if (idleButton->GetGlobalBounds().contains(worldPos))
+	{
+		selectedEnemyStatus = Enemy::Status::Idle;
+		normalButton->OnClick(false);
+		idleButton->OnClick(true);
+		patrolButton->OnClick(false);
+	}
+	else if (patrolButton->GetGlobalBounds().contains(worldPos))
+	{
+		selectedEnemyStatus = Enemy::Status::Patrol;
+		normalButton->OnClick(false);
+		idleButton->OnClick(false);
+		patrolButton->OnClick(true);
+	}
 }
 
 int TileMapEditor::GetSelectTileIndex(const sf::Vector2f& position)
@@ -318,7 +370,8 @@ void TileMapEditor::SetMode(EditorMode mode)
 	case EditorMode::DecorationMode:
 		break;
 	case EditorMode::EnemyMode:
-		background.setSize({ FRAMEWORK.GetWindowSizeF().x * 0.5f, FRAMEWORK.GetWindowSizeF().y * 0.2f });
+		selectedEnemyIndex = -1;
+		background.setSize({ FRAMEWORK.GetWindowSizeF().x * 0.5f, FRAMEWORK.GetWindowSizeF().y * 0.3f });
 		break;
 	}
 }

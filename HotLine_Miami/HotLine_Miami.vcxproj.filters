@@ -115,6 +115,7 @@
     <ClCompile Include="Framework\Objects\Weapon.cpp">
       <Filter>Framework\Objects\Entity</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="Framework\Map\TileMap.cpp">
       <Filter>Framework\Map</Filter>
     </ClCompile>
@@ -126,6 +127,14 @@
     <ClCompile Include="Framework\Objects\Cleaver.cpp">
       <Filter>Framework\Objects\Entity</Filter>
     </ClCompile>
+=======
+    <ClCompile Include="Button.cpp">
+      <Filter>Framework\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="WayPoint.cpp">
+      <Filter>Framework\Map</Filter>
+    </ClCompile>
+>>>>>>> origin/Dev_S
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Framework\Animation\AnimationClip.h">
@@ -254,6 +263,7 @@
     <ClInclude Include="Framework\Objects\Weapon.h">
       <Filter>Framework\Objects\Entity</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="Framework\Map\TileMap.h">
       <Filter>Framework\Map</Filter>
     </ClInclude>
@@ -265,6 +275,14 @@
     <ClInclude Include="Framework\Objects\Cleaver.h">
       <Filter>Framework\Objects\Entity</Filter>
     </ClInclude>
+=======
+    <ClInclude Include="Button.h">
+      <Filter>Framework\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="WayPoint.h">
+      <Filter>Framework\Map</Filter>
+    </ClInclude>
+>>>>>>> origin/Dev_S
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Framework">
