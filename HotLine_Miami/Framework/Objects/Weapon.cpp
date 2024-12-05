@@ -37,11 +37,14 @@ void Weapon::Reset()
 {
 	scenePointer = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene());
 	isPickupable = false;
+
+	collisionBox.setSize({ 10.f,10.f });
+	Utils::SetOrigin(collisionBox, Origins::MC);
 }
 
 void Weapon::Update(float dt)
 {
-	hitBox.UpdateTr(weaponSprite, weaponSprite.getLocalBounds());
+	hitBox.UpdateTr(collisionBox, collisionBox.getLocalBounds());
 
 	if (onDropTimer > 0.f)
 		onDropTimer -= dt;
@@ -91,12 +94,14 @@ void Weapon::Draw(sf::RenderWindow& window)
 {
 	window.draw(weaponSprite);
 	hitBox.Draw(window);
+	window.draw(collisionBox);
 }
 
 void Weapon::SetPosition(sf::Vector2f pos)
 {
 	position = pos;
 	weaponSprite.setPosition(position);
+	collisionBox.setPosition(position);
 }
 
 void Weapon::SetRotation(float angle)
@@ -123,6 +128,11 @@ void Weapon::SetScale(const sf::Vector2f& scale)
 {
 	this->scale = scale;
 	weaponSprite.setScale(scale);
+}
+
+void Weapon::SetDirection(sf::Vector2f newDirection)
+{
+	direction = newDirection;
 }
 
 /// <summary>
@@ -160,8 +170,8 @@ void Weapon::OnDrop(sf::Vector2f direction)
 
 void Weapon::OnHitWall()
 {
-	onThrowTimer *= 0.3f;
-	onDropTimer *= 0.3f;
+	onThrowTimer *= 0.4f;
+	onDropTimer *= 0.4f;
 }
 
 void Weapon::SetWeaponType(WeaponType type)

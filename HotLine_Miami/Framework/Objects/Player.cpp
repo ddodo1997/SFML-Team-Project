@@ -75,9 +75,7 @@ void Player::Release()
 void Player::Reset()
 {
 	// Mask Test용
-	mask.setTexture(TEXTURE_MGR.Get("graphics/player/Masks/sprMasks_0.png"));
-	Utils::SetOrigin(mask, Origins::MC);
-
+	ResetMask();	
 	// ~Mask Test용
 
 	isAlive = true;
@@ -116,8 +114,90 @@ void Player::Reset()
 	attackHitBoxCheck.setSize({ weaponStatus.hitBoxWidth, weaponStatus.hitBoxHeight });
 }
 
+void Player::ResetMask(bool ifInitialSetting)
+{
+	switch (currentMask)
+	{
+	case Mask::None:
+		mask.setTexture(TEXTURE_MGR.Get("graphics/player/Masks/sprMasks_x.png"));
+		break;
+	case Mask::Chicken:
+		mask.setTexture(TEXTURE_MGR.Get("graphics/player/Masks/sprMasks_0.png"));
+		break;
+	case Mask::Tiger:
+		mask.setTexture(TEXTURE_MGR.Get("graphics/player/Masks/sprMasks_2.png"));
+		break;
+	case Mask::Rabbit:
+		mask.setTexture(TEXTURE_MGR.Get("graphics/player/Masks/sprMasks_5.png"));
+		break;
+	case Mask::Wolf:
+		mask.setTexture(TEXTURE_MGR.Get("graphics/player/Masks/sprMasks_6.png"));
+		break;
+	case Mask::Giraffe:
+		mask.setTexture(TEXTURE_MGR.Get("graphics/player/Masks/sprMasks_7.png"));
+		break;
+	case Mask::Elephant:
+		mask.setTexture(TEXTURE_MGR.Get("graphics/player/Masks/sprMasks_9.png"));
+		break;
+	case Mask::Walrus:
+		mask.setTexture(TEXTURE_MGR.Get("graphics/player/Masks/sprMasks_21.png"));
+		break;
+	}
+	Utils::SetOrigin(mask, Origins::MC);
+
+	if (ifInitialSetting)
+	{
+		switch (currentMask)
+		{
+		case Mask::None:
+
+			break;
+		case Mask::Chicken:
+			
+			break;
+		case Mask::Tiger:
+			
+			break;
+		case Mask::Rabbit:
+			
+			break;
+		case Mask::Wolf:
+			weaponStatus.weaponType = Weapon::WeaponType::Knife;
+			SetWeaponStatus();
+			break;
+		case Mask::Giraffe:
+			
+			break;
+		case Mask::Elephant:
+			bulletProofCount = 1;
+			break;
+		case Mask::Walrus:
+			bulletProofCount = 2;
+			break;
+		}
+	}
+}
+
 void Player::Update(float dt)
 {
+	if (InputMgr::GetKeyDown(sf::Keyboard::Semicolon))
+	{
+		int currentMaskIndex = (int)currentMask;
+		currentMaskIndex--;
+		currentMaskIndex = Utils::Clamp(currentMaskIndex, 0, 7);
+		currentMask = (Mask)currentMaskIndex;
+		ResetMask();
+	}
+	if (InputMgr::GetKeyDown(sf::Keyboard::Apostrophe))
+	{
+		int currentMaskIndex = (int)currentMask;
+		currentMaskIndex++;
+		currentMaskIndex = Utils::Clamp(currentMaskIndex, 0, 7);
+		currentMask = (Mask)currentMaskIndex;
+		ResetMask();
+	}
+
+
 	if (attackTimer < weaponStatus.attackInterval)
 	{
 		attackTimer += dt;
@@ -143,6 +223,7 @@ void Player::Update(float dt)
 
 	animatorBody.Update(dt);
 	animatorLeg.Update(dt);
+	UpdateMask(dt);
 	//if (isMoving)
 	//{
 	//	UpdateMask(dt);
@@ -238,7 +319,7 @@ void Player::UpdateBodyAnimationMoving()
 	switch (weaponStatus.weaponType)
 	{
 	case Weapon::WeaponType::None:
-		animatorBody.Play("animations/Player/pBodyAni_default.json");
+		animatorBody.PlayP("animations/Player/pBodyAni_default.json");
 		if (isFlipped)
 		{
 			body.setScale(1.f, -1.f);
@@ -249,7 +330,7 @@ void Player::UpdateBodyAnimationMoving()
 		}
 		break;
 	case Weapon::WeaponType::Bat:
-		animatorBody.Play("animations/Player/pBodyAni_Bat.json");
+		animatorBody.PlayP("animations/Player/pBodyAni_Bat.json");
 		if (isFlipped)
 		{
 			body.setScale(1.f, -1.f);
@@ -260,7 +341,7 @@ void Player::UpdateBodyAnimationMoving()
 		}
 		break;
 	case Weapon::WeaponType::Knife:
-		animatorBody.Play("animations/Player/pBodyAni_Knife.json");
+		animatorBody.PlayP("animations/Player/pBodyAni_Knife.json");
 		if (isFlipped)
 		{
 			body.setScale(1.f, -1.f);
@@ -271,11 +352,11 @@ void Player::UpdateBodyAnimationMoving()
 		}
 		break;
 	case Weapon::WeaponType::Machinegun:
-		animatorBody.Play("animations/Player/pBodyAni_Machinegun.json");
+		animatorBody.PlayP("animations/Player/pBodyAni_Machinegun.json");
 		body.setScale(1.f, 1.f);
 		break;
 	case Weapon::WeaponType::Shotgun:
-		animatorBody.Play("animations/Player/pBodyAni_Shotgun.json");
+		animatorBody.PlayP("animations/Player/pBodyAni_Shotgun.json");
 		body.setScale(1.f, 1.f);
 		break;
 	}
@@ -285,9 +366,7 @@ void Player::UpdateMask(float dt)
 {
 	sf::Transform bodyTrans = body.getTransform();
 
-
-
-	maskRenderState = bodyTrans.translate((sf::Vector2f)Utils::FindPixelByColor(body));
+	maskRenderState = bodyTrans.translate((sf::Vector2f)animatorBody.GetCurrentMaskPos());
 
 	//mask.setPosition(position);
 	//mask.setRotation(Utils::Angle(look));
@@ -295,18 +374,26 @@ void Player::UpdateMask(float dt)
 
 void Player::UpdateExecution(float dt)
 {
-	switch (weaponStatus.weaponType)
+	if (!isExecutionOnWall)
 	{
-	case Weapon::WeaponType::None:
-		UpdateExecutionDefualt(dt);
-		break;
-	case Weapon::WeaponType::Bat:
-		UpdateExecutionBat(dt);
-		break;
-	case Weapon::WeaponType::Knife:
-		UpdateExecutionKnife(dt);
-		break;
+		switch (weaponStatus.weaponType)
+		{
+		case Weapon::WeaponType::None:
+			UpdateExecutionDefualt(dt);
+			break;
+		case Weapon::WeaponType::Bat:
+			UpdateExecutionBat(dt);
+			break;
+		case Weapon::WeaponType::Knife:
+			UpdateExecutionKnife(dt);
+			break;
+		}
 	}
+	else
+	{
+		UpdateExecutionWall(dt);
+	}
+
 }
 
 void Player::UpdateExecutionDefualt(float dt)
@@ -329,7 +416,7 @@ void Player::UpdateExecutionDefualt(float dt)
 	else
 	{
 		executionTimer = 10.f;
-		animatorBody.Play("animations/Player/Execution/pExctDefault.json");
+		animatorBody.PlayP("animations/Player/Execution/pExctDefault.json");
 		Utils::SetOrigin(body, Origins::MC);
 		if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
 		{
@@ -360,7 +447,8 @@ void Player::UpdateExecutionBat(float dt)
 	else
 	{
 		executionTimer = 10.f;
-		animatorBody.Play("animations/Player/Execution/pExctBat.json");
+		animatorBody.PlayP("animations/Player/Execution/pExctBat.json");
+		Utils::SetOrigin(body, Origins::MC);
 		if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
 		{
 			isExecuting = true;
@@ -384,6 +472,26 @@ void Player::UpdateExecutionKnife(float dt)
 		{
 			executionCount--;
 			isExecuting = false;
+			SOUND_MGR.PlaySfx("sound/Attack/sndHit.wav");
+		}
+	}
+}
+
+void Player::UpdateExecutionWall(float dt)
+{
+	if (isExecuting)
+	{
+		if (executionTimer > 0)
+		{
+			executionTimer -= dt;
+			executionTimer = Utils::Clamp(executionTimer, 0.f, 10.f);
+			//animatorBody.Play("animations/Player/Execution/pExctKnife.json");
+		}
+		else
+		{
+			executionCount--;
+			isExecuting = false;
+			isExecutionOnWall = false;
 			SOUND_MGR.PlaySfx("sound/Attack/sndHit.wav");
 		}
 	}
@@ -613,13 +721,27 @@ void Player::TryExecute()
 		{
 			if (GetHitBox().rect.getGlobalBounds().intersects(enemy->GetHitBox().rect.getGlobalBounds()))
 			{
-				enemy->SetStatus(Enemy::Status::Pounded); // ��⿡ ó������ �������� ���� // Status �߰���
+				enemy->SetStatus(Enemy::Status::Pounded); 
 				look = enemy->GetDirection();
 				SetRotation(Utils::Angle(look));
 				SetPosition(enemy->GetPosition());
 				Utils::SetOrigin(body, Origins::MC);
 				executingEnemy = enemy;
 				Execute();
+				return;
+			}
+		}
+		if (enemy->GetStatus() == Enemy::Status::StunOnWall)
+		{
+			if (GetHitBox().rect.getGlobalBounds().intersects(enemy->GetHitBox().rect.getGlobalBounds()))
+			{
+				enemy->SetStatus(Enemy::Status::Pounded);
+				look = enemy->GetDirection();
+				SetRotation(Utils::Angle(look));
+				SetPosition(enemy->GetPosition());
+				Utils::SetOrigin(body, Origins::MC);
+				executingEnemy = enemy;
+				ExecuteAgainstWall();
 				return;
 			}
 		}
@@ -650,6 +772,18 @@ void Player::Execute()
 	executionTimer = 0.4f;
 }
 
+void Player::ExecuteAgainstWall()
+{
+	DropWeapon();
+	isOnPound = true;
+	executionCount = 1;
+	isExecuting = true;
+	isExecutionOnWall = true;
+	executionTimer = 0.4f;
+	animatorBody.PlayP("animations/Player/Execution/pExctWallKick.json");
+	Utils::SetOrigin(body, Origins::MC);
+}
+
 void Player::ExecuteDefault()
 {
 	executionCount = Utils::RandomRange(3, 4);
@@ -667,7 +801,8 @@ void Player::ExecuteKnife()
 	executionCount = 1;
 	isExecuting = true;
 	executionTimer = 0.4f;
-	animatorBody.Play("animations/Player/Execution/pExctKnife.json");
+	animatorBody.PlayP("animations/Player/Execution/pExctKnife.json");
+	Utils::SetOrigin(body, Origins::MC);
 }
 
 void Player::ExecuteMachinegun()
@@ -706,7 +841,7 @@ void Player::Attack()
 
 void Player::AttackDefault()
 {
-	animatorBody.Play("animations/Player/Attack/pAttackPunch.json");
+	animatorBody.PlayP("animations/Player/Attack/pAttackPunch.json");
 	isAttacking = true;
 	isFlipped = !isFlipped;
 	if (isFlipped)
@@ -725,7 +860,7 @@ void Player::AttackDefault()
 
 void Player::AttackBat()
 {
-	animatorBody.Play("animations/Player/Attack/pAttackBat.json");
+	animatorBody.PlayP("animations/Player/Attack/pAttackBat.json");
 	isAttacking = true;
 	isFlipped = !isFlipped;
 	if (isFlipped)
@@ -744,7 +879,7 @@ void Player::AttackBat()
 
 void Player::AttackKnife()
 {
-	animatorBody.Play("animations/Player/Attack/pAttackKnife.json");
+	animatorBody.PlayP("animations/Player/Attack/pAttackKnife.json");
 	isAttacking = true;
 	isFlipped = !isFlipped;
 	if (isFlipped)
@@ -775,7 +910,7 @@ void Player::AttackMachinegun()
 			}
 		}
 		weaponStatus.remainingBullet--;
-		animatorBody.Play("animations/Player/Attack/pAttackMachinegun.json");
+		animatorBody.PlayP("animations/Player/Attack/pAttackMachinegun.json");
 		SOUND_MGR.PlaySfx("sound/Attack/sndEM16.wav");
 		isAttacking = true;
 	}
@@ -801,7 +936,7 @@ void Player::AttackShotgun()
 			}
 		}
 		weaponStatus.remainingBullet--;
-		animatorBody.Play("animations/Player/Attack/pAttackShotgun.json");
+		animatorBody.PlayP("animations/Player/Attack/pAttackShotgun.json");
 		SOUND_MGR.PlaySfx("sound/Attack/sndShotgun.wav");
 		isAttacking = true;
 	}

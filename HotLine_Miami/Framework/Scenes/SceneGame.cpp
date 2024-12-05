@@ -50,10 +50,14 @@ void SceneGame::Enter()
 	tileMap->Initialize(STAGE_TABLE->GetTileSize(), STAGE_TABLE->GetTileCount(), STAGE_TABLE->GetFloorTiles());
 
 	worldView.setSize(windowSize * 0.2f);
-	worldView.setCenter(player->GetPosition());
+	//worldView.setCenter(player->GetPosition());
 
 	uiView.setSize(windowSize);
 	uiView.setCenter(windowSize * 0.5f);
+	VIEW_MGR.Init();
+	VIEW_MGR.SetCurrentSceneWorldView(&worldView);
+	VIEW_MGR.SetCurrentSceneUiView(&uiView);
+	VIEW_MGR.SetCurrentScenePlayer(player);
 
 	SOUND_MGR.PlayBgm("sound/bgm/Paris2.ogg");
 	SOUND_MGR.SetBgmVolume(50);
@@ -193,7 +197,7 @@ void SceneGame::Update(float dt)
 	uiHud->UpdateHitDir(directionXY);
 	uiHud->UpdateWeaponStatus(player->GetWeaponStatus(), player->GetRemainingBullet());
 
-	worldView.setCenter(player->GetPosition());
+	//worldView.setCenter(player->GetPosition());
 	FRAMEWORK.GetWindow().setView(worldView);
 
 	ClearInactivePoolObjects();

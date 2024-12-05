@@ -5,6 +5,8 @@
 #include "SceneGame.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "Weapon.h"
+
 #include "Boss1.h"
 #include "Cleaver.h"
 Wall::Wall(const std::string& name)
@@ -42,6 +44,7 @@ void Wall::Reset()
     sceneGame = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene());
     player = sceneGame->GetPlayer();
     enemies = sceneGame->GetEnemies();
+    weapons = sceneGame->GetActiveWeapons();
     boss1 = sceneGame->GetBoss1();
     cleaver = sceneGame->GetCleaver();
     setScale(1.f, 1.f);
@@ -130,6 +133,55 @@ void Wall::FixedUpdate(float dt)
         }
     }
 
+    weapons = sceneGame->GetActiveWeapons();
+    for (auto weapon : weapons)
+    {
+        auto& weaponHitBox = weapon->GetHitBox();
+        if (weaponHitBox.rect.getGlobalBounds().intersects(hitBox.rect.getGlobalBounds()))
+        {
+            weapon->OnHitWall();
+
+            auto& weaponDir = weapon->GetDirection();
+            auto weaponPos = weapon->GetPosition();
+            auto weaponHitBoxHalf = weaponHitBox.rect.getLocalBounds().width * 0.5f;
+
+            if (hitBox.points.top < weaponHitBox.points.center.y && hitBox.points.bottom > weaponHitBox.points.center.y)
+            {
+                if (weaponHitBox.points.left < hitBox.points.right && weaponHitBox.points.left > hitBox.points.center.x)
+                {
+                    //벽 우측 충돌
+                    weapon->SetPosition({ hitBox.points.right + weaponHitBoxHalf, weaponPos.y + weaponDir.y * 0.5f });
+                    weapon->FlipDirectionX();
+                    SOUND_MGR.PlaySfx("sound/Attack/sndHitWall.wav");
+                }
+                else if (weaponHitBox.points.right > hitBox.points.left && weaponHitBox.points.right < hitBox.points.center.x)
+                {
+                    //벽 좌측 충돌
+                    weapon->SetPosition({ hitBox.points.left - weaponHitBoxHalf, weaponPos.y + weaponDir.y * 0.5f });
+                    weapon->FlipDirectionX();
+                    SOUND_MGR.PlaySfx("sound/Attack/sndHitWall.wav");
+                }
+            }
+            else
+            {
+                if (weaponHitBox.points.bottom > hitBox.points.top && weaponHitBox.points.bottom < hitBox.points.center.y)
+                {
+                    //벽 상부 충돌
+                    weapon->SetPosition({ weaponPos.x + weaponDir.x * 0.5f, hitBox.points.top - weaponHitBoxHalf });
+                    weapon->FlipDirectionY();
+                    SOUND_MGR.PlaySfx("sound/Attack/sndHitWall.wav");
+                }
+                else if (weaponHitBox.points.top < hitBox.points.bottom && weaponHitBox.points.top > hitBox.points.center.y)
+                {
+                    //벽 하부 충돌
+                    weapon->SetPosition({ weaponPos.x + weaponDir.x * 0.5f, hitBox.points.bottom + weaponHitBoxHalf });
+                    weapon->FlipDirectionY();
+                    SOUND_MGR.PlaySfx("sound/Attack/sndHitWall.wav");
+                }
+            }
+        }
+    }
+
     if (boss1 == nullptr)
         return;
 
@@ -187,7 +239,6 @@ void Wall::Draw(sf::RenderWindow& window)
         states.texture = currentTexture;
         window.draw(&va[i], 4, sf::Quads, states);
     }
-
     // 히트박스 그리기
     hitBox.Draw(window);
 }

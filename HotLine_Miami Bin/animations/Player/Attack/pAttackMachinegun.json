@@ -5,7 +5,7 @@
     "texId": "graphics/player/Attack/pAttackM16.png",
     "Frames":
     [
-        [0,0,66,32],
-        [66,0,66,32]
+        [0,0,66,32,29,15],
+        [66,0,66,32,29,16]
     ]
 }

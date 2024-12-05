@@ -12,6 +12,9 @@ protected:
 	sf::Text lookDirectionText;
 	sf::Sprite lookDirection;
 
+	sf::Sprite mouseSprite;
+	Animator cursorAnimator;
+
 	sf::Text currentWeaponStatus;
 
 	sf::Text volumeDisplayer;
@@ -37,6 +40,7 @@ public:
 	void Reset() override;
 	void Update(float dt) override;
 	void UpdateMPos(float dt);
+	void UpdateMouseSprite(float dt);
 	void UpdateHitDir(sf::Vector2f hitDir);
 	void UpdateLookDir(sf::Vector2f lookDir);
 	void UpdateWeaponStatus(Weapon::WeaponStatus weaponStatus, int remainingBullet);

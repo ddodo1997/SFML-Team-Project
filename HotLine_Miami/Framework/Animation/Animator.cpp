@@ -131,6 +131,48 @@ void Animator::Play(AnimationClip* clip, bool clearQueue)
 	SetFrame(currentClip->frames[currentFrame]);
 }
 
+void Animator::PlayP(const std::string& clipPId, bool clearQueue)
+{
+	PlayP(&ANI_CLIP_MGR_P.Get(clipPId), clearQueue);
+}
+
+void Animator::PlayP(AnimationClipPlayer* clip, bool clearQueue)
+{
+	currentClipP = clip;
+	if (clearQueue)
+	{
+		while (!playQueue.empty())
+			playQueue.pop();
+	}
+
+	//플레이중으로 바꾸기
+	isPlaying = true;
+
+	//현재 클립을 매개변수 클립으로 바꾸고
+	currentClip = &(clip->clip);
+	//첫 프레임으로 바꾸고
+	currentFrame = 0;
+	//총 프레임 수를 현재 클립의 사이즈로 바꾼다
+	totalFrame = currentClip->frames.size();
+
+	//프레임 변환 시간을 설정하고
+	frameDuration = 1.f / currentClip->fps;
+
+	//누적 시간을 0으로 설정하고
+	accumTime = 0.f;
+
+	//프레임을 현재 클립의 현재 프레임(현재 0) 으로 설정한다.
+	SetFrame(currentClip->frames[currentFrame]);
+}
+
+sf::Vector2i Animator::GetCurrentMaskPos()
+{
+	if (currentClipP == nullptr)
+		return { 0,0 };
+	
+	return currentClipP->maskPixelCoords[currentFrame];
+}
+
 void Animator::PlayQueue(const std::string& clipId)
 {
 	playQueue.push(clipId);

@@ -1,4 +1,5 @@
 #pragma once
+
 enum class AnimationLoopTypes
 {
 	Single,
@@ -24,4 +25,13 @@ struct AnimationClip
 	std::vector<AnimationFrame> frames;
 
 	bool loadFromFile(const std::string& filePath);
+};
+
+struct AnimationClipPlayer
+{
+	AnimationClip clip;
+	
+	std::vector<sf::Vector2i> maskPixelCoords;
+
+	bool loadFromFile(const std::string& filePath);	
 };
