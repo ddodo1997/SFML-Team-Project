@@ -119,6 +119,7 @@ std::vector<sf::Vector2f> PathFinder::FindPath(sf::Vector2f startPos, sf::Vector
             }
         }
     }
+    return std::vector<sf::Vector2f>(); 
 }
 
 float PathFinder::GetHeuristic(sf::Vector2i start, sf::Vector2i end)

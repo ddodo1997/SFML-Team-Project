@@ -2,6 +2,7 @@
 #include "TileMapEditor.h"
 #include "WallTable.h"
 #include "Button.h"
+
 TileMapEditor::TileMapEditor(const std::string& name)
 	: GameObject(name)
 {
