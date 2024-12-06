@@ -89,7 +89,7 @@ void Player::Reset()
 	speed = 100.f;
 	onDieSpeed = 100.f;
 	onDieEffectAccumTime = 0.6f;
-	position = { 50,150 };
+	position = { -1000.f, -1000.f };
 	SetScale({ 1.f, 1.f });
 	animatorBody.SetTarget(&body);
 	animatorLeg.SetTarget(&leg);
