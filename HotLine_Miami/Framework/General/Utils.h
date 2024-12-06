@@ -73,6 +73,4 @@ public:
 
 	// 이미지 내 Pixel 감지
 	static sf::Vector2i FindPixelByColor(const sf::Sprite& sprite, bool fromCenter = false);
-
-
 };
