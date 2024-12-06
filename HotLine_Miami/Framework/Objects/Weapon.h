@@ -2,12 +2,20 @@
 #include "GameObject.h"
 
 class Enemy;
+class BodyGuard;
+class MafiaBoss;
 class SceneGame;
-
+class Player;
 class Weapon : public GameObject
 {
-public: 
+public:
 	static int		indexCounter;
+
+	enum class Owner {
+		None = -1,
+		Player,
+		BodyGuard,
+	};
 
 	enum class WeaponType
 	{
@@ -32,26 +40,30 @@ public:
 		float				hitBoxHeight = 0.f;
 		float				noiseRadius = 0.f;
 	};
-	
+
 protected:
-	WeaponStatus	weaponStatus;	
+	WeaponStatus	weaponStatus;
 	sf::Sprite		weaponSprite;
 	sf::Vector2f	direction;
 
-	
+
 	float			speedOnThrow = 200.f;
 	float			onThrowTimer;
 
 	float			speedOnDrop = 200.f;
 	float			onDropTimer;
-	
+
 	// 개별 전달 필요
 	bool			isPickupable = false;
 
-	SceneGame*		scenePointer;
+	SceneGame* scenePointer;
 
 	long long				indexNo;
 
+	Owner currentOwner = Owner::None;
+	MafiaBoss* mafisBoss;
+	BodyGuard* bodyguard;
+	Player* player;
 public:
 	Weapon(std::string name = "");
 	~Weapon() = default;
@@ -84,6 +96,7 @@ public:
 
 	void OnPickUp();
 	void OnThrow(sf::Vector2f direction);
+	void OnThrow(sf::Vector2f direction, BodyGuard* bodyguard);
 	void OnDrop(sf::Vector2f direction = {0.f,0.f});
 	void OnHitWall();
 

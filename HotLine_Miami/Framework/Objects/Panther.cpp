@@ -63,7 +63,7 @@ void Panther::Reset()
 {
 	animator.SetTarget(&body);
 	animator.Play("animations/Boss2/boss2_panther_sit.json");
-	meleeHitBox.setSize({ 20.f,30.f });
+	meleeHitBox.setSize({ 20.f,15.f });
 	meleeHitBox.setFillColor(sf::Color::Transparent);
 	meleeHitBox.setOutlineColor(sf::Color::Green);
 	meleeHitBox.setOutlineThickness(1.f);
@@ -71,14 +71,28 @@ void Panther::Reset()
 	collisionBox.setFillColor(sf::Color::Transparent);
 	collisionBox.setOutlineColor(sf::Color::Green);
 	collisionBox.setOutlineThickness(1.f);	
+	SetOrigin(Origins::MC);
+	ResetPatterns();
+}
+
+void Panther::ResetPatterns()
+{
+	pattern.aggroTimer = 0.f;
+	pattern.attackTimer = 0.f;
+	pattern.stunTimer = 0.f;
+	pattern.stunStack = 0;
 	auto type = Weapon::WeaponType::Knife;
 	weaponStatus = WEAPON_TABLE->Get(type);
-	SetOrigin(Origins::MC);
 }
 
 void Panther::Update(float dt)
 {
 	animator.Update(dt);
+	hitBox.UpdateTr(collisionBox, collisionBox.getLocalBounds());
+	if (InputMgr::GetKeyDown(sf::Keyboard::M))
+	{
+		OnHit();
+	}
 }
 
 void Panther::Phase1(float dt)
@@ -107,6 +121,10 @@ void Panther::Phase1(float dt)
 
 void Panther::OnPause(float dt)
 {
+	if (player->IsDead())
+	{
+		return;
+	}
 	pattern.aggroTimer += dt;
 	if (pattern.aggroDelay <= pattern.aggroTimer)
 	{
@@ -117,6 +135,10 @@ void Panther::OnPause(float dt)
 
 void Panther::OnAggro(float dt)
 {
+	if (player->IsDead())
+	{
+		SetStatus(Status::Pause);
+	}
 	pattern.attackTimer += dt;
 	if (pattern.attackDelay <= pattern.attackTimer)
 	{
@@ -129,13 +151,13 @@ void Panther::OnAggro(float dt)
 
 void Panther::OnAttack(float dt)
 {
-	if (player->IsDead())
-	{
-		SetStatus(Status::HappyMeal);
-	}
 	if (meleeHitBox.getGlobalBounds().intersects(player->GetCollisionBox().getGlobalBounds()))
 	{
-		player->OnHit(weaponStatus, direction);
+		player->OnHit(weaponStatus, direction); 
+		if (player->IsDead())
+		{
+			SetStatus(Status::HappyMeal);
+		}
 	}
 	SetRotation(Utils::Angle(direction) - 90.f);
 	SetPosition(position + direction * pattern.attackSpeed * dt);
@@ -143,6 +165,13 @@ void Panther::OnAttack(float dt)
 
 void Panther::OnStun(float dt)
 {
+	pattern.stunTimer += dt;
+	if (pattern.stunDelay <= pattern.stunTimer)
+	{
+		pattern.stunTimer = 0.f;
+		pattern.stunStack++;
+		SetStatus(Status::Attack);
+	}
 }
 
 void Panther::OnDie(float dt)
@@ -156,6 +185,7 @@ void Panther::SetStatus(Status stat)
 	switch (pattern.currentStatus)
 	{
 	case Status::None:
+		SetRotation(0.f);
 		break;
 	case Status::Pause:
 		animator.Play("animations/Boss2/boss2_panther_sit.json");
@@ -175,8 +205,12 @@ void Panther::SetStatus(Status stat)
 		SetRotation(Utils::Angle(direction));
 		break;
 	case Status::Stun:
+		animator.Play("animations/Boss2/boss2_panther_hit.json");
+		SetOrigin(Origins::MC);
 		break;
 	case Status::Die:
+		animator.Play("animations/Boss2/boss2_panther_die.json");
+		SetOrigin(Origins::MC);
 		break;
 	}
 }
@@ -194,4 +228,11 @@ void Panther::Draw(sf::RenderWindow& window)
 void Panther::Awaken()
 {
 	SetStatus(Status::Pause);
+}
+
+void Panther::OnHit()
+{
+	if (pattern.currentStatus != Status::Attack)
+		return;
+	pattern.stunStack == 0 ? SetStatus(Status::Stun) : SetStatus(Status::Die);
 }

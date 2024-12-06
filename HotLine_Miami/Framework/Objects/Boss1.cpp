@@ -334,7 +334,7 @@ void Boss1::ChangePattern(Patterns pattern)
 		animatorBody.Stop();
 		isWalking = false;
 		this->pattern.targetDirection = Utils::GetNormal(player->GetPosition() - position);
-		SetRotation(Utils::Angle(-this->pattern.targetDirection));
+		SetRotation(Utils::Angle(-this->pattern.targetDirection) + 90.f);
 		break;
 	case Patterns::Die:
 		OnDie();
@@ -381,6 +381,6 @@ void Boss1::OnDie()
 	isAlive = false;
 	animatorBody.Play("animations/Boss1/boss1_head_boom.json");
 	SetOrigin(Origins::MC);
-	SetRotation(Utils::Angle(-pattern.targetDirection));
+	SetRotation(Utils::Angle(pattern.targetDirection));
 	//anima
 }

@@ -27,6 +27,7 @@ public:
 
 		float stunTimer = 0.f;
 		float stunDelay = 2.f;
+		int stunStack = 0;
 
 		Status currentStatus = Status::None;
 	};
@@ -52,6 +53,7 @@ public:
 	void SetOrigin(Origins preset) override;
 	void SetOrigin(const sf::Vector2f& newOrigin) override;
 
+	sf::Vector2f& GetDirection() { return direction; }
 	void SetPlayer(Player* player);
 
 	void SetTimer() { pattern.aggroDelay = 3.f; }
@@ -61,6 +63,8 @@ public:
 	void Init() override;
 	void Release() override;
 	void Reset() override;
+	void ResetPatterns();
+
 	void Update(float dt) override;
 	void Phase1(float dt);
 	void OnPause(float dt);
@@ -76,4 +80,6 @@ public:
 	bool IsHitAble() const { return pattern.currentStatus == Status::Attack; }
 	bool IsDead() const { return pattern.currentStatus == Status::Die; }
 	void Awaken();
+
+	void OnHit();
 };

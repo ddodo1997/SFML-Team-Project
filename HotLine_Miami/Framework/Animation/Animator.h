@@ -50,6 +50,7 @@ public:
 	void Update(float dt);
 
 	bool IsPlaying() const { return isPlaying; }
+	bool IsEnd() const { return currentFrame == totalFrame - 1; }
 
 	void Play(const std::string& clipId, bool clearQueue = true);
 	void Play(AnimationClip* clip, bool clearQueue = true);
@@ -59,6 +60,7 @@ public:
 
 	void RePlay() { isPlaying = true; }
 	void PlayQueue(const std::string& clipId);
+
 
 	//void Pause(bool pause);
 	void Stop();

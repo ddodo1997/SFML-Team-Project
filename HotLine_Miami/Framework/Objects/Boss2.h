@@ -30,7 +30,6 @@ protected:
 	Player* player;
 
 	Phase currentPhase = Phase::None;
-	bool flag = false;
 public:
 	Boss2(const std::string& name = "");
 	~Boss2() = default;
@@ -41,6 +40,11 @@ public:
 
 	void SetOrigin(Origins preset) override;
 	void SetOrigin(const sf::Vector2f& newOrigin) override;
+
+
+	BodyGuard* GetBodyGuard() { return &bodyGuard; }
+	MafiaBoss* GetMafiaBoss() { return &mafiaBoss; }
+
 
 	void Init() override;
 	void Release() override;

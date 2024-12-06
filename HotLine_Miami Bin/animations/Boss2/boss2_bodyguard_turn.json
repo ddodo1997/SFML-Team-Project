@@ -1,0 +1,14 @@
+{
+    "ID": "Boss2BodyGuardTurn",
+    "LoopType": 0,
+    "FPS": 15,
+    "texId": "graphics/Enemy/Boss2/boss2_bodyguard_turn.png",
+    "Frames":
+    [
+        [0,0,64,34],
+        [64,0,64,34],
+        [128,0,64,34],
+        [192,0,64,34],
+        [256,0,64,34]
+    ]
+}

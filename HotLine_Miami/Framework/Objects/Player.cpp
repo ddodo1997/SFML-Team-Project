@@ -89,7 +89,7 @@ void Player::Reset()
 	speed = 130.f;
 	onDieSpeed = 100.f;
 	onDieEffectAccumTime = 0.6f;
-	position = { -1000.f, -1000.f };
+	position = { 50.f, 100.f };
 	SetScale({ 1.f, 1.f });
 	animatorBody.SetTarget(&body);
 	animatorLeg.SetTarget(&leg);
@@ -113,9 +113,11 @@ void Player::Reset()
 	attackHitBoxCheck.setOutlineThickness(1.f);
 	Utils::SetOrigin(attackHitBoxCheck, Origins::ML);
 
-	weaponStatus.weaponType = Weapon::WeaponType::None;
+	weaponStatus.weaponType = Weapon::WeaponType::Bat;
 	weaponStatus = WEAPON_TABLE->Get(weaponStatus.weaponType);
 	attackHitBoxCheck.setSize({ weaponStatus.hitBoxWidth, weaponStatus.hitBoxHeight });
+
+	isControlable = true;
 }
 
 void Player::ResetMask(bool ifInitialSetting)

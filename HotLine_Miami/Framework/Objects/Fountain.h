@@ -27,6 +27,11 @@ public:
 	void SetOrigin(const sf::Vector2f& newOrigin) override;
 
 	void SetPlayer(Player* player);
+	void SetBodyGuard(BodyGuard* body);
+	void SetPanthers(Panther* pan1, Panther* pan2);
+
+	virtual sf::FloatRect GetLocalBounds()const { return body.getLocalBounds(); }
+	virtual sf::FloatRect GetGlobalBounds()const { return body.getGlobalBounds(); }
 
 	void Init() override;
 	void Release() override;

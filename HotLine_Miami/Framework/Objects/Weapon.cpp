@@ -1,9 +1,12 @@
 #include "stdafx.h"
 #include "Weapon.h"
 #include "Enemy.h"
+#include "Player.h"
 #include "SceneGame.h"
 #include <chrono>
 #include "time.h"
+#include "BodyGuard.h"
+#include "MafiaBoss.h"
 int Weapon::indexCounter = 0;
 
 Weapon::Weapon(std::string name)
@@ -36,8 +39,11 @@ void Weapon::Release()
 void Weapon::Reset()
 {
 	scenePointer = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene());
+	player = scenePointer->GetPlayer();
+	bodyguard = scenePointer->GetBodyGuard();
+	mafisBoss = scenePointer->GetMafiaBoss();
 	isPickupable = false;
-
+	currentOwner = Owner::None;
 	collisionBox.setSize({ 10.f,10.f });
 	Utils::SetOrigin(collisionBox, Origins::MC);
 }
@@ -67,26 +73,61 @@ void Weapon::Update(float dt)
 void Weapon::FixedUpdate(float dt)
 {
 	// 플레이어에게 던져진 무기의 경우 아래 코드로 적들과 충돌처리	
+	switch (currentOwner)
+	{
+	case Owner::Player:
+	{
+		if (!(onThrowTimer > 0.f))
+		{
+			return;
+		}
+		auto eList = scenePointer->GetEnemies();
+		for (auto enemy : eList)
+		{
+			if (weaponSprite.getGlobalBounds().intersects(enemy->GetGlobalBounds()) && !enemy->isDie() && !enemy->isStun() && !enemy->isStunOnWall())
+			{
+				onThrowTimer = 0.f;
+				enemy->OnHit(weaponStatus, direction, true);
+				std::string sfxFilePath = "sound/Attack/sndWeaponHit.wav";
+				if (weaponStatus.weaponType == WeaponType::Knife)
+				{
+					scenePointer->ReturnWeapon(this);
+					sfxFilePath = "sound/Attack/sndHit.wav";
+				}
+				SOUND_MGR.PlaySfx(sfxFilePath);
+			}
+		}
 
-	if (!(onThrowTimer > 0.f))
-	{
-		return;
-	}
-	auto eList = scenePointer->GetEnemies();
-	for (auto enemy : eList)
-	{
-		if (weaponSprite.getGlobalBounds().intersects(enemy->GetGlobalBounds()) && !enemy->isDie() && !enemy->isStun() && !enemy->isStunOnWall())
+		if (weaponSprite.getGlobalBounds().intersects(bodyguard->GetCollisionBox().getGlobalBounds()) && weaponStatus.weaponType == WeaponType::Bat)
 		{
 			onThrowTimer = 0.f;
-			enemy->OnHit(weaponStatus, direction, true);
+			bodyguard->OnHit();
 			std::string sfxFilePath = "sound/Attack/sndWeaponHit.wav";
-			if (weaponStatus.weaponType == WeaponType::Knife)
-			{
-				scenePointer->ReturnWeapon(this);
-				sfxFilePath = "sound/Attack/sndHit.wav";
-			}
+
 			SOUND_MGR.PlaySfx(sfxFilePath);
 		}
+		if (weaponSprite.getGlobalBounds().intersects(mafisBoss->GetCollisionBox().getGlobalBounds()) && weaponStatus.weaponType == WeaponType::Knife)
+		{
+			onThrowTimer = 0.f;
+			mafisBoss->OnHit();
+			std::string sfxFilePath = "sound/Attack/sndHit.wav";
+
+			SOUND_MGR.PlaySfx(sfxFilePath);
+		}
+		break;
+	}
+	case Owner::BodyGuard:
+		if (weaponSprite.getGlobalBounds().intersects(player->GetCollisionBox().getGlobalBounds()) && weaponStatus.weaponType == WeaponType::Knife)
+		{
+			onThrowTimer = 0.f;
+			player->OnHit(weaponStatus, direction);
+			scenePointer->ReturnWeapon(this);
+			std::string sfxFilePath = "sound/Attack/sndHit.wav";
+
+			SOUND_MGR.PlaySfx(sfxFilePath);
+		}
+
+		break;
 	}
 }
 
@@ -94,7 +135,7 @@ void Weapon::Draw(sf::RenderWindow& window)
 {
 	window.draw(weaponSprite);
 	hitBox.Draw(window);
-	if(Variables::isDrawHitBox)
+	if (Variables::isDrawHitBox)
 		window.draw(collisionBox);
 }
 
@@ -159,6 +200,15 @@ void Weapon::OnThrow(sf::Vector2f direction)
 	onThrowTimer = 2.f;
 	onThrowTimer = Utils::RandomRange(1.9f, 2.1f);
 	this->direction = Utils::AngleSpread(direction, 10);
+	currentOwner = Owner::Player;
+}
+
+void Weapon::OnThrow(sf::Vector2f direction, BodyGuard* bodyguard)
+{
+	onDropTimer = 0.f;
+	onThrowTimer = 20.f;
+	this->direction = direction;
+	currentOwner = Owner::BodyGuard;
 }
 
 void Weapon::OnDrop(sf::Vector2f direction)

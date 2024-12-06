@@ -50,4 +50,5 @@ public:
 
 	void Fire(sf::Vector2f direction, Player* owner, Weapon::WeaponStatus weaponStatus);
 	void Fire(sf::Vector2f direction, Enemy* owner, Weapon::WeaponStatus weaponStatus);
+	void Fire(sf::Vector2f direction, MafiaBoss* owner, Weapon::WeaponStatus weaponStatus);
 };

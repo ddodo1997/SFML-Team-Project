@@ -12,6 +12,9 @@ class Bullet;
 class UiHudL;
 class Boss1;
 class Boss2;
+class Panther;
+class BodyGuard;
+class MafiaBoss;
 class Cleaver;
 
 class SceneGame :
@@ -63,6 +66,10 @@ public:
 	Boss1* GetBoss1() { return boss; }
 	Cleaver* GetCleaver() { return cleaver; }
 
+	BodyGuard* GetBodyGuard();
+	MafiaBoss* GetMafiaBoss(); 
+
+
 	std::vector<Enemy*> GetEnemies() const { return enemies; }
 	std::vector<Decoration*> GetDecorations() const { return decorations; }
 	std::vector<Wall*> GetWalls() const { return walls; }
@@ -72,6 +79,7 @@ public:
 
 	void OnWeaponDrop(Weapon::WeaponStatus weapon, sf::Vector2f pos);
 	void OnWeaponThrow(Weapon::WeaponStatus weapon, sf::Vector2f dir, sf::Vector2f pos);
+	void OnWeaponThrow(Weapon::WeaponStatus weapon, sf::Vector2f dir, sf::Vector2f pos, BodyGuard* bodyguard);
 
 
 	// Test Code

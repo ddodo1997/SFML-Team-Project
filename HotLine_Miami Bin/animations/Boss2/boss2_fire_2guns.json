@@ -1,0 +1,13 @@
+{
+    "ID": "Boss2Fire2Guns",
+    "LoopType": 0,
+    "FPS": 5,
+    "texId": "graphics/Enemy/Boss2/boss2_fire_2guns.png",
+    "Frames":
+    [
+        [0,0,40,44],
+        [40,0,40,44],
+        [0,44,40,44],
+        [40,44,40,44]
+    ]
+}

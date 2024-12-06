@@ -7,6 +7,7 @@
 #include "SceneDev_K.h"
 #include "SceneDevL.h"
 #include "SceneGame.h"
+#include "MafiaBoss.h"
 Bullet::Bullet(const std::string& name)
 	: GameObject(name)
 {
@@ -115,7 +116,7 @@ void Bullet::FixedUpdateEnemies(float dt)
 	auto player = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene())->GetPlayer();
 	if (player->GetCollisionBox().getGlobalBounds().intersects(body.getGlobalBounds()))
 	{
-		player->OnHit(weaponStatus, direction);
+		//player->OnHit(weaponStatus, direction);
 		if (!player->IsDead())
 			dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene())->ReturnBullet(this);
 	}
@@ -136,6 +137,15 @@ void Bullet::Fire(sf::Vector2f direction, Player* owner, Weapon::WeaponStatus we
 }
 
 void Bullet::Fire(sf::Vector2f direction, Enemy* owner, Weapon::WeaponStatus weaponStatus)
+{
+	this->direction = direction;
+	this->currentOwner = Owner::Enemies;
+	this->weaponStatus = weaponStatus;
+	SetPosition(owner->GetPosition());
+	SetRotation(Utils::Angle(direction));
+}
+
+void Bullet::Fire(sf::Vector2f direction, MafiaBoss* owner, Weapon::WeaponStatus weaponStatus)
 {
 	this->direction = direction;
 	this->currentOwner = Owner::Enemies;

@@ -12,6 +12,7 @@
 #include "UiHudL.h"
 #include "Boss1.h"
 #include "Boss2.h"
+#include "BodyGuard.h"
 #include "Cleaver.h"
 SceneGame::SceneGame() : Scene(SceneIds::SceneGame)
 {
@@ -44,7 +45,7 @@ void SceneGame::Enter()
 {
 	SetWalls(); // 통짜 벽 사용할 때
 	Scene::Enter();
-
+	player->SetPosition({ -1000.f,-1000.f });
 	// SetWalls_2(); // 개별 벽 사용할 때 
 	SetEnemies();
 	SetDecorations();
@@ -320,6 +321,15 @@ void SceneGame::SetEnemies()
 	}
 }
 
+BodyGuard* SceneGame::GetBodyGuard()
+{
+	return boss2->GetBodyGuard();
+}
+MafiaBoss* SceneGame::GetMafiaBoss()
+{
+	return boss2->GetMafiaBoss();
+}
+
 void SceneGame::OnWeaponDrop(Weapon::WeaponStatus weapon, sf::Vector2f pos)
 {
 	Weapon* newWeapon = weaponPool.Take();
@@ -341,6 +351,18 @@ void SceneGame::OnWeaponThrow(Weapon::WeaponStatus weapon, sf::Vector2f dir, sf:
 	newWeapon->SetPosition(pos);
 	newWeapon->SetActive(true);
 	newWeapon->OnThrow(dir);
+	AddGo(newWeapon);
+}
+
+void SceneGame::OnWeaponThrow(Weapon::WeaponStatus weapon, sf::Vector2f dir, sf::Vector2f pos, BodyGuard* body)
+{
+	Weapon* newWeapon = weaponPool.Take();
+	weapons.push_back(newWeapon);
+
+	newWeapon->SetStatus(weapon);
+	newWeapon->SetPosition(pos);
+	newWeapon->SetActive(true);
+	newWeapon->OnThrow(dir,body);
 	AddGo(newWeapon);
 }
 
