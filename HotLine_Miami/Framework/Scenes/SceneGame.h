@@ -13,6 +13,7 @@ class UiHudL;
 class Boss1;
 class Boss2;
 class Cleaver;
+class PathFinder;
 
 class SceneGame :
     public Scene
@@ -24,6 +25,7 @@ protected:
 	Boss1* boss;
 	Boss2* boss2;
 	Cleaver* cleaver;
+	PathFinder* pathFinder;
 
 	sf::Vector2f directionXY;
 	float directionX = 0.f;

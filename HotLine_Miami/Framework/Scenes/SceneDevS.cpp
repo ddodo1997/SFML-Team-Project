@@ -93,6 +93,10 @@ void SceneDevS::Update(float dt)
 		{
 			tileMapEditor->SetMode(TileMapEditor::EditorMode::EnemyMode);
 		}
+		if (InputMgr::GetKeyDown(sf::Keyboard::Num4))
+		{
+			tileMapEditor->SetMode(TileMapEditor::EditorMode::WeaponMode);
+		}
 
 		if (InputMgr::GetMouseButton(sf::Mouse::Left))
 		{
@@ -521,6 +525,7 @@ void SceneDevS::SaveMap()
 	}
 
 	SaveEnemies(mapData);
+	mapData["decorations"]["decos"] = json::array();
 
 	std::ofstream outFile("tables/Test_Save.json");
 	if (outFile.is_open())

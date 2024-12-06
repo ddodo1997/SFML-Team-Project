@@ -31,16 +31,34 @@ bool PathFinder::IsWalkable(sf::Vector2i pos, sf::Vector2i nextPos)
 
     if (pos.x == nextPos.x)
     {
-        boundaryPos = { pos.x * tileSize.x, std::min(pos.y, nextPos.y) * tileSize.y + tileSize.y * 0.5f };
+        boundaryPos = { pos.x * tileSize.x + tileSize.x * 0.5f, std::max(pos.y, nextPos.y) * tileSize.y};
     }
     else if(pos.y == nextPos.y)
     {
-        boundaryPos = { std::min(pos.x, nextPos.x) * tileSize.x + tileSize.x * 0.5f, pos.y * tileSize.y };
+        boundaryPos = { std::max(pos.x, nextPos.x) * tileSize.x, pos.y * tileSize.y  + tileSize.y * 0.5f};
+    }
+    else
+    {
+        sf::Vector2i adjacentNode_1 = { pos.x, nextPos.y };
+        sf::Vector2i adjacentNode_2 = { nextPos.x, pos.y };
+
+        if (IsValid(adjacentNode_1) && IsWalkable(pos, adjacentNode_1) && IsWalkable(adjacentNode_1, nextPos))
+        {
+            return true;
+        }
+
+        if (IsValid(adjacentNode_2) && IsWalkable(pos, adjacentNode_2) && IsWalkable(adjacentNode_2, nextPos))
+        {
+            return true;
+        }
+
+        return false;
     }
 
     for (const auto& wall : walls)
     {
-        if (wall->GetGlobalBounds().contains(boundaryPos))
+        sf::FloatRect wallBound = wall->GetGlobalBounds();
+        if (wallBound.contains(boundaryPos))
         {
             return false;
         }
@@ -53,10 +71,14 @@ std::vector<sf::Vector2i> PathFinder::GetNeighborNodes(sf::Vector2i pos)
 {
     std::vector<sf::Vector2i> neighbors;
     std::vector<sf::Vector2i> directions = {
-        {0, 1},  
+        {0, -1},
+        {1, -1},
         {1, 0},
-        {0, -1}, 
-        {-1, 0}
+        {1, 1},
+        {0, 1},
+        {-1, 1},
+        {-1, 0},
+        {-1, -1}
     };
 
     for (const auto& dir : directions)
@@ -98,7 +120,7 @@ std::vector<sf::Vector2f> PathFinder::FindPath(sf::Vector2f startPos, sf::Vector
 
             while (pathNode)
             {
-                path.push_back({pathNode->position.x * tileSize.x + tileSize.x * 0.5f, pathNode->position.x * tileSize.y + tileSize.y * 0.5f });
+                path.push_back({pathNode->position.x * tileSize.x + tileSize.x * 0.5f, pathNode->position.y * tileSize.y + tileSize.y * 0.5f });
                 pathNode = pathNode->parent;
             }
 
@@ -115,7 +137,8 @@ std::vector<sf::Vector2f> PathFinder::FindPath(sf::Vector2f startPos, sf::Vector
                 continue;
             }
 
-            float nextGCost = currentNode->gCost + 1.0f;
+            float nextGCost = currentNode->gCost + ((std::abs(currentNode->position.x - neighborPos.x) + std::abs(currentNode->position.y - neighborPos.y)) == 2 ? 1.41f : 1.0f);
+
             if (nextGCost < neighborNode->gCost)
             {
                 neighborNode->position = neighborPos;
@@ -132,5 +155,8 @@ std::vector<sf::Vector2f> PathFinder::FindPath(sf::Vector2f startPos, sf::Vector
 
 float PathFinder::GetHeuristic(sf::Vector2i start, sf::Vector2i end)
 {
-    return std::abs(start.x - end.x) + std::abs(start.y - end.y);
+    int dx = std::abs(start.x - end.x);
+    int dy = std::abs(start.y - end.y);
+
+    return dx + dy;
 }

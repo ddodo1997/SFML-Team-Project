@@ -13,6 +13,7 @@
 #include "Boss1.h"
 #include "Boss2.h"
 #include "Cleaver.h"
+#include "PathFinder.h"
 SceneGame::SceneGame() : Scene(SceneIds::SceneGame)
 {
 
@@ -26,6 +27,7 @@ void SceneGame::Init()
 	boss = AddGo(new Boss1("Boss1"));
 	boss2 = AddGo(new Boss2("Boss2"));
 	cleaver = AddGo(new Cleaver("Cleaver"));
+	pathFinder = new PathFinder();
 	uiHud->SetPlayer(player);
 
 	LoadWalls(); // 통짜 벽 쓸때만 사용하기
@@ -50,7 +52,7 @@ void SceneGame::Enter()
 	SetDecorations();
 
 	boss2->SetPosition({ -1000.f, -1000.f, });
-
+	player->SetPosition({ 50.f, 100.f });
 	tileMap->SetTexture(&TEXTURE_MGR.Get(STAGE_TABLE->GetTileTextureId()));
 	tileMap->Initialize(STAGE_TABLE->GetTileSize(), STAGE_TABLE->GetTileCount(), STAGE_TABLE->GetFloorTiles());
 
@@ -174,7 +176,15 @@ void SceneGame::Update(float dt)
 	{
 		Variables::isDrawHitBox = !Variables::isDrawHitBox;
 	}
-
+	if (InputMgr::GetKeyDown(sf::Keyboard::L))
+	{
+		std::vector<sf::Vector2f> path = pathFinder->FindPath(player->GetPosition(), enemies[3]->GetPosition());
+		for (auto& pos : path)
+		{
+			std::cout << "(" << (int)pos.x / 16 << ", " << (int)pos.y / 16 << ")" << std::endl;
+			player->SetPosition(pos);
+		}
+	}
 	if (std::fabs(directionX) > 1000.f)
 	{
 		directionX = 0;

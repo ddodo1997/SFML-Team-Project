@@ -11,6 +11,7 @@ public:
 		WallMode,
 		DecorationMode,
 		EnemyMode,
+		WeaponMode,
 	};
 protected:
 	sf::Texture* texture = nullptr;
@@ -31,6 +32,9 @@ protected:
 	Button* idleButton;
 	Button* patrolButton;
 
+	std::vector<Weapon*> weaponsUI;
+	int seletedWeaponIndex = -1;
+	Weapon selectedWeapon;
 
 	EditorMode currentMode;
 	sf::RectangleShape background;
@@ -55,6 +59,7 @@ public:
 	void UpdateWallMode(float dt);
 	void UpdateDecoMode(float dt);
 	void UpdateEnemyMode(float dt);
+	void UpdateWeaponMode(float dt);
 	void UpdateSelectedSpritePosition();
 	void UpdateEnemyModeButtons(sf::Vector2f worldPos);
 	void Draw(sf::RenderWindow& window) override;

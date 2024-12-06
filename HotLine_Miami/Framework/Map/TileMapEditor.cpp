@@ -113,6 +113,16 @@ void TileMapEditor::Reset()
 	}
 	selectedEnemyIndex = -1;
 
+	for (int i = 0; i < 4; i++)
+	{
+		Weapon* weapon = new Weapon("Weapon");
+		weapon->Reset();
+		weapon->SetOrigin(Origins::MC);
+		weapon->SetScale({ 5.f, 5.f });
+		weapon->SetPosition({ 100.f + 200.f * i, 100.f });
+		weapon->SetWeaponType((Weapon::WeaponType)i);
+		weaponsUI.push_back(weapon);
+	}
 	normalButton = new Button("Normar Button");
 	normalButton->Reset();
 	normalButton->SetPosition({ 200.f, 250.f });
@@ -149,6 +159,9 @@ void TileMapEditor::Update(float dt)
 		break;
 	case EditorMode::EnemyMode:
 		UpdateEnemyMode(dt);
+		break;
+	case EditorMode::WeaponMode:
+		UpdateWeaponMode(dt);
 		break;
 	}
 
@@ -217,6 +230,26 @@ void TileMapEditor::UpdateEnemyMode(float dt)
 	}
 }
 
+void TileMapEditor::UpdateWeaponMode(float dt)
+{
+	sf::Vector2i mousePos = InputMgr::GetMousePosition();
+	sf::Vector2f worldPos = static_cast<sf::Vector2f>(mousePos);
+
+	if(InputMgr::GetMouseButtonDown(sf::Mouse::Left))
+	{
+		for (int i = 0; i < weaponsUI.size(); ++i)
+		{
+			if (weaponsUI[i]->GetGlobalBounds().contains(worldPos))
+			{
+				seletedWeaponIndex = i;
+				selectedWeapon = *weaponsUI[seletedWeaponIndex];
+				selectedWeapon.SetScale({ 3.f, 3.f });
+				break;
+			}
+		}
+	}
+}
+
 void TileMapEditor::UpdateSelectedSpritePosition()
 {
 	sf::Vector2i mousePos = InputMgr::GetMousePosition();
@@ -244,19 +277,29 @@ void TileMapEditor::UpdateSelectedSpritePosition()
 				selectedEnemy.SetRotation(selectedEnemy.GetRotation() + 90.f);
 			}
 		}
+	case EditorMode::WeaponMode:
+		if (seletedWeaponIndex != -1)
+		{
+			selectedWeapon.SetPosition({ mousePos.x - 10.f, mousePos.y - 10.f });
+			if (InputMgr::GetMouseButtonDown(sf::Mouse::Right))
+			{
+				selectedWeapon.SetRotation(selectedWeapon.GetRotation() + 90.f);
+			}
+		}
+		break;
 	}
 }
 
 void TileMapEditor::Draw(sf::RenderWindow& window)
 {
 	sf::RenderStates states;
+	window.draw(background);
 
 	switch (currentMode)
 	{
 	case EditorMode::TileMode:
 	{
 		states.texture = texture;
-		window.draw(background);
 		window.draw(tileSelector, states);
 		if (selectedTileIndex != -1)
 		{
@@ -265,7 +308,6 @@ void TileMapEditor::Draw(sf::RenderWindow& window)
 		break;
 	}
 	case EditorMode::WallMode:
-		window.draw(background);
 		for (auto& pair : wallSprites)
 		{
 			window.draw(pair.second);
@@ -278,7 +320,6 @@ void TileMapEditor::Draw(sf::RenderWindow& window)
 	case EditorMode::DecorationMode:
 		break;
 	case EditorMode::EnemyMode:
-		window.draw(background);
 		normalButton->Draw(window);
 		idleButton->Draw(window);
 		patrolButton->Draw(window);
@@ -291,8 +332,17 @@ void TileMapEditor::Draw(sf::RenderWindow& window)
 			selectedEnemy.Draw(window);
 		}
 		break;
+	case EditorMode::WeaponMode:
+		for (auto& weapon : weaponsUI)
+		{
+			weapon->Draw(window);
+		}
+		if (seletedWeaponIndex != -1)
+		{
+			selectedWeapon.Draw(window);
+		}
+		break;
 	}
-	
 }
 
 void TileMapEditor::UpdateEnemyModeButtons(sf::Vector2f worldPos)
@@ -373,6 +423,10 @@ void TileMapEditor::SetMode(EditorMode mode)
 	case EditorMode::EnemyMode:
 		selectedEnemyIndex = -1;
 		background.setSize({ FRAMEWORK.GetWindowSizeF().x * 0.5f, FRAMEWORK.GetWindowSizeF().y * 0.3f });
+		break;
+	case EditorMode::WeaponMode:
+		seletedWeaponIndex = -1;
+		background.setSize({ FRAMEWORK.GetWindowSizeF().x * 0.5f, FRAMEWORK.GetWindowSizeF().y * 0.2f });
 		break;
 	}
 }
