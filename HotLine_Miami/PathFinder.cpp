@@ -2,7 +2,15 @@
 #include "PathFinder.h"
 #include "SceneGame.h"
 #include "Wall.h"
-#include <queue>
+
+namespace std {
+    template <>
+    struct hash<sf::Vector2i> {
+        std::size_t operator()(const sf::Vector2i& vec) const {
+            return (static_cast<std::size_t>(vec.x) << 16) ^ static_cast<std::size_t>(vec.y);
+        }
+    };
+}
 
 PathFinder::PathFinder()
 {
@@ -59,7 +67,7 @@ std::vector<sf::Vector2i> PathFinder::GetNeighborNodes(sf::Vector2i pos)
             neighbors.push_back(neighborPos);
         }
     }
-    return;
+    return neighbors;
 }
 
 std::vector<sf::Vector2f> PathFinder::FindPath(sf::Vector2f startPos, sf::Vector2f targetPos)
@@ -68,8 +76,8 @@ std::vector<sf::Vector2f> PathFinder::FindPath(sf::Vector2f startPos, sf::Vector
     std::unordered_map<sf::Vector2i, Node> allNodes;
     std::list<sf::Vector2i> closedList;
 
-    sf::Vector2i startTileIdx = { startPos.x / tileSize.x, startPos.y / tileSize.y };
-    sf::Vector2i TargetTileIdx = { targetPos.x / tileSize.x, targetPos.y / tileSize.y };
+    sf::Vector2i startTileIdx = { static_cast<int>(startPos.x / tileSize.x), static_cast<int>(startPos.y / tileSize.y) };
+    sf::Vector2i TargetTileIdx = { static_cast<int>(targetPos.x / tileSize.x), static_cast<int>(targetPos.y / tileSize.y) };
 
     Node* startNode = &allNodes[startTileIdx];
     startNode->position = startTileIdx;
@@ -119,6 +127,7 @@ std::vector<sf::Vector2f> PathFinder::FindPath(sf::Vector2f startPos, sf::Vector
             }
         }
     }
+    return std::vector<sf::Vector2f>(); 
 }
 
 float PathFinder::GetHeuristic(sf::Vector2i start, sf::Vector2i end)

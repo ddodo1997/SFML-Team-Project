@@ -46,6 +46,7 @@
     <ClCompile Include="Framework\Objects\Wall.cpp" />
     <ClCompile Include="Framework\Tables\WallTable.cpp" />
     <ClCompile Include="Framework\Map\WayPoint.cpp" />
+    <ClCompile Include="PathFinder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Framework\Objects\Boss1.h" />
@@ -97,5 +98,6 @@
     <ClInclude Include="Framework\Objects\Wall.h" />
     <ClInclude Include="Framework\Tables\WallTable.h" />
     <ClInclude Include="Framework\Map\WayPoint.h" />
+    <ClInclude Include="PathFinder.h" />
   </ItemGroup>
 </Project>

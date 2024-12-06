@@ -200,6 +200,7 @@
     <ClCompile Include="MafiaBoss.cpp" />
     <ClCompile Include="Panther.cpp" />
     <ClCompile Include="Framework\Map\WayPoint.cpp" />
+    <ClCompile Include="PathFinder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BodyGuard.h" />
@@ -255,6 +256,7 @@
     <ClInclude Include="MafiaBoss.h" />
     <ClInclude Include="Panther.h" />
     <ClInclude Include="Framework\Map\WayPoint.h" />
+    <ClInclude Include="PathFinder.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

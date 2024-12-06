@@ -4,12 +4,12 @@ struct Node
 	sf::Vector2i position;
 	float gCost;
 	float hCost;
-	float fCost() const { gCost + hCost; }
+	float fCost() const { return gCost + hCost; }
 	Node* parent;
 	bool isClosed;
 
 	Node(sf::Vector2i pos = {0, 0}, float g = std::numeric_limits<float>::infinity(), float h = 0)
-		: position(pos), gCost(g), hCost(h), parent(nullptr) {}
+		: position(pos), gCost(g), hCost(h), parent(nullptr), isClosed(false) {}
 };
 
 struct CompareNode {
