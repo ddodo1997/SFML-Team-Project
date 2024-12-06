@@ -118,9 +118,10 @@ void TileMapEditor::Reset()
 		Weapon* weapon = new Weapon("Weapon");
 		weapon->Reset();
 		weapon->SetOrigin(Origins::MC);
+		weapon->SetWeaponType((Weapon::WeaponType)i);
+		weapon->SetStatus(weapon->GetStatus());
 		weapon->SetScale({ 5.f, 5.f });
 		weapon->SetPosition({ 100.f + 200.f * i, 100.f });
-		weapon->SetWeaponType((Weapon::WeaponType)i);
 		weaponsUI.push_back(weapon);
 	}
 	normalButton = new Button("Normar Button");

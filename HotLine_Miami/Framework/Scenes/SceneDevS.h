@@ -33,9 +33,11 @@ protected:
 	std::vector<DataWall> mergedHorizontalWalls;
 	std::vector<DataWall> mergedVerticalWalls;
 
-	std::vector<std::pair<Enemy::Status, Enemy*>> savedEnemies;
+	std::vector<std::pair<Enemy::Status, Enemy*>> createdEnemies;
 	std::vector<WayPoint*> waypoints;
 	sf::Vector2f direction;
+
+	std::vector<Weapon*> createdWeapons;
 
 	float zoomNoun = 0.5f;
 	bool isWayPointMode;
@@ -60,6 +62,8 @@ public:
 	void StartWayPointMode(Enemy* enemy);
 	void AddWayPoints(const sf::Vector2f& pos);
 
+	void CreateWeapon(const sf::Vector2f& pos);
+
 	void LoadWalls();
 	void LoadDecorations();
 	void LoadEnemies();
@@ -78,6 +82,7 @@ public:
 	void SaveMap();
 	void SaveWall();
 	void SaveEnemies(json& mapData);
+	void SaveWeapons(json& mapData);
 
 	std::string EnemyStatusToString(const Enemy::Status& state);
 	std::string EnemyWeaponToString(const Weapon::WeaponType& type);

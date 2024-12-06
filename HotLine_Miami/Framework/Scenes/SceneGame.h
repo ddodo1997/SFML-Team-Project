@@ -56,11 +56,13 @@ public:
 	void LoadWalls();
 	void LoadDecorations();
 	void LoadEnemies();
+	void LoadWeapons();
 
 	void SetWalls();
 	void SetWalls_2();
 	void SetDecorations();
 	void SetEnemies();
+	void SetWeapons();
 	Player* GetPlayer() { return player; }
 	Boss1* GetBoss1() { return boss; }
 	Cleaver* GetCleaver() { return cleaver; }
@@ -77,7 +79,7 @@ public:
 
 
 	// Test Code
-	void SpawnWeapon(Weapon::WeaponType weaponType, sf::Vector2f pos);
+	Weapon* SpawnWeapon(Weapon::WeaponType weaponType, sf::Vector2f pos);
 
 	Bullet* SpawnBullet();
 	void ReturnBullet(Bullet* val);

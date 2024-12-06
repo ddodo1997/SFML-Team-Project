@@ -6,6 +6,7 @@
 #include "WallTable.h"
 #include "Decoration.h"
 #include "Enemy.h"
+#include "Weapon.h"
 #include "Wall.h"
 #include "Wall2.h"
 #include "WayPoint.h"
@@ -125,6 +126,13 @@ void SceneDevS::Update(float dt)
 					break;
 				}
 				CreateEnemy(worldPos);
+				break;
+			case TileMapEditor::EditorMode::WeaponMode:
+				if (worldPos.x <  0.f || worldPos.x > tileSize.x * tileCount.x || worldPos.y <  0.f || worldPos.y > tileSize.y * tileCount.y)
+				{
+					break;
+				}
+				CreateWeapon(worldPos);
 				break;
 			}
 		}
@@ -264,7 +272,7 @@ void SceneDevS::CreateEnemy(const sf::Vector2f& pos)
 	sf::Vector2f enemyPosition = { xIndex * tileSize.x + tileSize.x * 0.5f, yIndex * tileSize.y + tileSize.y * 0.5f };
 	Enemy selectedEnemy = tileMapEditor->GetSelectedEnemy();
 
-	for (auto& enemy : savedEnemies)
+	for (auto& enemy : createdEnemies)
 	{
 		if (enemyPosition == enemy.second->GetPosition())
 		{
@@ -288,7 +296,7 @@ void SceneDevS::CreateEnemy(const sf::Vector2f& pos)
 	enemy->SetWeapon(selectedEnemy.GetWeaponType());
 	enemy->SetStatus(Enemy::Status::EditorMode);
 
-	savedEnemies.push_back(std::make_pair(tileMapEditor->GetSelectedEnemyStatus(), enemy));
+	createdEnemies.push_back(std::make_pair(tileMapEditor->GetSelectedEnemyStatus(), enemy));
 	AddGo(enemy);
 
 	if (enemy->GetStatus() == Enemy::Status::Patrol)
@@ -336,6 +344,35 @@ void SceneDevS::AddWayPoints(const sf::Vector2f& pos)
 		AddGo(waypoint);
 		waypoints.push_back(waypoint);
 	}
+}
+
+void SceneDevS::CreateWeapon(const sf::Vector2f& pos)
+{
+	int xIndex = static_cast<int>(pos.x) / tileSize.x;
+	int yIndex = static_cast<int>(pos.y) / tileSize.y;
+
+	sf::Vector2f weaponPosition = { xIndex * tileSize.x + tileSize.x * 0.5f, yIndex * tileSize.y + tileSize.y * 0.5f };
+	Weapon selectedWeapon = tileMapEditor->GetSelectedWeapon();
+
+	for (auto& weapon : createdWeapons)
+	{
+		if (weaponPosition == weapon->GetPosition())
+		{
+			weapon->SetRotation(selectedWeapon.GetRotation());
+			weapon->SetWeaponType(selectedWeapon.GetWeaponType());
+			return;
+		}
+	}
+
+	Weapon* weapon = new Weapon("Weapon");
+	weapon->Reset();
+	weapon->SetPosition(weaponPosition);
+	weapon->SetRotation(selectedWeapon.GetRotation());
+	weapon->SetOrigin(Origins::MC);
+	weapon->SetWeaponType(selectedWeapon.GetWeaponType());
+
+	createdWeapons.push_back(weapon);
+	AddGo(weapon);
 }
 
 void SceneDevS::LoadWalls()
@@ -414,11 +451,11 @@ void SceneDevS::DeleteWalls()
 
 void SceneDevS::DeleteEnemies()
 {
-	for (auto& enemy : savedEnemies)
+	for (auto& enemy : createdEnemies)
 	{
 		RemoveGo(enemy.second);
 	}
-	savedEnemies.clear();
+	createdEnemies.clear();
 }
 
 void SceneDevS::DeleteWaypoints()
@@ -525,6 +562,7 @@ void SceneDevS::SaveMap()
 	}
 
 	SaveEnemies(mapData);
+	SaveWeapons(mapData);
 	mapData["decorations"]["decos"] = json::array();
 
 	std::ofstream outFile("tables/Test_Save.json");
@@ -629,7 +667,7 @@ void SceneDevS::SaveEnemies(json& mapData)
 {
 	mapData["enemy"]["enemies"] = json::array();
 	int i = 1;
-	for (const auto& enemyPair : savedEnemies)
+	for (const auto& enemyPair : createdEnemies)
 	{
 		const auto& enemy = enemyPair.second;
 
@@ -651,6 +689,25 @@ void SceneDevS::SaveEnemies(json& mapData)
 		}
 
 		mapData["enemy"]["enemies"].push_back(enemyData);
+	}
+}
+
+void SceneDevS::SaveWeapons(json& mapData)
+{
+	mapData["weapon"]["weapons"] = json::array();
+	int i = 1;
+
+	for (const auto& weapon : createdWeapons)
+	{
+		json weaponData;
+		weaponData["id"] = "weapon_" + std::to_string(i++);
+		weaponData["type"] = weapon->GetWeaponType();
+		weaponData["x"] = static_cast<int>(weapon->GetPosition().x / tileSize.x) - minX;
+		weaponData["y"] = static_cast<int>(weapon->GetPosition().y / tileSize.y) - minY;
+		weaponData["rotation"] = static_cast<int>(weapon->GetRotation());
+
+
+		mapData["weapon"]["weapons"].push_back(weaponData);
 	}
 }
 

@@ -50,7 +50,7 @@ void SceneGame::Enter()
 	// SetWalls_2(); // 개별 벽 사용할 때 
 	SetEnemies();
 	SetDecorations();
-
+	SetWeapons();
 	boss2->SetPosition({ -1000.f, -1000.f, });
 	player->SetPosition({ 50.f, 100.f });
 	tileMap->SetTexture(&TEXTURE_MGR.Get(STAGE_TABLE->GetTileTextureId()));
@@ -330,6 +330,18 @@ void SceneGame::SetEnemies()
 	}
 }
 
+void SceneGame::SetWeapons()
+{
+	const auto& weaponTable = STAGE_TABLE->GetWeaponTable();
+	for (const auto& weaponPair : weaponTable)
+	{
+		const DataWeapon& weaponData = weaponPair.second;
+
+		auto weapon = SpawnWeapon(weaponData.weaponState.weaponType, { (weaponData.pos.x * STAGE_TABLE->GetTileSize().x) + 8.f,  (weaponData.pos.y * STAGE_TABLE->GetTileSize().y) + 8.f });
+		weapon->SetRotation(weaponData.rotation);
+	}
+}
+
 void SceneGame::OnWeaponDrop(Weapon::WeaponStatus weapon, sf::Vector2f pos)
 {
 	Weapon* newWeapon = weaponPool.Take();
@@ -355,7 +367,7 @@ void SceneGame::OnWeaponThrow(Weapon::WeaponStatus weapon, sf::Vector2f dir, sf:
 }
 
 
-void SceneGame::SpawnWeapon(Weapon::WeaponType weaponType, sf::Vector2f pos)
+Weapon* SceneGame::SpawnWeapon(Weapon::WeaponType weaponType, sf::Vector2f pos)
 {
 	Weapon* weapon = weaponPool.Take();
 	weapons.push_back(weapon);
@@ -363,7 +375,7 @@ void SceneGame::SpawnWeapon(Weapon::WeaponType weaponType, sf::Vector2f pos)
 	weapon->SetStatus(WEAPON_TABLE->Get(weaponType));
 	weapon->SetPosition(pos);
 	weapon->SetActive(true);
-	AddGo(weapon);
+	return AddGo(weapon);
 }
 
 Bullet* SceneGame::SpawnBullet()

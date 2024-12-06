@@ -20,6 +20,13 @@ struct DataEnemy
     Enemy::Status state = Enemy::Status::Normal;
     std::vector<sf::Vector2f> waypoints;
 };
+struct DataWeapon
+{
+    std::string id = "";
+    sf::Vector2f pos = { 0.f, 0.f };
+    float rotation = 0.f;
+    Weapon::WeaponStatus weaponState = Weapon::WeaponStatus();
+};
 class StageTable : public DataTable
 {
 private:
@@ -32,6 +39,7 @@ private:
     std::unordered_map<std::string, DataDecoration> decoTable;
     std::unordered_map<std::string, DataEnemy> enemyTable;
     std::unordered_map<std::string, DataWall> wallTable;
+    std::unordered_map<std::string, DataWeapon> weaponTable;
 public:
     StageTable() : DataTable(DataTable::Types::Stages) { };
     ~StageTable() = default;
@@ -46,5 +54,6 @@ public:
     const std::unordered_map<std::string, DataDecoration>& GetDecoTable() const { return decoTable; }
     const std::unordered_map<std::string, DataEnemy>& GetEnemyTable() const { return enemyTable; }
     const std::unordered_map<std::string, DataWall>& GetWallTable() const { return wallTable; }
+    const std::unordered_map<std::string, DataWeapon>& GetWeaponTable() const { return weaponTable; }
 };
 

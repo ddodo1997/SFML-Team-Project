@@ -21,4 +21,5 @@ public:
 	void SetPath();
 
 	const Weapon::WeaponStatus& Get(Weapon::WeaponType& id);
+	Weapon::WeaponType IndexTo(const std::string& type);
 };

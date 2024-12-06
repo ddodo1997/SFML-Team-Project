@@ -1,128 +1,57 @@
 {
+    "decorations": {
+        "decos": []
+    },
     "enemy": {
-        "enemies": [
-            {
-                "id": "enemy_1",
-                "rotation": 0,
-                "state": "enemy_NK",
-                "waypoint": [],
-                "x": 1,
-                "y": 0
-            },
-            {
-                "id": "enemy_2",
-                "rotation": 270,
-                "state": "enemy_NK",
-                "waypoint": [],
-                "x": 1,
-                "y": 4
-            },
-            {
-                "id": "enemy_3",
-                "rotation": 90,
-                "state": "enemy_IM",
-                "waypoint": [],
-                "x": 7,
-                "y": 1
-            },
-            {
-                "id": "enemy_4",
-                "rotation": 0,
-                "state": "enemy_PS",
-                "waypoint": [
-                    {
-                        "x": 2,
-                        "y": 2
-                    },
-                    {
-                        "x": 6,
-                        "y": 2
-                    },
-                    {
-                        "x": 6,
-                        "y": 6
-                    },
-                    {
-                        "x": 3,
-                        "y": 6
-                    }
-                ],
-                "x": 2,
-                "y": 2
-            }
-        ]
+        "enemies": []
     },
     "floor": {
         "textureId": "graphics/Map/Tiles/tlFloorTiles.png",
         "tiles": [
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56,
-            56
+            138,
+            138,
+            138,
+            138,
+            138,
+            138,
+            138,
+            138,
+            138,
+            138,
+            138,
+            138,
+            138,
+            138,
+            138,
+            138,
+            138,
+            138,
+            138,
+            138,
+            138,
+            138,
+            138,
+            138,
+            138,
+            138,
+            138,
+            138,
+            138,
+            138,
+            138,
+            138,
+            138,
+            138,
+            138,
+            138,
+            138,
+            138,
+            138,
+            138
         ]
     },
-    "tileCountX": 8,
-    "tileCountY": 8,
+    "tileCountX": 10,
+    "tileCountY": 4,
     "tileSizeX": 16,
     "tileSizeY": 16,
     "wall": {
@@ -130,15 +59,16 @@
         "walls": [
             {
                 "end": {
-                    "x": 8,
+                    "x": 10,
                     "y": 0
                 },
                 "id": "Horizontal_0",
                 "ids": [
-                    "PorchWall_H",
-                    "PorchWall_H",
-                    "PorchWall_H",
-                    "PorchWall_H"
+                    "BrickWall_H",
+                    "BrickWall_H",
+                    "BrickWall_H",
+                    "BrickWall_H",
+                    "BrickWall_H"
                 ],
                 "start": {
                     "x": 0,
@@ -147,20 +77,83 @@
             },
             {
                 "end": {
+                    "x": 10,
+                    "y": 4
+                },
+                "id": "Horizontal_5",
+                "ids": [
+                    "BrickWall_H",
+                    "BrickWall_H",
+                    "BrickWall_H",
+                    "BrickWall_H",
+                    "BrickWall_H"
+                ],
+                "start": {
                     "x": 0,
-                    "y": 8
+                    "y": 4
+                }
+            },
+            {
+                "end": {
+                    "x": 0,
+                    "y": 4
                 },
                 "id": "Vertical_0",
                 "ids": [
-                    "PorchWall_V",
-                    "PorchWall_V",
-                    "PorchWall_V",
-                    "PorchWall_V"
+                    "BrickWall_V",
+                    "BrickWall_V"
                 ],
                 "start": {
                     "x": 0,
                     "y": 0
                 }
+            },
+            {
+                "end": {
+                    "x": 10,
+                    "y": 4
+                },
+                "id": "Vertical_2",
+                "ids": [
+                    "BrickWall_V",
+                    "BrickWall_V"
+                ],
+                "start": {
+                    "x": 10,
+                    "y": 0
+                }
+            }
+        ]
+    },
+    "weapon": {
+        "weapons": [
+            {
+                "id": "weapon_1",
+                "rotation": 0,
+                "type": 3,
+                "x": 1,
+                "y": 0
+            },
+            {
+                "id": "weapon_2",
+                "rotation": 0,
+                "type": 2,
+                "x": 3,
+                "y": 0
+            },
+            {
+                "id": "weapon_3",
+                "rotation": 90,
+                "type": 1,
+                "x": 5,
+                "y": 0
+            },
+            {
+                "id": "weapon_4",
+                "rotation": 270,
+                "type": 0,
+                "x": 7,
+                "y": 3
             }
         ]
     }

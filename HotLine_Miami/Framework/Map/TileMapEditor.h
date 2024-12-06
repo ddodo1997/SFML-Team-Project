@@ -75,6 +75,8 @@ public:
 	Enemy GetSelectedEnemy() const { return selectedEnemy; }
 	Enemy::Status GetSelectedEnemyStatus() const { return selectedEnemyStatus; }
 
+	Weapon GetSelectedWeapon() const { return selectedWeapon; }
+
 	void SetMode(EditorMode mode);
 	EditorMode GetMode() const { return currentMode; }
 };
