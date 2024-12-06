@@ -59,7 +59,7 @@ protected:
 	sf::Vector2f direction;
 	sf::Vector2f look;
 
-	float speed = 100;
+	float speed = 130;
 	float onDieSpeed = 300;
 	float onDieEffectAccumTime = 0.6f;
 
@@ -76,6 +76,7 @@ protected:
 	bool isOnPound = false;
 	bool isExecuting = false;
 	bool isExecutionOnWall = false;
+	bool isPoundingBoss = false;
 	bool isControlable = true;
 	float executionTimer = 0.f;
 	int executionCount = 0;
@@ -111,6 +112,7 @@ public:
 	void UpdateMask(float dt);
 	void UpdateExecution(float dt);
 
+	void UpdateExecutionBoss1(float dt);
 	void UpdateExecutionDefualt(float dt);
 	void UpdateExecutionBat(float dt);
 	void UpdateExecutionKnife(float dt);

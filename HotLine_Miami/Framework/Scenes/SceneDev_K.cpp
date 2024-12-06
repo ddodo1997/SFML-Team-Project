@@ -188,7 +188,6 @@ void SceneDev_K::Update(float dt)
 
 	directionXY = { directionX, directionY };
 
-	uiHud->UpdateHitDir(directionXY);
 	uiHud->UpdateWeaponStatus(player->GetWeaponStatus(), player->GetRemainingBullet());
 
 	worldView.setCenter(player->GetPosition());

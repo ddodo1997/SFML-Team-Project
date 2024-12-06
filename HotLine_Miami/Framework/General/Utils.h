@@ -4,9 +4,10 @@ class Utils
 {
 private:
 	static std::mt19937 generator;
-	static const float PI;
 
 public:
+	static const float PI;
+
 	static void Init();
 
 	static int RandomRange(int min, int max);
@@ -73,4 +74,6 @@ public:
 
 	// 이미지 내 Pixel 감지
 	static sf::Vector2i FindPixelByColor(const sf::Sprite& sprite, bool fromCenter = false);
+
+
 };

@@ -86,7 +86,7 @@ void Player::Reset()
 	isControlable = true;
 	executionTimer = 10.f;
 	executionCount = 10;
-	speed = 100.f;
+	speed = 130.f;
 	onDieSpeed = 100.f;
 	onDieEffectAccumTime = 0.6f;
 	position = { -1000.f, -1000.f };
@@ -163,7 +163,7 @@ void Player::ResetMask(bool ifInitialSetting)
 			
 			break;
 		case Mask::Rabbit:
-			
+			speed = 150.f;
 			break;
 		case Mask::Wolf:
 			weaponStatus.weaponType = Weapon::WeaponType::Knife;
@@ -237,16 +237,22 @@ void Player::Update(float dt)
 
 	if (isOnPound)
 	{
-
-		if (executionCount > 0)
-		{
-			UpdateExecution(dt);
+		if (isPoundingBoss)
+		{			
+			UpdateExecutionBoss1(dt);
 		}
 		else
 		{
-			executingEnemy->SetStatus(Enemy::Status::Die);
-			executingEnemy = nullptr;
-			isOnPound = false;
+			if (executionCount > 0)
+			{
+				UpdateExecution(dt);
+			}
+			else
+			{
+				executingEnemy->SetStatus(Enemy::Status::Die);
+				executingEnemy = nullptr;
+				isOnPound = false;
+			}
 		}
 		return;
 	}
@@ -400,6 +406,25 @@ void Player::UpdateExecution(float dt)
 		UpdateExecutionWall(dt);
 	}
 
+}
+
+void Player::UpdateExecutionBoss1(float dt)
+{
+	if (isExecuting)
+	{
+		if (executionTimer > 0)
+		{
+			executionTimer -= dt;
+			executionTimer = Utils::Clamp(executionTimer, 0.f, 10.f);
+			//animatorBody.Play("animations/Player/Execution/pExctKnife.json");
+		}
+		else
+		{
+			executionCount--;
+			isExecuting = false;
+			SOUND_MGR.PlaySfx("sound/Attack/sndHit.wav");
+		}
+	}
 }
 
 void Player::UpdateExecutionDefualt(float dt)
@@ -767,7 +792,25 @@ void Player::TryExecute()
 				return;
 			}
 		}
-	}	
+	}
+
+	if (boss1 != nullptr)
+	{
+		if (GetHitBox().rect.getGlobalBounds().intersects(boss1->GetCollisionBox().getGlobalBounds()))
+		{
+			boss1->ChangePattern(Boss1::Patterns::Die); // Pounded 추가시 로 변경 필요
+			look = boss1->GetDirection();
+			SetRotation(Utils::Angle(look));
+			SetPosition(boss1->GetPosition());
+			Utils::SetOrigin(body, Origins::MC);
+			executionCount = 1;
+			isExecuting = true;
+			isOnPound = true;
+			isPoundingBoss = true;
+			executionTimer = 0.4f;
+			return;
+		}
+	}
 }
 
 void Player::Execute()

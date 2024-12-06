@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "UiHudL.h"
+#include "Player.h"
 
 UiHudL::UiHudL(const std::string& name)
 	: GameObject(name)
@@ -48,47 +49,7 @@ void UiHudL::Release()
 }
 
 void UiHudL::Reset()
-{
-	mPosX.setFont(FONT_MGR.Get("fonts/DS-DIGI.ttf"));
-	mPosX.setCharacterSize(30.f);
-	mPosX.setFillColor(sf::Color::White);
-	mPosX.setString(std::to_string(InputMgr::GetMousePosition().x));
-	mPosX.setPosition({ 30.f,30.f });
-	Utils::SetOrigin(mPosX, Origins::TL);
-
-	mPosY.setFont(FONT_MGR.Get("fonts/DS-DIGI.ttf"));
-	mPosY.setCharacterSize(30.f);
-	mPosY.setFillColor(sf::Color::White);
-	mPosY.setString(std::to_string(InputMgr::GetMousePosition().y));
-	mPosY.setPosition({ 30.f,80.f });
-	Utils::SetOrigin(mPosY, Origins::TL);
-
-	hitDirectionText.setFont(FONT_MGR.Get("fonts/DS-DIGI.ttf"));
-	hitDirectionText.setCharacterSize(30.f);
-	hitDirectionText.setFillColor(sf::Color::White);
-	hitDirectionText.setString(std::to_string(InputMgr::GetMousePosition().y));
-	hitDirectionText.setPosition({ 30.f,130.f });
-	Utils::SetOrigin(hitDirectionText, Origins::TL);
-
-	hitDirection.setTexture(TEXTURE_MGR.Get("graphics/ETC/sprArrowColor.png"));
-	hitDirection.setTextureRect({ 0,0,16,16 });
-	hitDirection.setScale(2.f, 2.f);
-	hitDirection.setPosition({ 38.f,230.f });
-	Utils::SetOrigin(hitDirection, Origins::ML);
-
-	lookDirectionText.setFont(FONT_MGR.Get("fonts/DS-DIGI.ttf"));
-	lookDirectionText.setCharacterSize(30.f);
-	lookDirectionText.setFillColor(sf::Color::White);
-	lookDirectionText.setString(std::to_string(InputMgr::GetMousePosition().y));
-	lookDirectionText.setPosition({ 30.f,330.f });
-	Utils::SetOrigin(lookDirectionText, Origins::TL);
-
-	lookDirection.setTexture(TEXTURE_MGR.Get("graphics/ETC/sprArrowColor.png"));
-	lookDirection.setTextureRect({ 0,0,16,16 });
-	lookDirection.setScale(2.f, 2.f);
-	lookDirection.setPosition({ 38.f,430.f });
-	Utils::SetOrigin(lookDirection, Origins::ML);
-
+{	
 	currentWeaponStatus.setFont(FONT_MGR.Get("fonts/DS-DIGI.ttf"));
 	currentWeaponStatus.setCharacterSize(30.f);
 	currentWeaponStatus.setFillColor(sf::Color::White);
@@ -107,22 +68,152 @@ void UiHudL::Reset()
 	cursorAnimator.Play("animations/cursor.json");
 	mouseSprite.setScale(3.f, 3.f);
 	Utils::SetOrigin(mouseSprite, Origins::MC);
+
+	boxBL.setFillColor(sf::Color::Black);
+	boxBL.setSize({ 430.f, 102.f });
+	boxBLpos = { 0.f,960.f };
+	boxBL.setPosition(boxBLpos);
+	Utils::SetOrigin(boxBL, Origins::TL);
+
+	textBL.setFont(FONT_MGR.Get("fonts/ByteBounce.ttf"));
+	textBL.setCharacterSize(80.f);
+	textBL.setFillColor(sf::Color::White);
+	textBL.setString("NO GUN!");
+	textBL.setPosition(boxBL.getGlobalBounds().width/2.f, boxBL.getGlobalBounds().top + boxBL.getGlobalBounds().height/5.f);
+	Utils::SetOrigin(textBL, Origins::MC);
+
+	textBL2.setFont(FONT_MGR.Get("fonts/ByteBounce.ttf"));
+	textBL2.setCharacterSize(80.f);
+	textBL2.setFillColor(sf::Color::Magenta);
+	textBL2.setString("NO GUN!");
+	textBL2.setPosition(boxBL.getGlobalBounds().width / 2.f, boxBL.getGlobalBounds().top + boxBL.getGlobalBounds().height / 5.f);
+	Utils::SetOrigin(textBL2, Origins::MC);
+
+	pauseShader.setFillColor(sf::Color(0, 0, 0, 100));
+	pauseShader.setSize({ 1920.f, 1080.f });
+	pauseShader.setPosition(FRAMEWORK.GetWindowSizeF()*0.5f);
+	Utils::SetOrigin(pauseShader, Origins::MC);
+
+	pauseTopBox.setFillColor(sf::Color::Black);
+	pauseTopBox.setSize({ 1920.f, 180.f });
+	pauseTopBox.setPosition({0.f, -180.f});
+	Utils::SetOrigin(pauseTopBox, Origins::TL);
+
+	pauseBottomBox.setFillColor(sf::Color::Black);
+	pauseBottomBox.setSize({ 1920.f, 180.f });
+	pauseBottomBox.setPosition({ 0.f, 1080.f });
+	Utils::SetOrigin(pauseBottomBox, Origins::TL);
+
+	//invertShader.loadFromFile("graphics/ETC/invertShader.frag", sf::Shader::Fragment);
+	//renderTexture.create(FRAMEWORK.GetWindowSize().x, FRAMEWORK.GetWindowSize().y);
+	//fade = 0.f;
+	//fadingIn = true;
 }
 
 void UiHudL::Update(float dt)
 {
-	UpdateMPos(dt);
+	realDt = FRAMEWORK.GetRealDeltaTime();
 	UpdateVolumeDisplay(dt);
 	UpdateMouseSprite(dt);
+	UpdateBoxBL(realDt);
+
+	if (InputMgr::GetKeyDown(sf::Keyboard::Escape) && !isPaused)
+	{
+		isPaused = true;
+		preventEscRepeat = true;
+		FRAMEWORK.SetTimeScale(0.f);
+	}
+	if (isPaused && !preventEscRepeat)
+	{
+		UpdatePaused(realDt);
+	}
+
+	preventEscRepeat = false;
 }
 
-void UiHudL::UpdateMPos(float dt)
+void UiHudL::UpdateBoxBL(float dt)
 {
-	mPosX.setString(std::to_string(InputMgr::GetMousePosition().x));
-	Utils::SetOrigin(mPosX, Origins::TL);
+	auto ws = player->GetWeaponStatus();
+	if (ws.isRangedWeapon == true)
+	{
+		boxBLtargetPos = { 0.f,960.f };
+		textBL.setString(std::to_string(ws.remainingBullet) + "/" + std::to_string(ws.maxBullet) + "rndS");
+		textBL2.setString(std::to_string(ws.remainingBullet) + "/" + std::to_string(ws.maxBullet) + "rndS");
+	}
+	else
+	{
+		boxBLtargetPos = { 0.f,1080.f };
+		textBL.setString("NO GUNS!");
+		textBL2.setString("NO GUNS!");
+	}
+	
+	float speedMultiplier = 2.f;
+	if (boxBLpos.y < boxBLtargetPos.y)
+	{
+		boxBLpos = boxBLpos + boxBLdir * boxBLspeed * dt;
+	}
+	if (boxBLpos.y > boxBLtargetPos.y)
+	{
+		boxBLpos = boxBLpos - boxBLdir * boxBLspeed * dt * speedMultiplier;
+	}
+	float stopThreshold = std::abs(boxBLdir.y * boxBLspeed * dt);
+	if (std::fabs(boxBLpos.y - boxBLtargetPos.y) < stopThreshold)
+	{
+		boxBLpos = boxBLtargetPos;
+	}
+	boxBL.setPosition(boxBLpos);
 
-	mPosY.setString(std::to_string(InputMgr::GetMousePosition().y));
-	Utils::SetOrigin(mPosY, Origins::TL);
+	textBLrotationTimer += dt;
+	textBL2rotationTimer += dt;
+	float textBLaxisX;
+	float textBL2axisX;
+
+	if (textBLrotationTimer > 2.f * Utils::PI)
+		textBLrotationTimer -= 2.f * Utils::PI;
+	if (textBL2rotationTimer > 2.f * Utils::PI)
+		textBL2rotationTimer -= 2.f * Utils::PI;
+
+	if (textBLrotationTimer > 1.5f * Utils::PI)
+	{
+		textBLaxisX = -0.5f * Utils::PI + (textBLrotationTimer - 1.5f * Utils::PI);
+	}
+	else if (textBLrotationTimer > 1.0f * Utils::PI)
+	{
+		textBLaxisX = -(textBLrotationTimer - Utils::PI);
+	}
+	else if (textBLrotationTimer > 0.5f * Utils::PI)
+	{
+		textBLaxisX = 0.5f * Utils::PI - (textBLrotationTimer - Utils::PI * 0.5f);
+	}
+	else
+	{
+		textBLaxisX = textBLrotationTimer;
+	}
+
+	if (textBL2rotationTimer > 1.5f * Utils::PI)
+	{
+		textBL2axisX = -0.5f * Utils::PI + (textBL2rotationTimer - 1.5f * Utils::PI);
+	}
+	else if (textBL2rotationTimer > 1.0f * Utils::PI)
+	{
+		textBL2axisX = -(textBL2rotationTimer - Utils::PI);
+	}
+	else if (textBL2rotationTimer > 0.5f * Utils::PI)
+	{
+		textBL2axisX = 0.5f * Utils::PI - (textBL2rotationTimer - Utils::PI * 0.5f);
+	}
+	else
+	{
+		textBL2axisX = textBL2rotationTimer;
+	}
+		
+	textBL.setRotation(std::sin(textBLrotationTimer) * textBLrotationDuration);
+	textBL.setPosition(boxBL.getPosition().x + boxBL.getSize().x / 2.f - 3.f * textBLaxisX, boxBL.getPosition().y + 20.f + 3.f * textBLaxisX);
+	Utils::SetOrigin(textBL, Origins::MC);
+
+	textBL2.setRotation(std::sin(textBLrotationTimer) * textBLrotationDuration);
+	textBL2.setPosition(boxBL.getPosition().x + boxBL.getSize().x / 2.f - 3.f * textBL2axisX, boxBL.getPosition().y + 20.f - 3.f * textBL2axisX);
+	Utils::SetOrigin(textBL2, Origins::MC);
 }
 
 void UiHudL::UpdateMouseSprite(float dt)
@@ -132,24 +223,6 @@ void UiHudL::UpdateMouseSprite(float dt)
 	mouseSprite.setPosition(VIEW_MGR.GetMouseSpritePos());
 	Utils::SetOrigin(mouseSprite, Origins::MC);
 	cursorAnimator.Update(dt);
-}
-
-void UiHudL::UpdateHitDir(sf::Vector2f hitDir)
-{
-	hitDirectionText.setString(std::to_string(hitDir.x) + "\n" + std::to_string(hitDir.y));
-	Utils::SetOrigin(hitDirectionText, Origins::TL);
-
-	hitDirection.setRotation(Utils::Angle(hitDir)-90);
-	Utils::SetOrigin(hitDirection, Origins::MC);
-}
-
-void UiHudL::UpdateLookDir(sf::Vector2f lookDir)
-{
-	lookDirectionText.setString(std::to_string(lookDir.x) + "\n" + std::to_string(lookDir.y));
-	Utils::SetOrigin(hitDirectionText, Origins::TL);
-
-	lookDirection.setRotation(Utils::Angle(lookDir) - 90);
-	Utils::SetOrigin(hitDirection, Origins::MC);
 }
 
 void UiHudL::UpdateWeaponStatus(Weapon::WeaponStatus weaponStatus, int remainingBullet)
@@ -192,19 +265,103 @@ void UiHudL::UpdateVolumeDisplay(float dt)
 	volumeDisplayer.setString("Bgm Vol : " + bgmVol + "\nSfx Vol : " + sfxVol);
 }
 
+void UiHudL::UpdatePaused(float realDt)
+{
+	//if (fadingIn)
+	//{
+	//	fade += realDt/6.f;
+	//	if (fade >= 1.f)
+	//		fadingIn = false;
+	//}
+	//else
+	//{
+	//	fade -= realDt / 6.f;
+	//	if (fade <= 0.f)
+	//		fadingIn = true;
+	//}
+
+
+	colorRotator += realDt;
+	if (colorRotator > colorCyclingDuration)
+		colorRotator -= colorCyclingDuration;
+
+	float valR = 0.f;
+	float valG = 0.f;
+
+	if (colorRotator < colorCyclingDuration / 3.f)
+	{
+		valR = 1.f - (colorRotator / (colorCyclingDuration / 3.f));
+		valG = colorRotator / (colorCyclingDuration / 3.f);
+	}
+	else if (colorRotator < colorCyclingDuration * 2.f / 3.f)
+	{
+		valR = 0.f;
+		valG = 1.f - (colorRotator - colorCyclingDuration / 3.f) / (colorCyclingDuration / 3.f);
+	}
+	else
+	{
+		valR = (colorRotator - colorCyclingDuration * 2.f / 3.f) / (colorCyclingDuration / 3.f);
+		valG = 0.f;
+	}
+	sf::Color shaderColor = { (sf::Uint8)(dscb.x + (dscb.y - dscb.x) * valR), (sf::Uint8)(dscb.x + (dscb.y - dscb.x) * valG), (sf::Uint8)dscb.y, 120 };
+
+	pauseShader.setFillColor(shaderColor);
+
+	if(pauseTimer < 0.4f)
+		pauseTimer += realDt;
+	pauseTimer = Utils::Clamp(pauseTimer, 0.f, 0.4f);
+
+	pauseTopBox.setPosition(0.f, -180.f + 180 / 0.4 * pauseTimer);
+	pauseBottomBox.setPosition(0.f, 1080.f - 180 / 0.4 * pauseTimer);
+
+
+
+	if (pauseTimer >= 0.4f && InputMgr::GetKeyDown(sf::Keyboard::Escape))
+	{
+		//fade = 0.f;
+		pauseTimer = 0.f;
+		isResuming = true;
+		preventEscRepeat = true;
+		FRAMEWORK.SetTimeScale(1.f);
+	}
+	if (isResuming)
+	{
+		resumeTimer += realDt;
+
+		pauseTopBox.setPosition(0.f, -180 / 0.4 * resumeTimer);
+		pauseBottomBox.setPosition(0.f, 900.f + 180 / 0.4 * resumeTimer);
+
+		if (resumeTimer > 0.4f)
+		{
+			isResuming = false;
+			isPaused = false;
+			pauseTimer = 0.f;
+			resumeTimer = 0.f;
+		}
+	}
+	else
+	{
+		VIEW_MGR.UpdatePausedView(realDt);
+	}
+}
+
 void UiHudL::Draw(sf::RenderWindow& window)
 {
-	//window.draw(mPosX);
-	//window.draw(mPosY);
-	//window.draw(hitDirectionText);
-	//window.draw(hitDirection);
-	//window.draw(lookDirectionText);
-	//window.draw(lookDirection);
 	window.draw(currentWeaponStatus);
 	window.draw(volumeDisplayer);
 	if (weaponTypeIndex != -1)
 	{
 		window.draw(currentWeaponStatus);
 	}
+	window.draw(boxBL);
+	window.draw(textBL2);
+	window.draw(textBL);
 	window.draw(mouseSprite);
+
+	if (isPaused)
+	{
+		window.draw(pauseShader);
+		window.draw(pauseTopBox);
+		window.draw(pauseBottomBox);
+	}
 }

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "ViewMgr.h"
 #include "Player.h"
+#include <Windows.h>
 
 void ViewMgr::Init()
 {
@@ -20,6 +21,16 @@ void ViewMgr::Reset()
 	mPosBound.top = boundEdgeCut;
 	mPosBound.width = 1920 - boundEdgeCut;
 	mPosBound.height = 1080 - boundEdgeCut;
+
+	vaBackground.setPrimitiveType(sf::PrimitiveType::Quads);
+	vaBackground.resize(4);
+
+	vaBackground[0].position = { 0.f,0.f };
+	vaBackground[1].position = { 1920.f,0.f };
+	vaBackground[2].position = { 1920.f,1080.f };
+	vaBackground[3].position = { 0.f,1080.f };
+
+	FRAMEWORK.GetWindow().setMouseCursorVisible(isCursorVisible);
 }
 
 void ViewMgr::Update(float dt)
@@ -28,6 +39,7 @@ void ViewMgr::Update(float dt)
 	playerPos = player->GetPosition();
 
 	UpdateViewRotation(dt);
+	UpdateBackground(FRAMEWORK.GetRealDeltaTime());
 
 	if (InputMgr::GetKey(sf::Keyboard::LShift))
 	{
@@ -41,6 +53,15 @@ void ViewMgr::Update(float dt)
 	{
 		isCursorVisible = !isCursorVisible;
 		FRAMEWORK.GetWindow().setMouseCursorVisible(isCursorVisible);
+
+		if (isCursorVisible)
+		{
+			UnlockCursor();
+		}
+		else
+		{
+			LockCursor(FRAMEWORK.GetWindow());
+		}
 	}
 }
 
@@ -105,8 +126,6 @@ void ViewMgr::UpdateViewRotation(float dt)
 void ViewMgr::UpdateFurtherView(float dt)
 {
 	UpdateFurtherViewMousePos(dt);
-
-
 }
 
 void ViewMgr::UpdateDefaultView(float dt)
@@ -126,6 +145,17 @@ void ViewMgr::UpdateDefaultView(float dt)
 	worldViewCenterPos = worldViewCenterPos + worldViewDirection * distanceToTargetView * viewMoveSpeed * dt;
 	if(Utils::SqrMagnitude(worldViewTargetPos-worldViewCenterPos) > 1.f)
 		worldViewCurrentScene->setCenter(worldViewCenterPos);	
+}
+
+void ViewMgr::UpdatePausedView(float realDt)
+{
+	pausedViewTimer += realDt * 2.f;
+
+	if (pausedViewTimer > 2 * Utils::PI)
+		pausedViewTimer -= 2 * Utils::PI;
+
+	//worldViewCenterPos += Utils::RadianToNormal(std::sin(pausedViewTimer));
+	worldViewCurrentScene->setCenter(worldViewCenterPos + Utils::RadianToNormal(std::sin(pausedViewTimer)));
 }
 
 void ViewMgr::UpdateFurtherViewMousePos(float dt)
@@ -156,6 +186,48 @@ void ViewMgr::UpdateFurtherViewMousePos(float dt)
 	worldViewCenterPos = worldViewCenterPos + worldViewDirection * distanceToTargetView * viewMoveSpeed * dt * (1.f/ viewDistanceMultiplier);
 	if (Utils::SqrMagnitude(worldViewTargetPos - worldViewCenterPos) > 1.f)
 		worldViewCurrentScene->setCenter(worldViewCenterPos);
+}
+
+void ViewMgr::UpdateBackground(float dt)
+{
+	colorRotator += dt;
+	if (colorRotator > colorCyclingDuration)
+		colorRotator -= colorCyclingDuration;
+
+	float valR = 0.f;
+	float valG = 0.f;
+		
+	if (colorRotator < colorCyclingDuration / 3.f)
+	{
+		valR = 1.f - (colorRotator / (colorCyclingDuration / 3.f));
+		valG = colorRotator / (colorCyclingDuration / 3.f);
+	}
+	else if (colorRotator < colorCyclingDuration * 2.f / 3.f)
+	{
+		valR = 0.f;
+		valG = 1.f - (colorRotator - colorCyclingDuration/3.f) / (colorCyclingDuration / 3.f);
+	}
+	else
+	{
+		valR = (colorRotator - colorCyclingDuration * 2.f / 3.f) / (colorCyclingDuration / 3.f);
+		valG = 0.f;
+	}	
+
+	sf::Color brightSideColor = { (sf::Uint8)(bscb.x + (bscb.y - bscb.x) * valR), (sf::Uint8)(bscb.x + (bscb.y - bscb.x) * valG), (sf::Uint8)bscb.y };
+	sf::Color darkSideColor = { (sf::Uint8)(dscb.x + (dscb.y - dscb.x) * valR), (sf::Uint8)(dscb.x + (dscb.y - dscb.x) * valG), (sf::Uint8)dscb.y };
+
+	vaBackground[0].color = brightSideColor;
+	vaBackground[1].color = brightSideColor;
+	vaBackground[2].color = darkSideColor;
+	vaBackground[3].color = darkSideColor;		
+}
+
+void ViewMgr::DrawBackground()
+{
+	auto tempView = FRAMEWORK.GetWindow().getView();
+	FRAMEWORK.GetWindow().setView(*uiViewCurrentScene);
+	FRAMEWORK.GetWindow().draw(vaBackground);
+	FRAMEWORK.GetWindow().setView(tempView);
 }
 
 sf::Vector2f ViewMgr::ScreenToWorld(sf::Vector2i screenPos)
@@ -205,3 +277,17 @@ sf::Vector2f ViewMgr::GetUiViewSize()
 	return uiView.getSize();
 }
 
+void ViewMgr::LockCursor(sf::RenderWindow& window)
+{
+	RECT rect;
+	HWND hwnd = window.getSystemHandle(); // SFML 창의 핸들을 가져옵니다.
+
+	GetClientRect(hwnd, &rect);           // 창 내부의 클라이언트 영역을 가져옵니다.
+	MapWindowPoints(hwnd, nullptr, reinterpret_cast<POINT*>(&rect), 2); // 화면 좌표로 변환
+	ClipCursor(&rect);                    // 커서를 해당 영역에 제한합니다.
+}
+
+void ViewMgr::UnlockCursor()
+{
+	ClipCursor(nullptr);                  // 제한을 해제합니다.
+}

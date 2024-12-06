@@ -26,6 +26,7 @@ void SceneGame::Init()
 	boss = AddGo(new Boss1("Boss1"));
 	boss2 = AddGo(new Boss2("Boss2"));
 	cleaver = AddGo(new Cleaver("Cleaver"));
+	uiHud->SetPlayer(player);
 
 	LoadWalls(); // 통짜 벽 쓸때만 사용하기
 	LoadDecorations();
@@ -108,29 +109,15 @@ void SceneGame::ClearInactivePoolObjects()
 
 void SceneGame::Update(float dt)
 {
-	Scene::Update(dt);
 	VIEW_MGR.Update(dt);
+	if (uiHud->IsPaused())
+	{
+		uiHud->Update(dt);
+		return;
+	}
 
-	Weapon::WeaponType tempIndex = Weapon::WeaponType::Bat;
-	if (InputMgr::GetKeyDown(sf::Keyboard::Numpad0))
-	{
-		player->OnHit(WEAPON_TABLE->Get(tempIndex), directionXY);
-	}
-	if (InputMgr::GetKeyDown(sf::Keyboard::Numpad1))
-	{
-		tempIndex = Weapon::WeaponType::Knife;
-		player->OnHit(WEAPON_TABLE->Get(tempIndex), directionXY);
-	}
-	if (InputMgr::GetKeyDown(sf::Keyboard::Numpad2))
-	{
-		tempIndex = Weapon::WeaponType::Machinegun;
-		player->OnHit(WEAPON_TABLE->Get(tempIndex), directionXY);
-	}
-	if (InputMgr::GetKeyDown(sf::Keyboard::Numpad3))
-	{
-		tempIndex = Weapon::WeaponType::Shotgun;
-		player->OnHit(WEAPON_TABLE->Get(tempIndex), directionXY);
-	}
+	Scene::Update(dt);
+
 	if (InputMgr::GetKeyDown(sf::Keyboard::R))
 	{
 		SCENE_MGR.ChangeScene(SceneIds::SceneGame);
@@ -199,7 +186,6 @@ void SceneGame::Update(float dt)
 
 	directionXY = { directionX, directionY };
 
-	uiHud->UpdateHitDir(directionXY);
 	uiHud->UpdateWeaponStatus(player->GetWeaponStatus(), player->GetRemainingBullet());
 
 	//worldView.setCenter(player->GetPosition());
@@ -413,5 +399,6 @@ void SceneGame::RemoveAllObjPool()
 
 void SceneGame::Draw(sf::RenderWindow& window)
 {
+	VIEW_MGR.DrawBackground();
 	Scene::Draw(window);
 }
