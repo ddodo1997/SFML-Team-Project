@@ -10,6 +10,7 @@ protected:
 	Animator animator;
 
 	Player* player;
+
 	Panther* panther1;
 	Panther* panther2;
 
@@ -24,6 +25,8 @@ public:
 
 	void SetOrigin(Origins preset) override;
 	void SetOrigin(const sf::Vector2f& newOrigin) override;
+
+	void SetPlayer(Player* player);
 
 	void Init() override;
 	void Release() override;

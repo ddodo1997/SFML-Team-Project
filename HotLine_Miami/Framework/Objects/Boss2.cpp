@@ -59,10 +59,13 @@ void Boss2::Reset()
 	player = sceneGame->GetPlayer();
 	 panther1.Reset();
 	 panther2.Reset();
+	 panther2.SetTimer();
 	bodyGuard.Reset();
 	mafiaBoss.Reset();
 	fountain1.Reset();
 	fountain2.Reset();
+	ChangePhase(Phase::None);
+	SetPlayer();
 }
 
 void Boss2::SetPlayer()
@@ -71,12 +74,17 @@ void Boss2::SetPlayer()
 	 panther2.SetPlayer(player);
 	bodyGuard.SetPlayer(player);
 	mafiaBoss.SetPlayer(player);
-	//fountain1.SetPlayer(player);
-	//fountain2.SetPlayer(player);
+	fountain1.SetPlayer(player);
+	fountain2.SetPlayer(player);
 }
 
 void Boss2::Update(float dt)
 {
+	if (awakeBound.intersects(player->GetCollisionBox().getGlobalBounds()) && !flag)
+	{
+		ChangePhase(Phase::Panther);
+		flag = true;
+	}
 	panther1.Update(dt);
 	panther2.Update(dt);
 	bodyGuard.Update(dt);
@@ -103,6 +111,8 @@ void Boss2::Update(float dt)
 
 void Boss2::Phase1(float dt)
 {
+	panther1.Phase1(dt);
+	panther2.Phase1(dt);
 }
 
 void Boss2::Phase2(float dt)
@@ -123,6 +133,8 @@ void Boss2::ChangePhase(Phase phase)
 	case Phase::None:
 		break;
 	case Phase::Panther:
+		panther1.Awaken();
+		panther2.Awaken();
 		break;
 	case Phase::BodyGuard:
 		break;

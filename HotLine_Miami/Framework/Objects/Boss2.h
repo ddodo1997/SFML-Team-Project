@@ -30,6 +30,7 @@ protected:
 	Player* player;
 
 	Phase currentPhase = Phase::None;
+	bool flag = false;
 public:
 	Boss2(const std::string& name = "");
 	~Boss2() = default;

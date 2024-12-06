@@ -1,0 +1,13 @@
+{
+    "ID": "Boss2PantherRun",
+    "LoopType": 1,
+    "FPS": 10,
+    "texId": "graphics/Enemy/Boss2/boss2_panther_run.png",
+    "Frames":
+    [
+        [0,0,24,52],
+        [24,0,24,52],
+        [48,0,24,52],
+        [72,0,24,52]
+    ]
+}

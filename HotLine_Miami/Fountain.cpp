@@ -40,6 +40,11 @@ void Fountain::SetOrigin(const sf::Vector2f& newOrigin)
 	body.setOrigin(origin);
 }
 
+void Fountain::SetPlayer(Player* player)
+{
+	this->player = player;
+}
+
 void Fountain::Init()
 {
 }
