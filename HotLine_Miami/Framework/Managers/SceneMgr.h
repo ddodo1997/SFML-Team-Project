@@ -40,4 +40,3 @@ public:
 
 
 #define SCENE_MGR (SceneMgr::Instance())
-

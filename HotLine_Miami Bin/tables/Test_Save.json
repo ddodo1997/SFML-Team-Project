@@ -1,56 +1,100 @@
 {
+    "boss1": {
+        "rotation": 180.0,
+        "x": 7,
+        "y": 3
+    },
     "decorations": {
         "decos": []
     },
     "enemy": {
-        "enemies": []
+        "enemies": [
+            {
+                "id": "enemy_1",
+                "rotation": 0,
+                "state": "enemy_NB",
+                "waypoint": [],
+                "x": 0,
+                "y": 0
+            },
+            {
+                "id": "enemy_2",
+                "rotation": 270,
+                "state": "enemy_IM",
+                "waypoint": [],
+                "x": 0,
+                "y": 3
+            },
+            {
+                "id": "enemy_3",
+                "rotation": 90,
+                "state": "enemy_PS",
+                "waypoint": [
+                    {
+                        "x": 4,
+                        "y": 0
+                    },
+                    {
+                        "x": 6,
+                        "y": 0
+                    },
+                    {
+                        "x": 6,
+                        "y": 2
+                    },
+                    {
+                        "x": 4,
+                        "y": 2
+                    }
+                ],
+                "x": 4,
+                "y": 0
+            }
+        ]
     },
     "floor": {
         "textureId": "graphics/Map/Tiles/tlFloorTiles.png",
         "tiles": [
-            138,
-            138,
-            138,
-            138,
-            138,
-            138,
-            138,
-            138,
-            138,
-            138,
-            138,
-            138,
-            138,
-            138,
-            138,
-            138,
-            138,
-            138,
-            138,
-            138,
-            138,
-            138,
-            138,
-            138,
-            138,
-            138,
-            138,
-            138,
-            138,
-            138,
-            138,
-            138,
-            138,
-            138,
-            138,
-            138,
-            138,
-            138,
-            138,
-            138
+            134,
+            134,
+            134,
+            134,
+            134,
+            134,
+            134,
+            134,
+            134,
+            134,
+            134,
+            134,
+            134,
+            134,
+            134,
+            134,
+            134,
+            134,
+            134,
+            134,
+            134,
+            134,
+            134,
+            134,
+            134,
+            134,
+            134,
+            134,
+            134,
+            134,
+            134,
+            134
         ]
     },
-    "tileCountX": 10,
+    "player": {
+        "rotation": 270.0,
+        "x": 2,
+        "y": 3
+    },
+    "tileCountX": 8,
     "tileCountY": 4,
     "tileSizeX": 16,
     "tileSizeY": 16,
@@ -59,12 +103,11 @@
         "walls": [
             {
                 "end": {
-                    "x": 10,
+                    "x": 8,
                     "y": 0
                 },
                 "id": "Horizontal_0",
                 "ids": [
-                    "BrickWall_H",
                     "BrickWall_H",
                     "BrickWall_H",
                     "BrickWall_H",
@@ -77,12 +120,11 @@
             },
             {
                 "end": {
-                    "x": 10,
+                    "x": 8,
                     "y": 4
                 },
-                "id": "Horizontal_5",
+                "id": "Horizontal_4",
                 "ids": [
-                    "BrickWall_H",
                     "BrickWall_H",
                     "BrickWall_H",
                     "BrickWall_H",
@@ -100,8 +142,8 @@
                 },
                 "id": "Vertical_0",
                 "ids": [
-                    "BrickWall_V",
-                    "BrickWall_V"
+                    "PorchWall_V",
+                    "PorchWall_V"
                 ],
                 "start": {
                     "x": 0,
@@ -110,16 +152,16 @@
             },
             {
                 "end": {
-                    "x": 10,
+                    "x": 8,
                     "y": 4
                 },
                 "id": "Vertical_2",
                 "ids": [
-                    "BrickWall_V",
-                    "BrickWall_V"
+                    "PorchWall_V",
+                    "PorchWall_V"
                 ],
                 "start": {
-                    "x": 10,
+                    "x": 8,
                     "y": 0
                 }
             }
@@ -130,30 +172,9 @@
             {
                 "id": "weapon_1",
                 "rotation": 0,
-                "type": 3,
-                "x": 1,
-                "y": 0
-            },
-            {
-                "id": "weapon_2",
-                "rotation": 0,
                 "type": 2,
-                "x": 3,
+                "x": 2,
                 "y": 0
-            },
-            {
-                "id": "weapon_3",
-                "rotation": 90,
-                "type": 1,
-                "x": 5,
-                "y": 0
-            },
-            {
-                "id": "weapon_4",
-                "rotation": 270,
-                "type": 0,
-                "x": 7,
-                "y": 3
             }
         ]
     }

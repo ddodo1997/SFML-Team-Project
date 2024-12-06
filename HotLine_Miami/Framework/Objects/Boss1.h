@@ -75,7 +75,7 @@ protected:
 	SceneGame* sceneGame;
 	Player* player;
 	Cleaver* cleaver;
-	
+	HitBox hitBox;
 	bool isPhase2 = false;
 	bool isWalking;
 	bool isAlive = true;
@@ -89,7 +89,7 @@ public:
 
 	void SetOrigin(Origins preset) override;
 	void SetOrigin(const sf::Vector2f& newOrigin) override;
-
+	sf::FloatRect GetGlobalBounds() const override { return legs.getGlobalBounds(); }
 	const sf::Vector2f& GetDirection() const { return direction; }
 
 	void Init() override;

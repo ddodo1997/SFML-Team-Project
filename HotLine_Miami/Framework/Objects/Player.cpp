@@ -80,10 +80,17 @@ void Player::Reset()
 	ResetMask();	
 	// ~Mask Test용
 
-	isAlive = true;
-	isOnPound = false;
-	isExecuting = false;
-	isControlable = true;
+	bool isMoving = false;
+	bool isAlive = true;
+
+	bool isFlipped = false;
+	bool isAttacking = false;
+
+	bool isOnPound = false;
+	bool isExecuting = false;
+	bool isExecutionOnWall = false;
+	bool isPoundingBoss = false;
+	bool isControlable = true;
 	executionTimer = 10.f;
 	executionCount = 10;
 	speed = 130.f;
@@ -93,6 +100,9 @@ void Player::Reset()
 	SetScale({ 1.f, 1.f });
 	animatorBody.SetTarget(&body);
 	animatorLeg.SetTarget(&leg);
+	animatorLeg.Play("animations/Player/pLegAni.json");
+	body.setTexture(TEXTURE_MGR.Get("graphics/player/Walk/pWalkUnArmdNoMask.png"));
+	body.setTextureRect(sf::IntRect(0, 0, 32, 32));
 	SetOrigin(Origins::MC);
 	sceneGame = (SceneGame*)SCENE_MGR.GetCurrentScene();
 	walls = sceneGame->GetWalls();
@@ -116,6 +126,32 @@ void Player::Reset()
 	weaponStatus.weaponType = Weapon::WeaponType::None;
 	weaponStatus = WEAPON_TABLE->Get(weaponStatus.weaponType);
 	attackHitBoxCheck.setSize({ weaponStatus.hitBoxWidth, weaponStatus.hitBoxHeight });
+
+	isAlive = true;
+	isOnPound = false;
+	isExecuting = false;
+	isControlable = true;
+	executionTimer = 10.f;
+	executionCount = 10;
+	speed = 130;
+	onDieSpeed = 300;
+	onDieEffectAccumTime = 0.6f;
+
+	isMoving = false;
+	isAlive = true;
+
+	isFlipped = false;
+	isAttacking = false;
+
+	isOnPound = false;
+	isExecuting = false;
+	isExecutionOnWall = false;
+	isPoundingBoss = false;
+	isControlable = true;
+	executionTimer = 0.f;
+	executionCount = 0;
+
+	bulletProofCount = 0;
 }
 
 void Player::ResetMask(bool ifInitialSetting)
@@ -185,7 +221,10 @@ void Player::ResetMask(bool ifInitialSetting)
 void Player::Update(float dt)
 {
 	if (!IsControlable())
+	{
 		speed = 0.f;
+		return;
+	}
 	if (InputMgr::GetKeyDown(sf::Keyboard::Semicolon))
 	{
 		int currentMaskIndex = (int)currentMask;

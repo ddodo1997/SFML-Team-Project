@@ -18,7 +18,8 @@ class SceneDevS : public SceneGame
 protected:
 	int minX, minY;
 
-	Player* player;
+	Player* player = nullptr;
+	Boss1* boss1 = nullptr;
 	TileMap* tileMap;
 	TileMapEditor* tileMapEditor;
 	Enemy* patrolEnemy;
@@ -63,6 +64,8 @@ public:
 	void AddWayPoints(const sf::Vector2f& pos);
 
 	void CreateWeapon(const sf::Vector2f& pos);
+	void CreatePlayer(const sf::Vector2f& pos);
+	void CreateBoss1(const sf::Vector2f& pos);
 
 	void LoadWalls();
 	void LoadDecorations();
@@ -83,6 +86,8 @@ public:
 	void SaveWall();
 	void SaveEnemies(json& mapData);
 	void SaveWeapons(json& mapData);
+	void SavePlayer(json& mapData);
+	void SaveBoss(json& mapData);
 
 	std::string EnemyStatusToString(const Enemy::Status& state);
 	std::string EnemyWeaponToString(const Weapon::WeaponType& type);

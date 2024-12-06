@@ -2,6 +2,8 @@
 #include "TileMapEditor.h"
 #include "WallTable.h"
 #include "Button.h"
+#include "Player.h"
+#include "Boss1.h"
 
 TileMapEditor::TileMapEditor(const std::string& name)
 	: GameObject(name)
@@ -113,17 +115,6 @@ void TileMapEditor::Reset()
 	}
 	selectedEnemyIndex = -1;
 
-	for (int i = 0; i < 4; i++)
-	{
-		Weapon* weapon = new Weapon("Weapon");
-		weapon->Reset();
-		weapon->SetOrigin(Origins::MC);
-		weapon->SetWeaponType((Weapon::WeaponType)i);
-		weapon->SetStatus(weapon->GetStatus());
-		weapon->SetScale({ 5.f, 5.f });
-		weapon->SetPosition({ 100.f + 200.f * i, 100.f });
-		weaponsUI.push_back(weapon);
-	}
 	normalButton = new Button("Normar Button");
 	normalButton->Reset();
 	normalButton->SetPosition({ 200.f, 250.f });
@@ -141,6 +132,34 @@ void TileMapEditor::Reset()
 
 	normalButton->OnClick(true);
 	selectedEnemyStatus = Enemy::Status::Normal;
+
+	for (int i = 0; i < 4; i++)
+	{
+		Weapon* weapon = new Weapon("Weapon");
+		weapon->Reset();
+		weapon->SetOrigin(Origins::MC);
+		weapon->SetWeaponType((Weapon::WeaponType)i);
+		weapon->SetStatus(weapon->GetStatus());
+		weapon->SetScale({ 5.f, 5.f });
+		weapon->SetPosition({ 100.f + 200.f * i, 100.f });
+		weaponsUI.push_back(weapon);
+	}
+	seletedWeaponIndex = -1;
+
+	player = new Player("Player");
+	player->Reset();
+	player->UpdateBodyAnimationMoving();
+	player->SetOrigin(Origins::MC);
+	player->SetScale({ 5.f, 5.f });
+	player->SetPosition({ 100.f, 100.f });
+
+	boss_1 = new Boss1("Boss_1");
+	boss_1->Reset();
+	boss_1->SetOrigin(Origins::MC);
+	boss_1->SetScale({ 5.f, 5.f });
+	boss_1->SetPosition({ 300.f, 100.f });
+
+	selectedPlayerOrBoss = "";
 
 	background.setSize(FRAMEWORK.GetWindowSizeF() * 0.4f);
 	background.setFillColor(sf::Color(150, 150, 150, 100));
@@ -163,6 +182,9 @@ void TileMapEditor::Update(float dt)
 		break;
 	case EditorMode::WeaponMode:
 		UpdateWeaponMode(dt);
+		break;
+	case EditorMode::PlayerAndBossMode:
+		UpdatePlayerAndBossMode(dt);
 		break;
 	}
 
@@ -251,9 +273,34 @@ void TileMapEditor::UpdateWeaponMode(float dt)
 	}
 }
 
+void TileMapEditor::UpdatePlayerAndBossMode(float dt)
+{
+	sf::Vector2i mousePos = InputMgr::GetMousePosition();
+	sf::Vector2f worldPos = static_cast<sf::Vector2f>(mousePos);
+
+	if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
+	{
+		if (player->GetGlobalBounds().contains(worldPos))
+		{
+			selectedPlayer = new Player("Player");
+			selectedPlayer->Reset();
+			selectedPlayer->SetScale({ 3.f, 3.f });
+			selectedPlayerOrBoss = "Player";
+		}
+		else if (boss_1->GetGlobalBounds().contains(worldPos))
+		{
+			selectedBoss_1 = new Boss1("Boss1");
+			selectedBoss_1->Reset();
+			selectedBoss_1->SetScale({ 3.f, 3.f });
+			selectedPlayerOrBoss = "Boss1";
+		}
+	}
+}
+
 void TileMapEditor::UpdateSelectedSpritePosition()
 {
 	sf::Vector2i mousePos = InputMgr::GetMousePosition();
+
 	switch (currentMode)
 	{
 	case EditorMode::TileMode:
@@ -285,6 +332,24 @@ void TileMapEditor::UpdateSelectedSpritePosition()
 			if (InputMgr::GetMouseButtonDown(sf::Mouse::Right))
 			{
 				selectedWeapon.SetRotation(selectedWeapon.GetRotation() + 90.f);
+			}
+		}
+		break;
+	case EditorMode::PlayerAndBossMode:
+		if (selectedPlayerOrBoss == "Player" && selectedPlayer != nullptr)
+		{
+			selectedPlayer->SetPosition({ mousePos.x - 10.f, mousePos.y - 10.f });
+			if (InputMgr::GetMouseButtonDown(sf::Mouse::Right))
+			{
+				selectedPlayer->SetRotation(selectedPlayer->GetRotation() + 90.f);
+			}
+		}
+		else if (selectedPlayerOrBoss == "Boss1" && selectedBoss_1 != nullptr)
+		{
+			selectedBoss_1->SetPosition({ mousePos.x - 10.f, mousePos.y - 10.f });
+			if (InputMgr::GetMouseButtonDown(sf::Mouse::Right))
+			{
+				selectedBoss_1->SetRotation(selectedBoss_1->GetRotation() + 90.f);
 			}
 		}
 		break;
@@ -341,6 +406,20 @@ void TileMapEditor::Draw(sf::RenderWindow& window)
 		if (seletedWeaponIndex != -1)
 		{
 			selectedWeapon.Draw(window);
+		}
+		break;
+	case EditorMode::PlayerAndBossMode:
+		player->Draw(window);
+		boss_1->Draw(window);
+		if (selectedPlayerOrBoss == "Player" && selectedPlayer != nullptr)
+		{
+			selectedPlayer->UpdateBodyAnimationMoving();
+			selectedPlayer->SetScale({3.f, 3.f});
+			selectedPlayer->Draw(window);
+		}
+		else if (selectedPlayerOrBoss == "Boss1" && selectedBoss_1 != nullptr)
+		{
+			selectedBoss_1->Draw(window);
 		}
 		break;
 	}
@@ -427,6 +506,12 @@ void TileMapEditor::SetMode(EditorMode mode)
 		break;
 	case EditorMode::WeaponMode:
 		seletedWeaponIndex = -1;
+		background.setSize({ FRAMEWORK.GetWindowSizeF().x * 0.5f, FRAMEWORK.GetWindowSizeF().y * 0.2f });
+		break;
+	case EditorMode::PlayerAndBossMode:
+		selectedPlayerOrBoss.clear();
+		selectedPlayer = nullptr;
+		selectedBoss_1 = nullptr;
 		background.setSize({ FRAMEWORK.GetWindowSizeF().x * 0.5f, FRAMEWORK.GetWindowSizeF().y * 0.2f });
 		break;
 	}

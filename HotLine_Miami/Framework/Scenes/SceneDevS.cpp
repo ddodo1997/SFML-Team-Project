@@ -9,6 +9,8 @@
 #include "Weapon.h"
 #include "Wall.h"
 #include "Wall2.h"
+#include "Player.h"
+#include "Boss1.h"
 #include "WayPoint.h"
 
 
@@ -98,6 +100,10 @@ void SceneDevS::Update(float dt)
 		{
 			tileMapEditor->SetMode(TileMapEditor::EditorMode::WeaponMode);
 		}
+		if (InputMgr::GetKeyDown(sf::Keyboard::Num5))
+		{
+			tileMapEditor->SetMode(TileMapEditor::EditorMode::PlayerAndBossMode);
+		}
 
 		if (InputMgr::GetMouseButton(sf::Mouse::Left))
 		{
@@ -133,6 +139,20 @@ void SceneDevS::Update(float dt)
 					break;
 				}
 				CreateWeapon(worldPos);
+				break;
+			case TileMapEditor::EditorMode::PlayerAndBossMode:
+				if (worldPos.x <  0.f || worldPos.x > tileSize.x * tileCount.x || worldPos.y <  0.f || worldPos.y > tileSize.y * tileCount.y)
+				{
+					break;
+				}
+				if (tileMapEditor->GetSelectedPlayerOrBoss() == "Player")
+				{
+					CreatePlayer(worldPos);
+				}
+				else if (tileMapEditor->GetSelectedPlayerOrBoss() == "Boss1")
+				{
+					CreateBoss1(worldPos);
+				}
 				break;
 			}
 		}
@@ -375,6 +395,50 @@ void SceneDevS::CreateWeapon(const sf::Vector2f& pos)
 	AddGo(weapon);
 }
 
+void SceneDevS::CreatePlayer(const sf::Vector2f& pos)
+{
+	int xIndex = static_cast<int>(pos.x) / tileSize.x;
+	int yIndex = static_cast<int>(pos.y) / tileSize.y;
+
+	sf::Vector2f playerPosition = { xIndex * tileSize.x + tileSize.x * 0.5f, yIndex * tileSize.y + tileSize.y * 0.5f };
+	if (player != nullptr)
+	{
+		player->SetPosition(playerPosition);
+		player->SetRotation(tileMapEditor->GetPlayer()->GetRotation());
+		return;
+	}
+
+	player = new Player("Player");
+	player->Reset();
+	player->UpdateBodyAnimationMoving();
+	player->SetControlable(false);
+	player->SetPosition(playerPosition);
+	player->SetRotation(tileMapEditor->GetPlayer()->GetRotation());
+
+	AddGo(player);
+}
+
+void SceneDevS::CreateBoss1(const sf::Vector2f& pos)
+{
+	int xIndex = static_cast<int>(pos.x) / tileSize.x;
+	int yIndex = static_cast<int>(pos.y) / tileSize.y;
+
+	sf::Vector2f boss1Position = { xIndex * tileSize.x + tileSize.x * 0.5f, yIndex * tileSize.y + tileSize.y * 0.5f };
+	if (boss1 != nullptr)
+	{
+		boss1->SetPosition(boss1Position);
+		boss1->SetRotation(tileMapEditor->GetBoss1()->GetRotation());
+		return;
+	}
+
+	boss1 = new Boss1("Boss1");
+	boss1->Reset();
+	boss1->SetPosition(boss1Position);
+	boss1->SetRotation(tileMapEditor->GetBoss1()->GetRotation());
+
+	AddGo(boss1);
+}
+
 void SceneDevS::LoadWalls()
 {
 	const auto& wallTable = STAGE_TABLE->GetWallTable();
@@ -563,6 +627,8 @@ void SceneDevS::SaveMap()
 
 	SaveEnemies(mapData);
 	SaveWeapons(mapData);
+	SavePlayer(mapData);
+	SaveBoss(mapData);
 	mapData["decorations"]["decos"] = json::array();
 
 	std::ofstream outFile("tables/Test_Save.json");
@@ -709,6 +775,20 @@ void SceneDevS::SaveWeapons(json& mapData)
 
 		mapData["weapon"]["weapons"].push_back(weaponData);
 	}
+}
+
+void SceneDevS::SavePlayer(json& mapData)
+{
+	mapData["player"]["x"] = static_cast<int>(player->GetPosition().x / tileSize.x) - minX;
+	mapData["player"]["y"] = static_cast<int>(player->GetPosition().y / tileSize.y) - minY;
+	mapData["player"]["rotation"] = player->GetRotation();
+}
+
+void SceneDevS::SaveBoss(json& mapData)
+{
+	mapData["boss1"]["x"] = static_cast<int>(boss1->GetPosition().x / tileSize.x) - minX;
+	mapData["boss1"]["y"] = static_cast<int>(boss1->GetPosition().y / tileSize.y) - minY;
+	mapData["boss1"]["rotation"] = boss1->GetRotation();
 }
 
 std::string SceneDevS::EnemyStatusToString(const Enemy::Status& state)
