@@ -149,6 +149,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BodyGuard.cpp" />
+    <ClCompile Include="Fountain.cpp" />
     <ClCompile Include="Framework\Objects\Boss1.cpp" />
     <ClCompile Include="Framework\Objects\Boss2.cpp" />
     <ClCompile Include="Framework\Objects\Cleaver.cpp" />
@@ -195,9 +197,13 @@
     <ClCompile Include="Framework\Tables\WeaponTable.cpp" />
     <ClCompile Include="Framework\Objects\Wall.cpp" />
     <ClCompile Include="Framework\Tables\WallTable.cpp" />
+    <ClCompile Include="MafiaBoss.cpp" />
+    <ClCompile Include="Panther.cpp" />
     <ClCompile Include="WayPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BodyGuard.h" />
+    <ClInclude Include="Fountain.h" />
     <ClInclude Include="Framework\Objects\Boss1.h" />
     <ClInclude Include="Framework\Objects\Boss2.h" />
     <ClInclude Include="Framework\Objects\Cleaver.h" />
@@ -246,6 +252,8 @@
     <ClInclude Include="Framework\Tables\WeaponTable.h" />
     <ClInclude Include="Framework\Objects\Wall.h" />
     <ClInclude Include="Framework\Tables\WallTable.h" />
+    <ClInclude Include="MafiaBoss.h" />
+    <ClInclude Include="Panther.h" />
     <ClInclude Include="WayPoint.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

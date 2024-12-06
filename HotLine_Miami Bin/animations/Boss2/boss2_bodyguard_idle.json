@@ -1,0 +1,10 @@
+{
+    "ID": "Boss2BodyGuardIdle",
+    "LoopType": 1,
+    "FPS": 10,
+    "texId": "graphics/Enemy/Boss2/boss2_bodyguard_throw.png",
+    "Frames":
+    [
+        [0,0,48,32]
+    ]
+}

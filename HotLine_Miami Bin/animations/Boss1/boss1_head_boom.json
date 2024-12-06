@@ -1,0 +1,13 @@
+{
+    "ID": "Boss1HeadBoom",
+    "LoopType": 0,
+    "FPS": 10,
+    "texId": "graphics/Enemy/Boss1/boss1_head_boom.png",
+    "Frames":
+    [
+        [0,0,80,60],
+		[80,0,80,60],
+		[0,60,80,60],
+		[80,60,80,60]
+    ]
+}

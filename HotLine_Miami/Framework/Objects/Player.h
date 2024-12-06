@@ -77,6 +77,7 @@ protected:
 	bool isExecuting = false;
 	bool isExecutionOnWall = false;
 	bool isPoundingBoss = false;
+	bool isControlable = true;
 	float executionTimer = 0.f;
 	int executionCount = 0;
 
@@ -133,6 +134,9 @@ public:
 	const sf::Vector2f& GetDirection() { return direction; }
 	const sf::Vector2f& GetLook() { return look; }
 	sf::Vector2f GetPrevPos() { return prevPos; }
+
+	void SetControlable(bool val) { isControlable = val; }
+	bool IsControlable() const { return isControlable; }
 
 	sf::FloatRect GetGlobalBounds() { return leg.getGlobalBounds(); }
 	sf::FloatRect GetLocalBounds() { return leg.getLocalBounds(); }

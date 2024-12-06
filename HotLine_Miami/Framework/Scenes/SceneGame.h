@@ -11,6 +11,7 @@ class Wall2;
 class Bullet;
 class UiHudL;
 class Boss1;
+class Boss2;
 class Cleaver;
 
 class SceneGame :
@@ -21,6 +22,7 @@ protected:
 	TileMap* tileMap;
 	UiHudL* uiHud;
 	Boss1* boss;
+	Boss2* boss2;
 	Cleaver* cleaver;
 
 	sf::Vector2f directionXY;
