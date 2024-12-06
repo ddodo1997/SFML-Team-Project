@@ -1,4 +1,3 @@
-#define _USE_MATH_DEFINES
 
 #include "stdafx.h"
 #include "Utils.h"
@@ -7,6 +6,7 @@
 #include "Wall.h"
 #include <sstream>
 
+#define _USE_MATH_DEFINES
 std::mt19937 Utils::generator;
 const float Utils::PI = acosf(-1.f);
 
