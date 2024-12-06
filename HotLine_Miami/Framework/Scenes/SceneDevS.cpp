@@ -50,6 +50,8 @@ void SceneDevS::Exit()
 
 void SceneDevS::Update(float dt)
 {
+	Scene::Update(dt);
+
 	float cameraSpeed = 300.f * dt;
 	sf::Vector2i mousePos = InputMgr::GetMousePosition();
 	sf::Vector2f worldPos = ScreenToWorld(mousePos);
@@ -94,6 +96,11 @@ void SceneDevS::Update(float dt)
 
 		if (InputMgr::GetMouseButton(sf::Mouse::Left))
 		{
+			if (tileMapEditor->GetGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
+			{
+				return;
+			}
+
 			switch (tileMapEditor->GetMode())
 			{
 			case TileMapEditor::EditorMode::TileMode:
@@ -147,7 +154,6 @@ void SceneDevS::Update(float dt)
 			isWayPointMode = false;
 		}
 	}
-	Scene::Update(dt);
 }
 
 void SceneDevS::Draw(sf::RenderWindow& window)
