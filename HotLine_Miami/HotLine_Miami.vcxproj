@@ -149,14 +149,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BodyGuard.cpp" />
-    <ClCompile Include="Fountain.cpp" />
+    <ClCompile Include="AlphabetTable.cpp" />
+    <ClCompile Include="Framework\Objects\BodyGuard.cpp" />
     <ClCompile Include="Framework\Objects\Boss1.cpp" />
     <ClCompile Include="Framework\Objects\Boss2.cpp" />
     <ClCompile Include="Framework\Objects\Cleaver.cpp" />
     <ClCompile Include="Framework\Map\Button.cpp" />
     <ClCompile Include="Framework\Objects\Bullet.cpp" />
     <ClCompile Include="Framework\Objects\Decoration.cpp" />
+    <ClCompile Include="Framework\Objects\Fountain.cpp" />
+    <ClCompile Include="Framework\Objects\MafiaBoss.cpp" />
+    <ClCompile Include="Framework\Objects\Panther.cpp" />
     <ClCompile Include="Framework\Tables\DecorationTable.cpp" />
     <ClCompile Include="Framework\Objects\Enemy.cpp" />
     <ClCompile Include="Framework\Tables\EnemyTable.cpp" />
@@ -197,20 +200,21 @@
     <ClCompile Include="Framework\Tables\WeaponTable.cpp" />
     <ClCompile Include="Framework\Objects\Wall.cpp" />
     <ClCompile Include="Framework\Tables\WallTable.cpp" />
-    <ClCompile Include="MafiaBoss.cpp" />
-    <ClCompile Include="Panther.cpp" />
     <ClCompile Include="Framework\Map\WayPoint.cpp" />
     <ClCompile Include="PathFinder.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BodyGuard.h" />
-    <ClInclude Include="Fountain.h" />
+    <ClInclude Include="AlphabetTable.h" />
+    <ClInclude Include="Framework\Objects\BodyGuard.h" />
     <ClInclude Include="Framework\Objects\Boss1.h" />
     <ClInclude Include="Framework\Objects\Boss2.h" />
     <ClInclude Include="Framework\Objects\Cleaver.h" />
     <ClInclude Include="Framework\Map\Button.h" />
     <ClInclude Include="Framework\Objects\Bullet.h" />
     <ClInclude Include="Framework\Objects\Decoration.h" />
+    <ClInclude Include="Framework\Objects\Fountain.h" />
+    <ClInclude Include="Framework\Objects\MafiaBoss.h" />
+    <ClInclude Include="Framework\Objects\Panther.h" />
     <ClInclude Include="Framework\Tables\DecorationTable.h" />
     <ClInclude Include="Framework\Objects\Enemy.h" />
     <ClInclude Include="Framework\Tables\EnemyTable.h" />
@@ -253,8 +257,6 @@
     <ClInclude Include="Framework\Tables\WeaponTable.h" />
     <ClInclude Include="Framework\Objects\Wall.h" />
     <ClInclude Include="Framework\Tables\WallTable.h" />
-    <ClInclude Include="MafiaBoss.h" />
-    <ClInclude Include="Panther.h" />
     <ClInclude Include="Framework\Map\WayPoint.h" />
     <ClInclude Include="PathFinder.h" />
   </ItemGroup>

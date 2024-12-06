@@ -110,7 +110,10 @@ void Boss1::SetWeaponStatus()
 void Boss1::Update(float dt)
 {
 	if (InputMgr::GetKeyDown(sf::Keyboard::M))
-		OnDie();
+	{
+	/*	OnDie();*/
+		ChangePattern(Patterns::Crawl);
+	}
 
 	animatorBody.Update(dt);
 	if (isWalking)
@@ -334,7 +337,7 @@ void Boss1::ChangePattern(Patterns pattern)
 		animatorBody.Stop();
 		isWalking = false;
 		this->pattern.targetDirection = Utils::GetNormal(player->GetPosition() - position);
-		SetRotation(Utils::Angle(-this->pattern.targetDirection));
+		SetRotation(Utils::Angle(-this->pattern.targetDirection) + 90.f);
 		break;
 	case Patterns::Die:
 		OnDie();

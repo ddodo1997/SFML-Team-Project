@@ -86,11 +86,32 @@ void Player::Reset()
 	isControlable = true;
 	executionTimer = 10.f;
 	executionCount = 10;
+	speed = 130;
+	onDieSpeed = 300;
+	onDieEffectAccumTime = 0.6f;
+
+	isMoving = false;
+	isAlive = true;
+
+	isFlipped = false;
+	isAttacking = false;
+
+	isOnPound = false;
+	isExecuting = false;
+	isExecutionOnWall = false;
+	isPoundingBoss = false;
+	executionTimer = 0.f;
+	executionCount = 0;
+
+	bulletProofCount = 0;
+
 	speed = 130.f;
 	onDieSpeed = 100.f;
 	onDieEffectAccumTime = 0.6f;
-	position = { -1000.f, -1000.f };
+	position = { 50.f, 50.f };
 	SetScale({ 1.f, 1.f });
+	body.setTexture(TEXTURE_MGR.Get("graphics/player/Walk/pWalkUnArmdNoMask.png"));
+	body.setTextureRect(sf::IntRect(0, 0, 32, 32));
 	animatorBody.SetTarget(&body);
 	animatorLeg.SetTarget(&leg);
 	SetOrigin(Origins::MC);
@@ -116,6 +137,8 @@ void Player::Reset()
 	weaponStatus.weaponType = Weapon::WeaponType::None;
 	weaponStatus = WEAPON_TABLE->Get(weaponStatus.weaponType);
 	attackHitBoxCheck.setSize({ weaponStatus.hitBoxWidth, weaponStatus.hitBoxHeight });
+
+	Utils::SetOrigin(body, Origins::MC);
 }
 
 void Player::ResetMask(bool ifInitialSetting)
@@ -422,7 +445,11 @@ void Player::UpdateExecutionBoss1(float dt)
 		{
 			executionCount--;
 			isExecuting = false;
+			boss1->ChangePattern(Boss1::Patterns::Die);
 			SOUND_MGR.PlaySfx("sound/Attack/sndHit.wav");
+			animatorBody.PlayP("animations/Player/Execution/pExctBat_boss1.json");
+			isOnPound = false;
+			isPoundingBoss = false;
 		}
 	}
 }
@@ -782,7 +809,7 @@ void Player::TryExecute()
 		{
 			if (GetHitBox().rect.getGlobalBounds().intersects(enemy->GetHitBox().rect.getGlobalBounds()))
 			{
-				enemy->SetStatus(Enemy::Status::Pounded);
+				enemy->SetStatus(Enemy::Status::Die);
 				look = enemy->GetDirection();
 				SetRotation(Utils::Angle(look));
 				SetPosition(enemy->GetPosition());
@@ -796,19 +823,23 @@ void Player::TryExecute()
 
 	if (boss1 != nullptr)
 	{
-		if (GetHitBox().rect.getGlobalBounds().intersects(boss1->GetCollisionBox().getGlobalBounds()))
+		if (boss1->IsExcutable() && weaponStatus.weaponType == Weapon::WeaponType::Bat)
 		{
-			boss1->ChangePattern(Boss1::Patterns::Die); // Pounded 추가시 로 변경 필요
-			look = boss1->GetDirection();
-			SetRotation(Utils::Angle(look));
-			SetPosition(boss1->GetPosition());
-			Utils::SetOrigin(body, Origins::MC);
-			executionCount = 1;
-			isExecuting = true;
-			isOnPound = true;
-			isPoundingBoss = true;
-			executionTimer = 0.4f;
-			return;
+			if (GetHitBox().rect.getGlobalBounds().intersects(boss1->GetCollisionBox().getGlobalBounds()))
+			{
+				boss1->ChangePattern(Boss1::Patterns::Pounded); // Pounded 추가시 로 변경 필요
+				look = boss1->GetDirection();
+				SetRotation(Utils::Angle(-look));
+				SetPosition(boss1->GetPosition());
+				Utils::SetOrigin(body, Origins::MC);
+				executionCount = 1;
+				isExecuting = true;
+				isOnPound = true;
+				isPoundingBoss = true;
+				executionTimer = 0.5f;
+				animatorBody.PlayP("animations/Player/Execution/pExctBat_boss1.json");
+				return;
+			}
 		}
 	}
 }

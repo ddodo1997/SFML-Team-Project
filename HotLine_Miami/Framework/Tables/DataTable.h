@@ -11,8 +11,9 @@ public:
 		Stages,
 		Item,
 		Weapon,
+		Alphabet,
 	};
-	static const int TotalType = 6;
+	static const int TotalType = 8;
 
 protected:
 	Types type;

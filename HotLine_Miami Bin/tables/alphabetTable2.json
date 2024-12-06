@@ -1,0 +1,32 @@
+{
+    "TextureId": "graphics/ETC/Fonts/fntPause.png",
+    "Width":39,
+    "Height":34,
+    "Alphabets": [
+      {
+        "Character": "P",
+        "RectPos":[1,1],
+        "CharWidth": 26
+      },
+      {
+        "Character": "A",
+        "RectPos":[41,1],
+        "CharWidth": 35
+      },
+      {
+        "Character": "U",
+        "RectPos":[81,1],
+        "CharWidth": 29
+      },
+      {
+        "Character": "S",
+        "RectPos":[121,1],
+        "CharWidth": 27
+      },
+      {
+        "Character": "E",
+        "RectPos":[161,1],
+        "CharWidth": 30
+      }
+    ]
+  }

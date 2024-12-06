@@ -12,16 +12,30 @@ protected:
 	//float fade = 0.f;
 	//bool fadingIn = true;
 
+
+	// Pause 관련
+	bool isPaused = false;
+	bool wasPaused = false;
+	bool isResuming = false;
+
 	sf::RectangleShape pauseShader;
 	sf::RectangleShape pauseTopBox;
 	sf::RectangleShape pauseBottomBox;
 	float pauseTimer = 0.0;
 	float resumeTimer = 0.0;
 
+	std::vector<sf::Sprite*> pauseText;
+	std::vector<sf::Sprite*> pauseTextResume;
+	std::vector<sf::Sprite*> pauseTextRestart;
+	std::vector<sf::Sprite*> pauseTextQuit;
+
 	sf::Vector2f dscb = { 13, 41 };
 	float colorRotator = 0.f;
 	float colorCyclingDuration = 6.f;
 
+	int selectedFunctionPause = 0;
+
+	// Mouse 관련
 	sf::Sprite mouseSprite;
 	Animator cursorAnimator;
 
@@ -31,6 +45,7 @@ protected:
 
 	sf::Text volumeDisplayer;
 
+	// BL Box 관련
 	sf::RectangleShape boxBL;
 	sf::Vector2f boxBLpos = { 0.f,960.f };
 	sf::Vector2f boxBLtargetPos = { 0.f,960.f };
@@ -43,8 +58,6 @@ protected:
 	const float textBLrotationDuration = 2.4f;
 	float rotationAngle = 0.f;
 
-	bool isPaused = false;
-	bool isResuming = false;
 	bool preventEscRepeat = false;
 
 	int weaponTypeIndex = -1;
@@ -66,6 +79,9 @@ public:
 	void Release() override;
 	void Reset() override;
 
+	void ResetPauseContent();
+	void ReleasePauseContent();
+
 	void SetPlayer(Player* player) { this->player = player; }
 
 	void Update(float dt) override;
@@ -73,10 +89,18 @@ public:
 	void UpdateMouseSprite(float dt);
 	void UpdateWeaponStatus(Weapon::WeaponStatus weaponStatus, int remainingBullet);
 	void UpdateVolumeDisplay(float dt);
+
+	void ResetPaused();
 	void UpdatePaused(float realDt);
+	void UpdatePausedContents(float realDt);
+
+	void Resume();
+	void Restart();
+	void Quit();
+
+	void UpdatePausedContent(float realDt);
 
 	bool IsPaused() { return isPaused; }
-
 
 	void Draw(sf::RenderWindow& window) override;
 };

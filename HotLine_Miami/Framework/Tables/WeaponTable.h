@@ -13,7 +13,7 @@ protected:
 	std::string filePath = "tables/weaponTable.json";
 
 public:
-	WeaponTable() : DataTable(DataTable::Types::String) { };
+	WeaponTable() : DataTable(DataTable::Types::Weapon) { };
 	~WeaponTable() = default;
 
 	bool Load() override;

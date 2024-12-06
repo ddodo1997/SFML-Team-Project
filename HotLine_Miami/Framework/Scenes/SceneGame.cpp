@@ -13,6 +13,7 @@
 #include "Boss1.h"
 #include "Boss2.h"
 #include "Cleaver.h"
+
 SceneGame::SceneGame() : Scene(SceneIds::SceneGame)
 {
 
@@ -65,8 +66,8 @@ void SceneGame::Enter()
 	VIEW_MGR.SetCurrentScenePlayer(player);
 
 	SOUND_MGR.PlayBgm("sound/bgm/Paris2.ogg");
-	SOUND_MGR.SetBgmVolume(50);
-	SOUND_MGR.SetSfxVolume(50);
+	SOUND_MGR.SetBgmVolume(0);
+	SOUND_MGR.SetSfxVolume(20);
 }
 
 void SceneGame::Exit()
