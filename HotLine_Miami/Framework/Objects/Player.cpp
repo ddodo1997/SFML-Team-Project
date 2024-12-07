@@ -127,26 +127,6 @@ void Player::Reset()
 	weaponStatus.weaponType = Weapon::WeaponType::Bat;
 	weaponStatus = WEAPON_TABLE->Get(weaponStatus.weaponType);
 	attackHitBoxCheck.setSize({ weaponStatus.hitBoxWidth, weaponStatus.hitBoxHeight });
-
-<<<<<<< HEAD
-	isMoving = false;
-	isAlive = true;
-	isAttacking = false;
-	isOnPound = false;
-	isExecuting = false;
-	isControlable = true;
-	isExecutionOnWall = false;
-	isFlipped = false;
-	isPoundingBoss = false;
-	executionTimer = 10.f;
-	executionCount = 10;
-	speed = 130;
-	onDieSpeed = 300;
-	onDieEffectAccumTime = 0.6f;
-	bulletProofCount = 0;
-=======
-	Utils::SetOrigin(body, Origins::MC);
->>>>>>> origin/Dev_L
 }
 
 void Player::ResetMask(bool ifInitialSetting)
