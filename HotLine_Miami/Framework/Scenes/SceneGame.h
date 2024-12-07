@@ -44,6 +44,8 @@ protected:
 
 	ObjectPool<Bullet> bulletPool;
 	std::list<Bullet*> activeBullets;
+
+	sf::Vector2f tileSize;
 public:
 	SceneGame();
 	~SceneGame() = default;

@@ -43,6 +43,7 @@ public:
 	void SetOrigin(Origins preset) override;
 	void SetOrigin(const sf::Vector2f& newOrigin) override;
 
+	sf::FloatRect GetAwakeBounds() const { return awakeBound; }
 
 	BodyGuard* GetBodyGuard() { return &bodyGuard; }
 	MafiaBoss* GetMafiaBoss() { return &mafiaBoss; }

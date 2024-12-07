@@ -45,15 +45,17 @@ void SceneGame::Release()
 
 void SceneGame::Enter()
 {
+	tileSize = static_cast<sf::Vector2f>(STAGE_TABLE->GetTileSize());
 	SetWalls(); // ��¥ �� ����� ��
 	Scene::Enter();
-	player->SetPosition({ -1000.f,-1000.f });
 	// SetWalls_2(); // ���� �� ����� �� 
 	SetEnemies();
 	SetDecorations();
 	SetWeapons();
-	boss2->SetPosition({ -1000.f, -1000.f, });
-	player->SetPosition({ 50.f, 100.f });
+	player->SetPosition(STAGE_TABLE->GetPlayerData().pos * tileSize.x);
+	player->SetRotation(STAGE_TABLE->GetPlayerData().rotation);
+	boss->SetPosition(STAGE_TABLE->GetBoss1Data().pos * tileSize.x);
+	boss->SetRotation(STAGE_TABLE->GetBoss1Data().rotation);
 	tileMap->SetTexture(&TEXTURE_MGR.Get(STAGE_TABLE->GetTileTextureId()));
 	tileMap->Initialize(STAGE_TABLE->GetTileSize(), STAGE_TABLE->GetTileCount(), STAGE_TABLE->GetFloorTiles());
 

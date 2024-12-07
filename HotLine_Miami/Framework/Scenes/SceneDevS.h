@@ -20,6 +20,7 @@ protected:
 
 	Player* player = nullptr;
 	Boss1* boss1 = nullptr;
+	Boss2* boss2 = nullptr;
 	TileMap* tileMap;
 	TileMapEditor* tileMapEditor;
 	Enemy* patrolEnemy;
@@ -36,10 +37,12 @@ protected:
 
 	std::vector<std::pair<Enemy::Status, Enemy*>> createdEnemies;
 	std::vector<WayPoint*> waypoints;
-	sf::Vector2f direction;
 
 	std::vector<Weapon*> createdWeapons;
 
+	std::vector<WayPoint*> endPoints;
+
+	sf::Vector2f direction;
 	float zoomNoun = 0.5f;
 	bool isWayPointMode;
 	sf::Color waypointColor;
@@ -66,6 +69,8 @@ public:
 	void CreateWeapon(const sf::Vector2f& pos);
 	void CreatePlayer(const sf::Vector2f& pos);
 	void CreateBoss1(const sf::Vector2f& pos);
+	void CreateBoss2(const sf::Vector2f& pos);
+	void CreateEndPoint(const sf::Vector2f& pos);
 
 	void LoadWalls();
 	void LoadDecorations();
@@ -83,11 +88,13 @@ public:
 	void DeleteWaypoints();
 
 	void SaveMap();
-	void SaveWall();
+	void SaveWall(json& mapData);
 	void SaveEnemies(json& mapData);
 	void SaveWeapons(json& mapData);
 	void SavePlayer(json& mapData);
 	void SaveBoss(json& mapData);
+	void SaveBoss2(json& mapData);
+	void SaveEndPoint(json& mapData);
 
 	std::string EnemyStatusToString(const Enemy::Status& state);
 	std::string EnemyWeaponToString(const Weapon::WeaponType& type);
