@@ -36,6 +36,7 @@ using json = nlohmann::json;
 #include "StringTable.h"
 #include "WeaponTable.h"
 #include "StageTable.h"
+#include "AlphabetTable.h"
 #include "DataTableMgr.h"
 #include "Variables.h"
 #include "SaveLoadMgr.h"

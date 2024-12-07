@@ -4,6 +4,7 @@
 #include "DecorationTable.h"
 #include "WallTable.h"
 #include "StageTable.h"
+#include "AlphabetTable.h"
 
 DataTableMgr::~DataTableMgr()
 {
@@ -18,6 +19,7 @@ void DataTableMgr::Init()
 	tables.insert({ DataTable::Types::Enemies, new EnemyTable() });
 	tables.insert({ DataTable::Types::Decos, new DecorationTable() });
 	tables.insert({ DataTable::Types::Stages, new StageTable() });
+	tables.insert({ DataTable::Types::Alphabet, new AlphabetTable() });
 	//tables.insert({ DataTable::Types::String ,new StringTable() });
 	for (auto t : tables)
 	{

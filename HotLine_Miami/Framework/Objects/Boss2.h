@@ -3,8 +3,10 @@
 #include "BodyGuard.h"
 #include "MafiaBoss.h"
 #include "Fountain.h"
+
 class SceneGame;
 class Player;
+
 class Boss2 : public GameObject
 {
 public:

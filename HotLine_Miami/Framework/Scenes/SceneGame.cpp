@@ -68,14 +68,15 @@ void SceneGame::Enter()
 	VIEW_MGR.SetCurrentScenePlayer(player);
 
 	SOUND_MGR.PlayBgm("sound/bgm/Paris2.ogg");
-	SOUND_MGR.SetBgmVolume(50);
-	SOUND_MGR.SetSfxVolume(50);
+	SOUND_MGR.SetBgmVolume(0);
+	SOUND_MGR.SetSfxVolume(20);
 }
 
 void SceneGame::Exit()
 {
 	RemoveAllObjPool();
 	Scene::Exit();
+	uiHud = nullptr;
 }
 
 void SceneGame::ClearInactivePoolObjects()
@@ -113,10 +114,13 @@ void SceneGame::ClearInactivePoolObjects()
 void SceneGame::Update(float dt)
 {
 	VIEW_MGR.Update(dt);
-	if (uiHud->IsPaused())
+	if (uiHud != nullptr)
 	{
-		uiHud->Update(dt);
-		return;
+		if (uiHud->IsPaused())
+		{
+			uiHud->Update(dt);
+			return;
+		}
 	}
 
 	Scene::Update(dt);
@@ -197,7 +201,8 @@ void SceneGame::Update(float dt)
 
 	directionXY = { directionX, directionY };
 
-	uiHud->UpdateWeaponStatus(player->GetWeaponStatus(), player->GetRemainingBullet());
+	if(uiHud != nullptr)
+		uiHud->UpdateWeaponStatus(player->GetWeaponStatus(), player->GetRemainingBullet());
 
 	//worldView.setCenter(player->GetPosition());
 	FRAMEWORK.GetWindow().setView(worldView);
@@ -338,6 +343,7 @@ BodyGuard* SceneGame::GetBodyGuard()
 MafiaBoss* SceneGame::GetMafiaBoss()
 {
 	return boss2->GetMafiaBoss();
+}
 void SceneGame::SetWeapons()
 {
 	const auto& weaponTable = STAGE_TABLE->GetWeaponTable();

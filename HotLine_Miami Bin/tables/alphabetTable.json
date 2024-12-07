@@ -1,0 +1,272 @@
+{
+    "TextureId": "graphics/ETC/Fonts/fntMenu_mod.png",
+    "Width":29,
+    "Height":21,
+    "Alphabets": [
+      {
+        "Character": "A",
+        "RectPos":[1,1],
+        "CharWidth": 22
+      },
+      {
+        "Character": "B",
+        "RectPos":[31,1],
+        "CharWidth": 21
+      },
+      {
+        "Character": "C",
+        "RectPos":[61,1],
+        "CharWidth": 17
+      },
+      {
+        "Character": "D",
+        "RectPos":[91,1],
+        "CharWidth": 18
+      },
+      {
+        "Character": "E",
+        "RectPos":[121,1],
+        "CharWidth": 18
+      },
+      {
+        "Character": "F",
+        "RectPos":[151,1],
+        "CharWidth": 17
+      },
+      {
+        "Character": "G",
+        "RectPos":[181,1],
+        "CharWidth": 17
+      },
+      {
+        "Character": "H",
+        "RectPos":[211,23],
+        "CharWidth": 20
+      },
+      {
+        "Character": "I",
+        "RectPos":[1,23],
+        "CharWidth": 11
+      },
+      {
+        "Character": "J",
+        "RectPos":[31,23],
+        "CharWidth": 17
+      },
+      {
+        "Character": "K",
+        "RectPos":[61,23],
+        "CharWidth": 23
+      },
+      {
+        "Character": "L",
+        "RectPos":[91,23],
+        "CharWidth": 20
+      },
+      {
+        "Character": "M",
+        "RectPos":[121,23],
+        "CharWidth": 25
+      },
+      {
+        "Character": "N",
+        "RectPos":[151,23],
+        "CharWidth": 20
+      },
+      {
+        "Character": "O",
+        "RectPos":[181,23],
+        "CharWidth": 17
+      },
+      {
+        "Character": "P",
+        "RectPos":[211,23],
+        "CharWidth": 17
+      },
+      {
+        "Character": "Q",
+        "RectPos":[1,45],
+        "CharWidth": 22
+      },
+      {
+        "Character": "R",
+        "RectPos":[31,45],
+        "CharWidth": 19
+      },
+      {
+        "Character": "S",
+        "RectPos":[61,45],
+        "CharWidth": 17
+      },
+      {
+        "Character": "T",
+        "RectPos":[91,45],
+        "CharWidth": 15
+      },
+      {
+        "Character": "U",
+        "RectPos":[121,45],
+        "CharWidth": 18
+      },
+      {
+        "Character": "V",
+        "RectPos":[151,45],
+        "CharWidth": 18
+      },
+      {
+        "Character": "W",
+        "RectPos":[181,45],
+        "CharWidth": 25
+      },
+      {
+        "Character": "X",
+        "RectPos":[211,45],
+        "CharWidth": 22
+      },
+      {
+        "Character": "Y",
+        "RectPos":[1,67],
+        "CharWidth": 21
+      },
+      {
+        "Character": "Z",
+        "RectPos":[31,67],
+        "CharWidth": 19
+      },
+      {
+        "Character": "a",
+        "RectPos":[1,89],
+        "CharWidth": 19
+      },
+      {
+        "Character": "b",
+        "RectPos":[31,89],
+        "CharWidth": 16
+      },
+      {
+        "Character": "c",
+        "RectPos":[61,89],
+        "CharWidth": 16
+      },
+      {
+        "Character": "d",
+        "RectPos":[91,89],
+        "CharWidth": 16
+      },
+      {
+        "Character": "e",
+        "RectPos":[121,89],
+        "CharWidth": 17
+      },
+      {
+        "Character": "f",
+        "RectPos":[151,89],
+        "CharWidth": 17
+      },
+      {
+        "Character": "g",
+        "RectPos":[181,89],
+        "CharWidth": 16
+      },
+      {
+        "Character": "h",
+        "RectPos":[211,89],
+        "CharWidth": 18
+      },
+      {
+        "Character": "i",
+        "RectPos":[1,111],
+        "CharWidth": 10
+      },
+      {
+        "Character": "j",
+        "RectPos":[31,111],
+        "CharWidth": 16
+      },
+      {
+        "Character": "k",
+        "RectPos":[61,111],
+        "CharWidth": 18
+      },
+      {
+        "Character": "l",
+        "RectPos":[91,111],
+        "CharWidth": 17
+      },
+      {
+        "Character": "m",
+        "RectPos":[121,111],
+        "CharWidth": 21
+      },
+      {
+        "Character": "n",
+        "RectPos":[151,111],
+        "CharWidth": 17
+      },
+      {
+        "Character": "o",
+        "RectPos":[181,111],
+        "CharWidth": 15
+      },
+      {
+        "Character": "p",
+        "RectPos":[211,111],
+        "CharWidth": 15
+      },
+      {
+        "Character": "q",
+        "RectPos":[1,133],
+        "CharWidth": 18
+      },
+      {
+        "Character": "r",
+        "RectPos":[31,133],
+        "CharWidth": 17
+      },
+      {
+        "Character": "s",
+        "RectPos":[61,133],
+        "CharWidth": 16
+      },
+      {
+        "Character": "t",
+        "RectPos":[91,133],
+        "CharWidth": 11
+      },
+      {
+        "Character": "u",
+        "RectPos":[121,133],
+        "CharWidth": 15
+      },
+      {
+        "Character": "v",
+        "RectPos":[151,133],
+        "CharWidth": 17
+      },
+      {
+        "Character": "w",
+        "RectPos":[181,133],
+        "CharWidth": 21
+      },
+      {
+        "Character": "x",
+        "RectPos":[211,133],
+        "CharWidth": 20
+      },
+      {
+        "Character": "y",
+        "RectPos":[1,155],
+        "CharWidth": 17
+      },
+      {
+        "Character": "z",
+        "RectPos":[31,155],
+        "CharWidth": 16
+      },
+      {
+        "Character": " ",
+        "RectPos":[61,155],
+        "CharWidth": 6
+      }
+    ]
+  }

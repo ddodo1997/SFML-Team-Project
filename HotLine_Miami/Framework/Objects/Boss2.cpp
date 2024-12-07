@@ -2,6 +2,7 @@
 #include "Boss2.h"
 #include "SceneGame.h"
 #include "Player.h"
+
 Boss2::Boss2(const std::string& name)
 	: GameObject(name)
 {

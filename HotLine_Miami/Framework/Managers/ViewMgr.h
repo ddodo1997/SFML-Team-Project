@@ -67,7 +67,8 @@ public:
 
 	void UpdateFurtherViewMousePos(float dt);
 
-	void UpdateBackground(float dt);
+	void UpdateBackground(float realDt);
+	void UpdateMenuBackground(float realDt);
 
 	void DrawBackground();
 
