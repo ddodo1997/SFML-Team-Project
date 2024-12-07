@@ -42,12 +42,19 @@ void ViewMgr::Update(float dt)
 		playerPos = player->GetPosition();
 	}
 
-	UpdateViewRotation(dt);
-	if(SCENE_MGR.GetCurrentSceneId()==SceneIds::SceneGame)
+	if (SCENE_MGR.GetCurrentSceneId() == SceneIds::SceneGame)
+	{
 		UpdateBackground(FRAMEWORK.GetRealDeltaTime());
+		UpdateViewRotation(dt);
+	}
 	if (SCENE_MGR.GetCurrentSceneId() == SceneIds::SceneMenu)
+	{
 		UpdateMenuBackground(FRAMEWORK.GetRealDeltaTime());
-
+	}
+	if (SCENE_MGR.GetCurrentSceneId() == SceneIds::DevS)
+	{
+		UpdateMenuBackground(FRAMEWORK.GetRealDeltaTime());
+	}
 
 	if (InputMgr::GetKey(sf::Keyboard::LShift))
 	{

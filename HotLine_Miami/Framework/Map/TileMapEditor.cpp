@@ -335,7 +335,7 @@ void TileMapEditor::UpdateSelectedSpritePosition()
 		if (selectedEnemyIndex != -1)
 		{
 			selectedEnemy.SetPosition({ mousePos.x - 10.f, mousePos.y - 10.f });
-			if (InputMgr::GetMouseButtonDown(sf::Mouse::Right))
+			if (InputMgr::GetKeyDown(sf::Keyboard::R))
 			{
 				selectedEnemy.SetRotation(selectedEnemy.GetRotation() + 90.f);
 			}
@@ -344,7 +344,7 @@ void TileMapEditor::UpdateSelectedSpritePosition()
 		if (seletedWeaponIndex != -1)
 		{
 			selectedWeapon.SetPosition({ mousePos.x - 10.f, mousePos.y - 10.f });
-			if (InputMgr::GetMouseButtonDown(sf::Mouse::Right))
+			if (InputMgr::GetKeyDown(sf::Keyboard::R))
 			{
 				selectedWeapon.SetRotation(selectedWeapon.GetRotation() + 90.f);
 			}
@@ -354,7 +354,7 @@ void TileMapEditor::UpdateSelectedSpritePosition()
 		if (selectedPlayerOrBoss == "Player" && selectedPlayer != nullptr)
 		{
 			selectedPlayer->SetPosition({ mousePos.x - 10.f, mousePos.y - 10.f });
-			if (InputMgr::GetMouseButtonDown(sf::Mouse::Right))
+			if (InputMgr::GetKeyDown(sf::Keyboard::R))
 			{
 				selectedPlayer->SetRotation(selectedPlayer->GetRotation() + 90.f);
 			}
@@ -362,7 +362,7 @@ void TileMapEditor::UpdateSelectedSpritePosition()
 		else if (selectedPlayerOrBoss == "Boss1" && selectedBoss_1 != nullptr)
 		{
 			selectedBoss_1->SetPosition({ mousePos.x - 10.f, mousePos.y - 10.f });
-			if (InputMgr::GetMouseButtonDown(sf::Mouse::Right))
+			if (InputMgr::GetKeyDown(sf::Keyboard::R))
 			{
 				selectedBoss_1->SetRotation(selectedBoss_1->GetRotation() + 90.f);
 			}
