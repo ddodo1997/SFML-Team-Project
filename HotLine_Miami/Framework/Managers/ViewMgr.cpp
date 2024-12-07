@@ -16,6 +16,7 @@ void ViewMgr::Reset()
 
 	worldView.setCenter(0.f, 0.f);
 	uiView.setCenter(wSize / 2.f);
+	playerPos = { 0.f,0.f };
 
 	mPosBound.left = boundEdgeCut;
 	mPosBound.top = boundEdgeCut;
@@ -35,11 +36,18 @@ void ViewMgr::Reset()
 
 void ViewMgr::Update(float dt)
 {
-	look = player->GetLook();
-	playerPos = player->GetPosition();
+	if (player != nullptr)
+	{
+		look = player->GetLook();
+		playerPos = player->GetPosition();
+	}
 
 	UpdateViewRotation(dt);
-	UpdateBackground(FRAMEWORK.GetRealDeltaTime());
+	if(SCENE_MGR.GetCurrentSceneId()==SceneIds::SceneGame)
+		UpdateBackground(FRAMEWORK.GetRealDeltaTime());
+	if (SCENE_MGR.GetCurrentSceneId() == SceneIds::SceneMenu)
+		UpdateMenuBackground(FRAMEWORK.GetRealDeltaTime());
+
 
 	if (InputMgr::GetKey(sf::Keyboard::LShift))
 	{
@@ -188,9 +196,9 @@ void ViewMgr::UpdateFurtherViewMousePos(float dt)
 		worldViewCurrentScene->setCenter(worldViewCenterPos);
 }
 
-void ViewMgr::UpdateBackground(float dt)
+void ViewMgr::UpdateBackground(float realDt)
 {
-	colorRotator += dt;
+	colorRotator += realDt;
 	if (colorRotator > colorCyclingDuration)
 		colorRotator -= colorCyclingDuration;
 
@@ -220,6 +228,11 @@ void ViewMgr::UpdateBackground(float dt)
 	vaBackground[1].color = brightSideColor;
 	vaBackground[2].color = darkSideColor;
 	vaBackground[3].color = darkSideColor;		
+}
+
+void ViewMgr::UpdateMenuBackground(float realDt)
+{
+	UpdateBackground(realDt);
 }
 
 void ViewMgr::DrawBackground()

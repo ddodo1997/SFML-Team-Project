@@ -31,7 +31,7 @@
       {
         "Character": "F",
         "RectPos":[151,1],
-        "CharWidth": 18
+        "CharWidth": 17
       },
       {
         "Character": "G",
@@ -46,7 +46,7 @@
       {
         "Character": "I",
         "RectPos":[1,23],
-        "CharWidth": 10
+        "CharWidth": 11
       },
       {
         "Character": "J",
@@ -61,7 +61,7 @@
       {
         "Character": "L",
         "RectPos":[91,23],
-        "CharWidth": 19
+        "CharWidth": 20
       },
       {
         "Character": "M",
@@ -91,7 +91,7 @@
       {
         "Character": "R",
         "RectPos":[31,45],
-        "CharWidth": 18
+        "CharWidth": 19
       },
       {
         "Character": "S",
@@ -101,7 +101,7 @@
       {
         "Character": "T",
         "RectPos":[91,45],
-        "CharWidth": 17
+        "CharWidth": 15
       },
       {
         "Character": "U",
@@ -111,7 +111,7 @@
       {
         "Character": "V",
         "RectPos":[151,45],
-        "CharWidth": 21
+        "CharWidth": 18
       },
       {
         "Character": "W",
@@ -262,6 +262,11 @@
         "Character": "z",
         "RectPos":[31,155],
         "CharWidth": 16
+      },
+      {
+        "Character": " ",
+        "RectPos":[61,155],
+        "CharWidth": 6
       }
     ]
   }

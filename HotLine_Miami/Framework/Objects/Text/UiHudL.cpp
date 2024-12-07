@@ -9,6 +9,11 @@ UiHudL::UiHudL(const std::string& name)
 	sortingOrder = 0;
 }
 
+UiHudL::~UiHudL()
+{
+	ReleasePauseContent();
+}
+
 void UiHudL::SetPosition(const sf::Vector2f& pos)
 {
 	position = pos;
@@ -45,7 +50,7 @@ void UiHudL::Init()
 
 void UiHudL::Release()
 {
-	ReleasePauseContent();
+	//ReleasePauseContent();
 }
 
 void UiHudL::Reset()
@@ -130,7 +135,7 @@ void UiHudL::ResetPauseContent()
 
 	for (int i = 0; i < tempText.size(); ++i)
 	{
-		sf::Sprite* alphabetSprite = new sf::Sprite(TEXTURE_MGR.Get(path), ALPHABET_TABLE->Get(tempText[i], true).texCoord);
+		sf::Sprite* alphabetSprite = new sf::Sprite(TEXTURE_MGR.Get(path,true), ALPHABET_TABLE->Get(tempText[i], true).texCoord);
 		alphabetSprite->setPosition(textDefaultPos + textPos);
 		alphabetSprite->setScale(alphabetScale);
 		Utils::SetOrigin(*alphabetSprite, Origins::TL);
@@ -155,7 +160,7 @@ void UiHudL::ResetPauseContent()
 
 	for (int i = 0; i < tempText.size(); ++i)
 	{
-		sf::Sprite* alphabetSprite = new sf::Sprite(TEXTURE_MGR.Get(path), ALPHABET_TABLE->Get(tempText[i]).texCoord);
+		sf::Sprite* alphabetSprite = new sf::Sprite(TEXTURE_MGR.Get(path,true), ALPHABET_TABLE->Get(tempText[i]).texCoord);
 		alphabetSprite->setPosition(textDefaultPos + textPos);
 		alphabetSprite->setScale(alphabetScale);
 		Utils::SetOrigin(*alphabetSprite, Origins::TL);
@@ -177,7 +182,7 @@ void UiHudL::ResetPauseContent()
 
 	for (int i = 0; i < tempText.size(); ++i)
 	{
-		sf::Sprite* alphabetSprite = new sf::Sprite(TEXTURE_MGR.Get(path), ALPHABET_TABLE->Get(tempText[i]).texCoord);
+		sf::Sprite* alphabetSprite = new sf::Sprite(TEXTURE_MGR.Get(path,true), ALPHABET_TABLE->Get(tempText[i]).texCoord);
 		alphabetSprite->setPosition(textDefaultPos + textPos);
 		alphabetSprite->setScale(alphabetScale);
 		Utils::SetOrigin(*alphabetSprite, Origins::TL);
@@ -587,6 +592,11 @@ void UiHudL::Restart()
 
 void UiHudL::Quit()
 {
+	selectedFunctionPause = 0;
+	SCENE_MGR.ChangeScene(SceneIds::SceneMenu);
+	isPaused = false;
+	wasPaused = false;
+	FRAMEWORK.SetTimeScale(1.f);
 }
 
 void UiHudL::UpdatePausedContent(float realDt)

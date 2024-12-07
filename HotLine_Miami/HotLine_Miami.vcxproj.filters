@@ -52,6 +52,8 @@
     <ClCompile Include="Framework\Objects\BodyGuard.cpp" />
     <ClCompile Include="Framework\Objects\Fountain.cpp" />
     <ClCompile Include="AlphabetTable.cpp" />
+    <ClCompile Include="SceneMenu.cpp" />
+    <ClCompile Include="UiMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Framework\Objects\Boss1.h" />
@@ -109,5 +111,7 @@
     <ClInclude Include="Framework\Objects\BodyGuard.h" />
     <ClInclude Include="Framework\Objects\Fountain.h" />
     <ClInclude Include="AlphabetTable.h" />
+    <ClInclude Include="SceneMenu.h" />
+    <ClInclude Include="UiMenu.h" />
   </ItemGroup>
 </Project>

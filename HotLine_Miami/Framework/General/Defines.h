@@ -21,6 +21,7 @@ enum class SceneIds
 	DevL,
 	DevS,
 	SceneGame,
+	SceneMenu,
 	Count,
 };
 

@@ -79,10 +79,10 @@ public:
 		return true;
 	}
 
-	T& Get(const std::string& id)
+	T& Get(const std::string& id, bool notUnloadAll = false)
 	{
 		auto it = resources.find(id);
-		if (it == resources.end() && !Load(id))
+		if (it == resources.end() && !Load(id , notUnloadAll))
 		{
 			return Empty;
 		}

@@ -74,6 +74,7 @@ void SceneGame::Exit()
 {
 	RemoveAllObjPool();
 	Scene::Exit();
+	uiHud = nullptr;
 }
 
 void SceneGame::ClearInactivePoolObjects()
@@ -111,10 +112,13 @@ void SceneGame::ClearInactivePoolObjects()
 void SceneGame::Update(float dt)
 {
 	VIEW_MGR.Update(dt);
-	if (uiHud->IsPaused())
+	if (uiHud != nullptr)
 	{
-		uiHud->Update(dt);
-		return;
+		if (uiHud->IsPaused())
+		{
+			uiHud->Update(dt);
+			return;
+		}
 	}
 
 	Scene::Update(dt);
@@ -187,7 +191,8 @@ void SceneGame::Update(float dt)
 
 	directionXY = { directionX, directionY };
 
-	uiHud->UpdateWeaponStatus(player->GetWeaponStatus(), player->GetRemainingBullet());
+	if(uiHud != nullptr)
+		uiHud->UpdateWeaponStatus(player->GetWeaponStatus(), player->GetRemainingBullet());
 
 	//worldView.setCenter(player->GetPosition());
 	FRAMEWORK.GetWindow().setView(worldView);

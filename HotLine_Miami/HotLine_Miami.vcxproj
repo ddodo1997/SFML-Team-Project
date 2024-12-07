@@ -202,6 +202,8 @@
     <ClCompile Include="Framework\Tables\WallTable.cpp" />
     <ClCompile Include="Framework\Map\WayPoint.cpp" />
     <ClCompile Include="PathFinder.cpp" />
+    <ClCompile Include="SceneMenu.cpp" />
+    <ClCompile Include="UiMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AlphabetTable.h" />
@@ -259,6 +261,8 @@
     <ClInclude Include="Framework\Tables\WallTable.h" />
     <ClInclude Include="Framework\Map\WayPoint.h" />
     <ClInclude Include="PathFinder.h" />
+    <ClInclude Include="SceneMenu.h" />
+    <ClInclude Include="UiMenu.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

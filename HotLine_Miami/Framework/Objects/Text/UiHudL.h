@@ -66,7 +66,7 @@ protected:
 
 public:
 	UiHudL(const std::string& name = "");
-	~UiHudL() = default;
+	~UiHudL();
 
 	void SetPosition(const sf::Vector2f& pos) override;
 	void SetRotation(float angle) override;
