@@ -638,6 +638,5 @@ void UiHudL::Draw(sf::RenderWindow& window)
 		{
 			window.draw(*alphabetSprite);
 		}
-
 	}
 }

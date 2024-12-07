@@ -83,6 +83,30 @@ sf::Vector2f Utils::SetOrigin(sf::Sprite& obj, Origins preset)
 	return SetOrigin(obj, preset, obj.getLocalBounds());
 }
 
+sf::Vector2f Utils::SetOrigin5SQ(sf::Transformable& obj, Origin5SQ preset, const sf::FloatRect bound)
+{
+	sf::Vector2f newOrigin(bound.width, bound.height);
+	newOrigin.x *= ((int)preset % 5) * 0.25f;
+	newOrigin.y *= ((int)preset / 5) * 0.25f;
+	obj.setOrigin(newOrigin);
+	return newOrigin;
+}
+
+sf::Vector2f Utils::SetOrigin5SQ(sf::Shape& obj, Origin5SQ preset)
+{
+	return SetOrigin5SQ(obj, preset, obj.getLocalBounds());
+}
+
+sf::Vector2f Utils::SetOrigin5SQ(sf::Text& obj, Origin5SQ preset)
+{
+	return SetOrigin5SQ(obj, preset, obj.getLocalBounds());
+}
+
+sf::Vector2f Utils::SetOrigin5SQ(sf::Sprite& obj, Origin5SQ preset)
+{
+	return SetOrigin5SQ(obj, preset, obj.getLocalBounds());
+}
+
 float Utils::Clamp(float value, float min, float max)
 {
 	if (value < min)

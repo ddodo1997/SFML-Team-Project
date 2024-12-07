@@ -8,6 +8,9 @@
 #include "Decoration.h"
 #include "Boss1.h"
 #include "Boss2.h"
+#include "MafiaBoss.h"
+#include "BodyGuard.h"
+#include "Panther.h"
 
 Player::Player(const std::string& name)
 	: GameObject(name)
@@ -128,7 +131,6 @@ void Player::Reset()
 	weaponStatus = WEAPON_TABLE->Get(weaponStatus.weaponType);
 	attackHitBoxCheck.setSize({ weaponStatus.hitBoxWidth, weaponStatus.hitBoxHeight });
 
-<<<<<<< HEAD
 	isMoving = false;
 	isAlive = true;
 	isAttacking = false;
@@ -144,9 +146,7 @@ void Player::Reset()
 	onDieSpeed = 300;
 	onDieEffectAccumTime = 0.6f;
 	bulletProofCount = 0;
-=======
 	Utils::SetOrigin(body, Origins::MC);
->>>>>>> origin/Dev_L
 }
 
 void Player::ResetMask(bool ifInitialSetting)
@@ -570,44 +570,66 @@ void Player::FixedUpdate(float dt)
 {
 	if (isAttacking)
 	{
-		std::vector<Enemy*> enemies = sceneGame->GetEnemies();
-		for (auto enemy : enemies)
+		SearchEnemy();
+		SearchBiker();
+
+	}
+}
+
+void Player::SearchEnemy()
+{
+	std::vector<Enemy*> enemies = sceneGame->GetEnemies();
+	for (auto enemy : enemies)
+	{
+		if (enemy != nullptr)
 		{
-			if (enemy != nullptr)
+			if (!enemy->isDie() && !enemy->isStun() && !enemy->isStunOnWall())
 			{
-				if (!enemy->isDie() && !enemy->isStun() && !enemy->isStunOnWall())
+				if (attackHitBoxCheck.getGlobalBounds().intersects(enemy->GetGlobalBounds()))
 				{
-					if (attackHitBoxCheck.getGlobalBounds().intersects(enemy->GetGlobalBounds()))
+					if (!Utils::RayCast(position, Utils::GetNormal(enemy->GetPosition() - position), 100.f, enemy))
 					{
-						if (!Utils::RayCast(position, Utils::GetNormal(enemy->GetPosition() - position), 100.f, enemy))
+						enemy->OnHit(weaponStatus, look);
+						std::string sfxFilePath = "sound/Attack/sndWeaponHit.wav";
+						if (weaponStatus.weaponType == Weapon::WeaponType::Knife)
+							sfxFilePath = "sound/Attack/sndHit.wav";
+						if (currentMask == Mask::Tiger)
 						{
-							enemy->OnHit(weaponStatus, look);
-							std::string sfxFilePath = "sound/Attack/sndWeaponHit.wav";
-							if (weaponStatus.weaponType == Weapon::WeaponType::Knife)
-								sfxFilePath = "sound/Attack/sndHit.wav";							
-							if (currentMask == Mask::Tiger)
-							{
-								auto tempWeaponStatus = Weapon::WeaponType::Bat;
-								enemy->OnHit(WEAPON_TABLE->Get(tempWeaponStatus), look);
-							}
-							SOUND_MGR.PlaySfx(sfxFilePath);
+							auto tempWeaponStatus = Weapon::WeaponType::Bat;
+							enemy->OnHit(WEAPON_TABLE->Get(tempWeaponStatus), look);
 						}
+						SOUND_MGR.PlaySfx(sfxFilePath);
 					}
 				}
 			}
 		}
+	}
+}
 
-		if (boss1 != nullptr)
+void Player::SearchBiker()
+{
+	if (boss1 != nullptr)
+	{
+		if (weaponStatus.weaponType == Weapon::WeaponType::Bat)
 		{
-			if (weaponStatus.weaponType == Weapon::WeaponType::Bat)
-			{	
-				if (attackHitBoxCheck.getGlobalBounds().intersects(boss1->GetCollisionBox().getGlobalBounds()))
-				{
-					boss1->OnHit(look);
-				}
+			if (attackHitBoxCheck.getGlobalBounds().intersects(boss1->GetCollisionBox().getGlobalBounds()))
+			{
+				boss1->OnHit(look);
 			}
 		}
 	}
+}
+
+void Player::SearchPanther()
+{
+}
+
+void Player::SearchBodyGuard()
+{
+}
+
+void Player::SearchMafiaBoss()
+{
 }
 
 void Player::UpdateOnDie(float dt)

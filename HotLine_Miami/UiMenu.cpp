@@ -5,6 +5,7 @@ UiMenu::UiMenu(const std::string& name)
 	: GameObject(name)
 {
 	sortingLayer = SortingLayers::UI;
+	sortingOrder = 0;
 }
 
 void UiMenu::SetPosition(const sf::Vector2f& pos)
@@ -169,7 +170,7 @@ void UiMenu::ResetMenuContent()
 		alphabetSprite->setScale(alphabetScale);
 		alphabetSprite->setOrigin(alphabetOrigin * 0.2f);
 		textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
-		mainTextStartGame.push_back(alphabetSprite);
+		mainTextOption.push_back(alphabetSprite);
 	}
 
 	tempText = "SFX  VOLUME";
@@ -289,13 +290,13 @@ void UiMenu::UpdateMainMenuKey(float realDt)
 {
 	if (InputMgr::GetKeyDown(sf::Keyboard::W) || InputMgr::GetKeyDown(sf::Keyboard::Up))
 	{
-		mainMenuIndex++;
+		mainMenuIndex--;
 		mainMenuIndex = Utils::Clamp(mainMenuIndex, 0, 2);
 	}
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::S) || InputMgr::GetKeyDown(sf::Keyboard::Down))
 	{
-		mainMenuIndex--;
+		mainMenuIndex++;
 		mainMenuIndex = Utils::Clamp(mainMenuIndex, 0, 2);
 	}
 
@@ -344,13 +345,13 @@ void UiMenu::UpdateOptionKey(float realDt)
 {
 	if (InputMgr::GetKeyDown(sf::Keyboard::W) || InputMgr::GetKeyDown(sf::Keyboard::Up))
 	{
-		optionIndex++;
+		optionIndex--;
 		optionIndex = Utils::Clamp(optionIndex, 0, 0);
 	}
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::S) || InputMgr::GetKeyDown(sf::Keyboard::Down))
 	{
-		optionIndex--;
+		optionIndex++;
 		optionIndex = Utils::Clamp(optionIndex, 0, 0);
 	}
 
@@ -378,7 +379,6 @@ void UiMenu::UpdateVolume(float realDt)
 			alphabetSprite->setColor(sf::Color::Magenta);
 		}
 	}
-
 	else
 	{
 		for (auto alphabetSprite : volumeTextMusic)
@@ -408,13 +408,13 @@ void UiMenu::UpdateVolumeKey(float realDt)
 {
 	if (InputMgr::GetKeyDown(sf::Keyboard::W) || InputMgr::GetKeyDown(sf::Keyboard::Up))
 	{
-		volumeIndex++;
+		volumeIndex--;
 		volumeIndex = Utils::Clamp(volumeIndex, 0, 1);
 	}
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::S) || InputMgr::GetKeyDown(sf::Keyboard::Down))
 	{
-		volumeIndex--;
+		volumeIndex++;
 		volumeIndex = Utils::Clamp(volumeIndex, 0, 1);
 	}
 
