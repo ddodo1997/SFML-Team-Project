@@ -5,7 +5,7 @@
 bool StageTable::Load()
 {
 	Release();
-	std::ifstream inFile("tables/test_stage.json");
+	std::ifstream inFile("tables/Test_Save.json");
 
 	if (!inFile)
 	{
@@ -89,6 +89,37 @@ bool StageTable::Load()
 		weaponData.weaponState = WEAPON_TABLE->Get(temp);
 
 		weaponTable.insert({ weaponData.id, weaponData });
+	}
+
+	if (data.contains("player"))
+	{
+		playerData.pos = { data["player"]["x"], data["player"]["y"] };
+		playerData.rotation = data["player"]["rotation"];
+	}
+
+	if (data.contains("boss1"))
+	{
+		boss1Data.pos = { data["boss1"]["x"], data["boss1"]["y"] };
+		boss1Data.rotation = data["boss1"]["rotation"];
+	}
+	else
+	{
+		boss1Data.pos = { -1.f, -1.f };
+		boss1Data.rotation = 0.0f;     
+	}
+
+	if (data.contains("boss2"))
+	{
+		boss2Position = { data["boss2"]["x"], data["boss2"]["y"] };
+	}
+	else
+	{
+		boss2Position = { -1.f, -1.f };
+	}
+
+	for (const auto& pos : data["EndPosition"])
+	{
+		endPoints.push_back({ pos["x"], pos["y"] });
 	}
 
 	inFile.close();

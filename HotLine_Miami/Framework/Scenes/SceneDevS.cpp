@@ -11,6 +11,7 @@
 #include "Wall2.h"
 #include "Player.h"
 #include "Boss1.h"
+#include "Boss2.h"
 #include "WayPoint.h"
 
 
@@ -153,10 +154,18 @@ void SceneDevS::Update(float dt)
 				{
 					CreateBoss1(worldPos);
 				}
+				else if (tileMapEditor->GetSelectedPlayerOrBoss() == "Boss2")
+				{
+					CreateBoss2(worldPos);
+				}
 				break;
 			}
 		}
 
+		if (tileMapEditor->GetMode() == TileMapEditor::EditorMode::TileMode && InputMgr::GetMouseButtonDown(sf::Mouse::Right))
+		{
+			CreateEndPoint(worldPos);
+		}
 		if (InputMgr::GetKeyDown(sf::Keyboard::F9))
 		{
 			Variables::isDrawHitBox = !Variables::isDrawHitBox;
@@ -173,6 +182,8 @@ void SceneDevS::Update(float dt)
 		{
 			SaveMap();
 		}
+
+
 	}
 	else
 	{
@@ -439,6 +450,48 @@ void SceneDevS::CreateBoss1(const sf::Vector2f& pos)
 	AddGo(boss1);
 }
 
+void SceneDevS::CreateBoss2(const sf::Vector2f& pos)
+{
+	if (boss2 != nullptr)
+	{
+		boss2->SetPosition(pos);
+		return;
+	}
+
+	boss2 = new Boss2("Boss2");
+	boss2->Reset();
+	boss2->SetPosition(pos);
+
+	AddGo(boss2);
+}
+
+void SceneDevS::CreateEndPoint(const sf::Vector2f& pos)
+{
+	int xIndex = static_cast<int>(pos.x) / tileSize.x;
+	int yIndex = static_cast<int>(pos.y) / tileSize.y;
+
+	if (xIndex < 0 || xIndex >= tileCount.x || yIndex < 0 || yIndex >= tileCount.y)
+	{
+		return;
+	}
+
+	sf::Vector2f pointPosition = { (xIndex * tileSize.x) + tileSize.x * 0.5f, (yIndex * tileSize.y) + tileSize.y * 0.5f };
+
+	for (const auto& endPoint : endPoints)
+	{
+		if (pointPosition == endPoint->GetPosition())
+		{
+			return;
+		}
+	}
+
+	WayPoint* endPoint = new WayPoint("WayPoint");
+	endPoint->Reset();
+	endPoint->SetPosition(pointPosition);
+	AddGo(endPoint);
+	endPoints.push_back(endPoint);
+}
+
 void SceneDevS::LoadWalls()
 {
 	const auto& wallTable = STAGE_TABLE->GetWallTable();
@@ -597,45 +650,39 @@ void SceneDevS::SaveMap()
 	}
 
 	mapData["floor"]["tiles"] = resizedTiles;
+	mapData["decorations"]["decos"] = json::array();
 
-	SaveWall();
-	mapData["wall"]["filePath"] = WALL_TABLE->GetFilePath();
-
-	for (const auto& wall : mergedHorizontalWalls) {
-		json wallData;
-		wallData["id"] = wall.id;
-		wallData["start"]["x"] = (int)wall.start.x / tileSize.x - minX;
-		wallData["start"]["y"] = (int)wall.start.y / tileSize.y - minY;
-		wallData["end"]["x"] = (int)wall.end.x / tileSize.x - minX;
-		wallData["end"]["y"] = (int)wall.end.y / tileSize.y - minY;
-		wallData["ids"] = wall.textureIds;
-
-		mapData["wall"]["walls"].push_back(wallData);
-	}
-
-	for (const auto& wall : mergedVerticalWalls) {
-		json wallData;
-		wallData["id"] = wall.id;
-		wallData["start"]["x"] = (int)wall.start.x / tileSize.x - minX;
-		wallData["start"]["y"] = (int)wall.start.y / tileSize.y - minY;
-		wallData["end"]["x"] = (int)wall.end.x / tileSize.x - minX;
-		wallData["end"]["y"] = (int)wall.end.y / tileSize.y - minY;
-		wallData["ids"] = wall.textureIds;
-
-		mapData["wall"]["walls"].push_back(wallData);
-	}
-
+	SaveWall(mapData);
 	SaveEnemies(mapData);
 	SaveWeapons(mapData);
 	SavePlayer(mapData);
 	SaveBoss(mapData);
-	mapData["decorations"]["decos"] = json::array();
+	SaveBoss2(mapData);
+	SaveEndPoint(mapData);
 
-	std::ofstream outFile("tables/Test_Save.json");
+	std::ifstream indexFile("tables/save_index.txt");
+	int saveIndex = 0;
+
+	if (indexFile.is_open())
+	{
+		indexFile >> saveIndex;
+		indexFile.close();
+	}
+
+	std::string fileName = "tables/stage_" + std::to_string(saveIndex) + ".json";
+
+	std::ofstream outFile(fileName);
 	if (outFile.is_open())
 	{
 		outFile << mapData.dump(4);
 		outFile.close();
+
+		std::ofstream indexFileOut("tables/save_index.txt");
+        if (indexFileOut.is_open())
+        {
+            indexFileOut << saveIndex + 1;
+            indexFileOut.close();
+        }
 		std::cout << "save success!!" << std::endl;
 	}
 	else
@@ -644,7 +691,7 @@ void SceneDevS::SaveMap()
 	}
 }
 
-void SceneDevS::SaveWall()
+void SceneDevS::SaveWall(json& mapData)
 {
 	std::vector<bool> processedHorizontal(wallsHorizontal.size(), false);
 	std::vector<bool> processedVertical(wallsVertical.size(), false);
@@ -687,6 +734,8 @@ void SceneDevS::SaveWall()
 		}
 
 		mergedHorizontalWalls.push_back(wallData);
+
+
 	}
 
 	for (int i = 0; i < wallsVertical.size(); i++)
@@ -726,6 +775,32 @@ void SceneDevS::SaveWall()
 		}
 
 		mergedVerticalWalls.push_back(wallData);
+	}
+
+	mapData["wall"]["filePath"] = WALL_TABLE->GetFilePath();
+
+	for (const auto& wall : mergedHorizontalWalls) {
+		json wallData;
+		wallData["id"] = wall.id;
+		wallData["start"]["x"] = (int)wall.start.x / tileSize.x - minX;
+		wallData["start"]["y"] = (int)wall.start.y / tileSize.y - minY;
+		wallData["end"]["x"] = (int)wall.end.x / tileSize.x - minX;
+		wallData["end"]["y"] = (int)wall.end.y / tileSize.y - minY;
+		wallData["ids"] = wall.textureIds;
+
+		mapData["wall"]["walls"].push_back(wallData);
+	}
+
+	for (const auto& wall : mergedVerticalWalls) {
+		json wallData;
+		wallData["id"] = wall.id;
+		wallData["start"]["x"] = (int)wall.start.x / tileSize.x - minX;
+		wallData["start"]["y"] = (int)wall.start.y / tileSize.y - minY;
+		wallData["end"]["x"] = (int)wall.end.x / tileSize.x - minX;
+		wallData["end"]["y"] = (int)wall.end.y / tileSize.y - minY;
+		wallData["ids"] = wall.textureIds;
+
+		mapData["wall"]["walls"].push_back(wallData);
 	}
 }
 
@@ -779,16 +854,44 @@ void SceneDevS::SaveWeapons(json& mapData)
 
 void SceneDevS::SavePlayer(json& mapData)
 {
-	mapData["player"]["x"] = static_cast<int>(player->GetPosition().x / tileSize.x) - minX;
-	mapData["player"]["y"] = static_cast<int>(player->GetPosition().y / tileSize.y) - minY;
-	mapData["player"]["rotation"] = player->GetRotation();
+	if(player != nullptr)
+	{
+		mapData["player"]["x"] = static_cast<int>(player->GetPosition().x / tileSize.x) - minX;
+		mapData["player"]["y"] = static_cast<int>(player->GetPosition().y / tileSize.y) - minY;
+		mapData["player"]["rotation"] = player->GetRotation();
+	}
 }
 
 void SceneDevS::SaveBoss(json& mapData)
 {
-	mapData["boss1"]["x"] = static_cast<int>(boss1->GetPosition().x / tileSize.x) - minX;
-	mapData["boss1"]["y"] = static_cast<int>(boss1->GetPosition().y / tileSize.y) - minY;
-	mapData["boss1"]["rotation"] = boss1->GetRotation();
+	if(boss1 != nullptr)
+	{
+		mapData["boss1"]["x"] = static_cast<int>(boss1->GetPosition().x / tileSize.x) - minX;
+		mapData["boss1"]["y"] = static_cast<int>(boss1->GetPosition().y / tileSize.y) - minY;
+		mapData["boss1"]["rotation"] = boss1->GetRotation();
+	}
+}
+
+void SceneDevS::SaveBoss2(json& mapData)
+{
+	if(boss2 != nullptr)
+	{
+		mapData["boss2"]["x"] = boss2->GetPosition().x - minX * tileSize.x;
+		mapData["boss2"]["y"] = boss2->GetPosition().y - minY * tileSize.y;
+	}
+}
+
+void SceneDevS::SaveEndPoint(json& mapData)
+{
+	mapData["EndPosition"] = json::array();
+	for (const auto& endPoint : endPoints)
+	{
+		json endPos;
+		endPos["x"] = static_cast<int>(endPoint->GetPosition().x / tileSize.x) - minX;
+		endPos["y"] = static_cast<int>(endPoint->GetPosition().y / tileSize.y) - minX;
+
+		mapData["EndPosition"].push_back(endPos);
+	}
 }
 
 std::string SceneDevS::EnemyStatusToString(const Enemy::Status& state)

@@ -44,6 +44,8 @@ public:
 	void SetOrigin(const sf::Vector2f& newOrigin) override;
 
 	std::vector<Panther*> GetPanthers();
+	sf::FloatRect GetAwakeBounds() const { return awakeBound; }
+
 	BodyGuard* GetBodyGuard() { return &bodyGuard; }
 	MafiaBoss* GetMafiaBoss() { return &mafiaBoss; }
 	Fountain* GetFountain1() { return &fountain1; }

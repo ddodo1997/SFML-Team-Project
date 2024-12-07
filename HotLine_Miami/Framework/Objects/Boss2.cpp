@@ -96,6 +96,11 @@ void Boss2::SetPlayer()
 
 void Boss2::Update(float dt)
 {
+	if (player == nullptr)
+	{
+		return;
+	}
+
 	if (player->IsDead())
 	{
 		sortingOrder = 3;

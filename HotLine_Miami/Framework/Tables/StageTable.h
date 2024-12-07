@@ -27,6 +27,16 @@ struct DataWeapon
     float rotation = 0.f;
     Weapon::WeaponStatus weaponState = Weapon::WeaponStatus();
 };
+struct DataPlayer
+{
+    sf::Vector2f pos = { 0.f, 0.f };
+    float rotation = 0.f;
+};
+struct DataBoss1
+{
+    sf::Vector2f pos = { 0.f, 0.f };
+    float rotation = 0.f;
+};
 class StageTable : public DataTable
 {
 private:
@@ -34,12 +44,16 @@ private:
     sf::Vector2i tileCount;
 
     std::string tileTextureId;
-    std::vector<int> floorTiles;
 
+    std::vector<int> floorTiles;
     std::unordered_map<std::string, DataDecoration> decoTable;
     std::unordered_map<std::string, DataEnemy> enemyTable;
     std::unordered_map<std::string, DataWall> wallTable;
     std::unordered_map<std::string, DataWeapon> weaponTable;
+    DataPlayer playerData;
+    DataBoss1 boss1Data;
+    std::vector<sf::Vector2f> endPoints;
+    sf::Vector2f boss2Position;
 public:
     StageTable() : DataTable(DataTable::Types::Stages) { };
     ~StageTable() = default;
@@ -55,5 +69,9 @@ public:
     const std::unordered_map<std::string, DataEnemy>& GetEnemyTable() const { return enemyTable; }
     const std::unordered_map<std::string, DataWall>& GetWallTable() const { return wallTable; }
     const std::unordered_map<std::string, DataWeapon>& GetWeaponTable() const { return weaponTable; }
+    const DataPlayer& GetPlayerData() const { return playerData; }
+    const DataBoss1& GetBoss1Data() const { return boss1Data; }
+    const sf::Vector2f& GetBoss2Position() const { return boss2Position; }
+    const std::vector<sf::Vector2f>& GetEndPointArea() const { return endPoints; }
 };
 

@@ -4,6 +4,7 @@
 #include "Button.h"
 #include "Player.h"
 #include "Boss1.h"
+#include "Boss2.h"
 
 TileMapEditor::TileMapEditor(const std::string& name)
 	: GameObject(name)
@@ -159,6 +160,13 @@ void TileMapEditor::Reset()
 	boss_1->SetScale({ 5.f, 5.f });
 	boss_1->SetPosition({ 300.f, 100.f });
 
+	boss_2 = new MafiaBoss("Boss_2");
+	boss_2->Reset();
+	boss_2->SetOrigin(Origins::MC);
+	boss_2->SetRotation(270.f);
+	boss_2->SetScale({ 5.f, 5.f });
+	boss_2->SetPosition({ 500.f, 100.f });
+
 	selectedPlayerOrBoss = "";
 
 	background.setSize(FRAMEWORK.GetWindowSizeF() * 0.4f);
@@ -294,6 +302,13 @@ void TileMapEditor::UpdatePlayerAndBossMode(float dt)
 			selectedBoss_1->SetScale({ 3.f, 3.f });
 			selectedPlayerOrBoss = "Boss1";
 		}
+		else if (boss_2->GetGlobalBounds().contains(worldPos))
+		{
+			selectedBoss_2 = new Boss2("Boss2");
+			selectedBoss_2->Reset();
+			selectedBoss_2->SetScale({ 3.f, 3.f });
+			selectedPlayerOrBoss = "Boss2";
+		}
 	}
 }
 
@@ -351,6 +366,10 @@ void TileMapEditor::UpdateSelectedSpritePosition()
 			{
 				selectedBoss_1->SetRotation(selectedBoss_1->GetRotation() + 90.f);
 			}
+		}
+		else if (selectedPlayerOrBoss == "Boss2" && selectedBoss_2 != nullptr)
+		{
+			selectedBoss_2->SetPosition({ mousePos.x - 10.f, mousePos.y - 10.f });
 		}
 		break;
 	}
@@ -411,6 +430,7 @@ void TileMapEditor::Draw(sf::RenderWindow& window)
 	case EditorMode::PlayerAndBossMode:
 		player->Draw(window);
 		boss_1->Draw(window);
+		boss_2->Draw(window);
 		if (selectedPlayerOrBoss == "Player" && selectedPlayer != nullptr)
 		{
 			selectedPlayer->UpdateBodyAnimationMoving();
@@ -420,6 +440,10 @@ void TileMapEditor::Draw(sf::RenderWindow& window)
 		else if (selectedPlayerOrBoss == "Boss1" && selectedBoss_1 != nullptr)
 		{
 			selectedBoss_1->Draw(window);
+		}
+		else if (selectedPlayerOrBoss == "Boss2" && selectedBoss_2 != nullptr)
+		{
+			selectedBoss_2->Draw(window);
 		}
 		break;
 	}
@@ -512,6 +536,7 @@ void TileMapEditor::SetMode(EditorMode mode)
 		selectedPlayerOrBoss.clear();
 		selectedPlayer = nullptr;
 		selectedBoss_1 = nullptr;
+		selectedBoss_2 = nullptr;
 		background.setSize({ FRAMEWORK.GetWindowSizeF().x * 0.5f, FRAMEWORK.GetWindowSizeF().y * 0.2f });
 		break;
 	}
