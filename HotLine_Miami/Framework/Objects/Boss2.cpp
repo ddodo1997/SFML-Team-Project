@@ -44,7 +44,7 @@ void Boss2::SetOrigin(const sf::Vector2f& newOrigin)
 	originPreset = Origins::Custom;
 }
 
-std::vector<Panther*> Boss2::GetPanther()
+std::vector<Panther*> Boss2::GetPanthers()
 {
 	std::vector<Panther*> temp;
 	temp.push_back(&panther1);
