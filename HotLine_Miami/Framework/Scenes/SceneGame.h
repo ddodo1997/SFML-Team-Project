@@ -92,7 +92,6 @@ public:
 	Bullet* SpawnBullet();
 	void ReturnBullet(Bullet* val);
 
-	Weapon* SpawnWeapon();
 	void ReturnWeapon(Weapon* val);
 
 	void RemoveAllObjPool();

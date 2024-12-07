@@ -426,7 +426,6 @@ void SceneGame::ReturnWeapon(Weapon* val)
 	weapons.remove(val);
 }
 
-
 void SceneGame::RemoveAllObjPool()
 {
 	for (auto bullet : activeBullets)

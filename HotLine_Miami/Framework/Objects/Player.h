@@ -8,6 +8,9 @@ class Wall;
 class Decoration;
 class Boss1;
 class Boss2;
+class MafiaBoss;
+class BodyGuard;
+class Panther;
 
 class Player : public GameObject
 {
@@ -42,6 +45,10 @@ protected:
 
 	Enemy* executingEnemy;
 	Boss1* boss1;
+	Boss2* boss2;
+
+	BodyGuard* bodyGuard;
+	MafiaBoss* mafiaBoss;
 
 	std::vector<Enemy*> enemies;
 
@@ -119,6 +126,15 @@ public:
 	void UpdateExecutionWall(float dt);
 
 	void FixedUpdate(float dt) override;
+
+	void SearchEnemy();
+	void SearchBiker();
+	void SearchPanther();
+	void SearchBodyGuard();
+	void SearchMafiaBoss();
+
+
+
 	void UpdateOnDie(float dt);
 
 	void Draw(sf::RenderWindow& window) override;

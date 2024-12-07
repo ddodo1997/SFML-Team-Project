@@ -42,7 +42,7 @@ bool AlphabetTable::Load()
 	std::ifstream fStream2(filePath2);
 
 
-	if (!fStream.is_open())
+	if (!fStream2.is_open())
 	{
 		std::cerr << "Alphabet2 Table File Open Error!!" << std::endl;
 	}
