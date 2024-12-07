@@ -75,7 +75,7 @@ protected:
 	SceneGame* sceneGame;
 	Player* player;
 	Cleaver* cleaver;
-	HitBox hitBox;
+
 	bool isPhase2 = false;
 	bool isWalking;
 	bool isAlive = true;

@@ -43,11 +43,11 @@ public:
 	void SetOrigin(Origins preset) override;
 	void SetOrigin(const sf::Vector2f& newOrigin) override;
 
-
+	std::vector<Panther*> GetPanthers();
 	BodyGuard* GetBodyGuard() { return &bodyGuard; }
 	MafiaBoss* GetMafiaBoss() { return &mafiaBoss; }
-
-
+	Fountain* GetFountain1() { return &fountain1; }
+	Fountain* GetFountain2() { return &fountain2; }
 	void Init() override;
 	void Release() override;
 	void Reset() override;

@@ -8,6 +8,7 @@
 #include "SceneDevL.h"
 #include "SceneGame.h"
 #include "MafiaBoss.h"
+#include "Fountain.h"
 Bullet::Bullet(const std::string& name)
 	: GameObject(name)
 {
@@ -47,6 +48,12 @@ void Bullet::SetOrigin(const sf::Vector2f& newOrigin)
 	body.setOrigin(origin);
 }
 
+void Bullet::SetFountains(Fountain* fountain1, Fountain* fountain2)
+{
+	fountains.push_back(fountain1);
+	fountains.push_back(fountain2);
+}
+
 void Bullet::Init()
 {
 	sortingLayer = SortingLayers::Foreground;
@@ -78,6 +85,16 @@ void Bullet::FixedUpdate(float dt)
 	{
 		auto wallBounds = wall->GetGlobalBounds();
 		if (wallBounds.intersects(body.getGlobalBounds()))
+		{
+			dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene())->ReturnBullet(this);
+			return;
+		}
+	}
+
+	for (auto fountain : fountains)
+	{
+		auto fountainBounds = fountain->GetGlobalBounds();
+		if (fountainBounds.intersects(body.getGlobalBounds()))
 		{
 			dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene())->ReturnBullet(this);
 			return;

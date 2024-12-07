@@ -1,6 +1,6 @@
 #pragma once
 #include "Weapon.h"
-
+#include "PathFinder.h"
 class Player;
 class SceneGame;
 class Wall2;
@@ -42,12 +42,14 @@ public:
 		int wayPointCnt;
 		int currentWayPoint = 0;
 	};
+
 	enum class Status
 	{
 		EditorMode = -1,
 		Normal,
 		Idle,
 		Patrol,
+		PathFinding,
 		Aggro,
 		SearchWeapon,
 		Stun,
@@ -83,6 +85,7 @@ protected:
 	Normal normal;
 	Idle idle;
 	Patrol patrol;
+	PathFinder pathFinder;
 
 	Weapon::WeaponStatus weaponStatus;
 	int hp = 1;
@@ -121,6 +124,7 @@ public:
 	void UpdateNormal(float dt);
 	void UpdateIdle(float dt); 
 	void UpdatePatrol(float dt);
+	void UpdatePathFinding(float dt);
 	void UpdateAggro(float dt);
 	void UpdateSearchWeapon(float dt);
 	void UpdateStun(float dt);

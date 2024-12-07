@@ -164,6 +164,9 @@ void Enemy::Update(float dt)
 	case Status::Patrol:
 		UpdatePatrol(dt);
 		break;
+	case Status::PathFinding :
+		UpdatePathFinding(dt);
+		break;
 	case Status::Aggro:
 		UpdateAggro(dt);
 		break;
@@ -277,6 +280,19 @@ void Enemy::UpdatePatrol(float dt)
 {
 	patrol.originPoint.setPosition(position);
 	patrol.currentWayPoint %= patrol.wayPointCnt;
+	if (!patrol.originPoint.getGlobalBounds().intersects(patrol.wayPoints[patrol.currentWayPoint].point.getGlobalBounds()))
+		direction = Utils::GetNormal(patrol.wayPoints[patrol.currentWayPoint].position - position);
+	else
+		patrol.currentWayPoint++;
+}
+
+void Enemy::UpdatePathFinding(float dt)
+{
+	patrol.originPoint.setPosition(position);
+
+	if (patrol.currentWayPoint == patrol.wayPointCnt - 1)
+		SetStatus(Status::Normal);
+
 	if (!patrol.originPoint.getGlobalBounds().intersects(patrol.wayPoints[patrol.currentWayPoint].point.getGlobalBounds()))
 		direction = Utils::GetNormal(patrol.wayPoints[patrol.currentWayPoint].position - position);
 	else
@@ -476,6 +492,29 @@ void Enemy::SetStatus(Status stat)
 			break;
 		}
 		break;
+	case Status::PathFinding:
+		SetWayPoints(pathFinder.FindPath(position, player->GetPosition()));
+		patrol.currentWayPoint = 1;
+		speed = 70.f;
+		switch (weaponStatus.weaponType)
+		{
+		case Weapon::WeaponType::None:
+			animatorBody.Play("animations/Enemy/enemy_none_walk.json");
+			break;
+		case Weapon::WeaponType::Bat:
+			animatorBody.Play("animations/Enemy/enemy_bat_walk.json");
+			break;
+		case Weapon::WeaponType::Knife:
+			animatorBody.Play("animations/Enemy/enemy_knife_walk.json");
+			break;
+		case Weapon::WeaponType::Machinegun:
+			animatorBody.Play("animations/Enemy/enemy_m16_walk.json");
+			break;
+		case Weapon::WeaponType::Shotgun:
+			animatorBody.Play("animations/Enemy/enemy_shotgun_walk.json");
+			break;
+		}
+		break;
 	case Status::Aggro:
 		switch (weaponStatus.weaponType)
 		{
@@ -545,6 +584,10 @@ void Enemy::SetWayPoints(std::vector<sf::Vector2f> pos)
 		Patrol::WayPoint temp(vec2f);
 		temp.point.setRadius(0.1f);
 		temp.point.setFillColor(sf::Color::Transparent);
+		
+		//temp.point.setRadius(3.f);
+		//temp.point.setFillColor(sf::Color::Blue);
+
 		patrol.wayPoints.push_back(temp);
 	}
 	patrol.wayPointCnt = patrol.wayPoints.size();
@@ -552,6 +595,7 @@ void Enemy::SetWayPoints(std::vector<sf::Vector2f> pos)
 
 void Enemy::clearWayPoints()
 {
+	patrol.currentWayPoint = 0;
 	patrol.wayPoints.clear();
 	patrol.wayPointCnt = patrol.wayPoints.size();
 }

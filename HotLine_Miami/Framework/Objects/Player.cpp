@@ -993,7 +993,7 @@ void Player::AttackMachinegun()
 			if (enemy->GetGlobalBounds().intersects(noiseCircle.getGlobalBounds()) && !enemy->isDie() && !enemy->isStun() && !enemy->isStunOnWall())
 			{
 				if (Utils::RandomRange(0, 1))
-					enemy->SetStatus(Enemy::Status::Aggro);
+					enemy->SetStatus(Enemy::Status::PathFinding);
 			}
 		}
 		weaponStatus.remainingBullet--;
@@ -1019,7 +1019,7 @@ void Player::AttackShotgun()
 			if (enemy->GetGlobalBounds().intersects(noiseCircle.getGlobalBounds()) && !enemy->isDie() && !enemy->isStun() && !enemy->isStunOnWall())
 			{
 				if (Utils::RandomRange(0, 1))
-					enemy->SetStatus(Enemy::Status::Aggro);
+					enemy->SetStatus(Enemy::Status::PathFinding);
 			}
 		}
 		weaponStatus.remainingBullet--;

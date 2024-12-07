@@ -358,6 +358,7 @@ void Boss1::Draw(sf::RenderWindow& window)
 		window.draw(collisionBox);
 		window.draw(meleeHitBox);
 	}
+	hitBox.Draw(window);
 }
 
 void Boss1::Attack()

@@ -407,6 +407,7 @@ Weapon* SceneGame::SpawnWeapon(Weapon::WeaponType weaponType, sf::Vector2f pos)
 Bullet* SceneGame::SpawnBullet()
 {
 	Bullet* bullet = bulletPool.Take();
+	bullet->SetFountains(boss2->GetFountain1(), boss2->GetFountain2());
 	activeBullets.push_back(bullet);
 	return AddGo(bullet);
 }

@@ -4,7 +4,7 @@
 class Player;
 class Enemy;
 class Wall;
-
+class Fountain;
 class Bullet : public GameObject
 {
 public:
@@ -24,7 +24,7 @@ protected:
 	Owner currentOwner;
 
 	std::vector<Wall*> walls;
-
+	std::vector<Fountain*> fountains;
 	Weapon::WeaponStatus weaponStatus;
 public:
 	Bullet(const std::string& name = "");
@@ -36,6 +36,7 @@ public:
 
 	void SetOrigin(Origins preset) override;
 	void SetOrigin(const sf::Vector2f& newOrigin) override;
+	void SetFountains(Fountain* fountain1, Fountain* fountain2);
 
 	void Init() override;
 	void Release() override;
