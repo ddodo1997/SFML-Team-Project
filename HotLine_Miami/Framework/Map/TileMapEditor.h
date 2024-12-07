@@ -4,6 +4,7 @@
 class Button;
 class Player;
 class Boss1;
+class Boss2;
 class TileMapEditor : public GameObject
 {
 public:
@@ -36,9 +37,11 @@ protected:
 	Button* patrolButton;
 
 	Player* player;
-	Boss1* boss_1;
 	Player* selectedPlayer = nullptr;
+	Boss1* boss_1;
 	Boss1* selectedBoss_1 = nullptr;
+	MafiaBoss* boss_2;
+	Boss2* selectedBoss_2 = nullptr;
 	std::string selectedPlayerOrBoss;
 
 	std::vector<Weapon*> weaponsUI;

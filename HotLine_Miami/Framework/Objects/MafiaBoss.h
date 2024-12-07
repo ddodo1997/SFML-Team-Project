@@ -66,6 +66,8 @@ public:
 	void SetOrigin(const sf::Vector2f& newOrigin) override;
 	void SetPlayer(Player* player);
 
+	sf::FloatRect GetGlobalBounds() const override { return legs.getGlobalBounds(); }
+
 	void Init() override;
 	void Release() override;
 	void Reset() override;

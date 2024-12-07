@@ -1,8 +1,26 @@
 {
+    "EndPosition": [
+        {
+            "x": 10,
+            "y": 14
+        },
+        {
+            "x": 11,
+            "y": 14
+        },
+        {
+            "x": 11,
+            "y": 13
+        },
+        {
+            "x": 10,
+            "y": 13
+        }
+    ],
     "boss1": {
         "rotation": 180.0,
-        "x": 7,
-        "y": 3
+        "x": 8,
+        "y": 6
     },
     "decorations": {
         "decos": []
@@ -11,50 +29,324 @@
         "enemies": [
             {
                 "id": "enemy_1",
-                "rotation": 0,
+                "rotation": 90,
                 "state": "enemy_NB",
                 "waypoint": [],
-                "x": 0,
-                "y": 0
+                "x": 8,
+                "y": 11
             },
             {
                 "id": "enemy_2",
-                "rotation": 270,
-                "state": "enemy_IM",
+                "rotation": 180,
+                "state": "enemy_NK",
                 "waypoint": [],
-                "x": 0,
-                "y": 3
+                "x": 13,
+                "y": 13
             },
             {
                 "id": "enemy_3",
-                "rotation": 90,
+                "rotation": 180,
+                "state": "enemy_IB",
+                "waypoint": [],
+                "x": 9,
+                "y": 14
+            },
+            {
+                "id": "enemy_4",
+                "rotation": 0,
                 "state": "enemy_PS",
                 "waypoint": [
                     {
-                        "x": 4,
+                        "x": 15,
+                        "y": 8
+                    },
+                    {
+                        "x": 18,
+                        "y": 8
+                    },
+                    {
+                        "x": 18,
+                        "y": 14
+                    },
+                    {
+                        "x": 15,
+                        "y": 14
+                    }
+                ],
+                "x": 15,
+                "y": 8
+            },
+            {
+                "id": "enemy_5",
+                "rotation": 90,
+                "state": "enemy_IM",
+                "waypoint": [],
+                "x": 17,
+                "y": 11
+            },
+            {
+                "id": "enemy_6",
+                "rotation": 360,
+                "state": "enemy_NM",
+                "waypoint": [],
+                "x": 13,
+                "y": 9
+            },
+            {
+                "id": "enemy_7",
+                "rotation": 0,
+                "state": "enemy_PK",
+                "waypoint": [
+                    {
+                        "x": 1,
                         "y": 0
                     },
                     {
-                        "x": 6,
+                        "x": 13,
                         "y": 0
                     },
                     {
-                        "x": 6,
+                        "x": 13,
                         "y": 2
                     },
                     {
-                        "x": 4,
+                        "x": 1,
                         "y": 2
                     }
                 ],
-                "x": 4,
+                "x": 1,
                 "y": 0
+            },
+            {
+                "id": "enemy_8",
+                "rotation": 0,
+                "state": "enemy_PB",
+                "waypoint": [
+                    {
+                        "x": 15,
+                        "y": 1
+                    },
+                    {
+                        "x": 18,
+                        "y": 1
+                    },
+                    {
+                        "x": 18,
+                        "y": 5
+                    },
+                    {
+                        "x": 15,
+                        "y": 5
+                    }
+                ],
+                "x": 15,
+                "y": 1
+            },
+            {
+                "id": "enemy_9",
+                "rotation": 90,
+                "state": "enemy_IS",
+                "waypoint": [],
+                "x": 17,
+                "y": 3
             }
         ]
     },
     "floor": {
         "textureId": "graphics/Map/Tiles/tlFloorTiles.png",
         "tiles": [
+            370,
+            370,
+            370,
+            370,
+            370,
+            370,
+            370,
+            370,
+            370,
+            370,
+            370,
+            370,
+            370,
+            370,
+            370,
+            370,
+            370,
+            370,
+            370,
+            370,
+            370,
+            370,
+            434,
+            434,
+            434,
+            434,
+            434,
+            434,
+            434,
+            434,
+            434,
+            434,
+            434,
+            434,
+            434,
+            434,
+            434,
+            434,
+            370,
+            370,
+            370,
+            370,
+            434,
+            434,
+            434,
+            434,
+            434,
+            434,
+            434,
+            434,
+            434,
+            434,
+            434,
+            434,
+            434,
+            434,
+            434,
+            434,
+            370,
+            370,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            370,
+            370,
+            434,
+            434,
+            370,
+            370,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            370,
+            370,
+            434,
+            434,
+            370,
+            370,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            370,
+            370,
+            434,
+            434,
+            370,
+            370,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            213,
+            214,
+            214,
+            215,
+            370,
+            370,
+            434,
+            434,
+            370,
+            370,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            213,
+            214,
+            214,
+            215,
+            134,
+            134,
+            134,
+            134,
+            134,
+            134,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            213,
+            214,
+            214,
+            215,
+            134,
+            134,
+            134,
+            134,
+            134,
+            134,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            268,
+            213,
+            214,
             134,
             134,
             134,
@@ -63,6 +355,18 @@
             134,
             134,
             134,
+            272,
+            272,
+            272,
+            272,
+            272,
+            272,
+            22,
+            22,
+            22,
+            22,
+            213,
+            215,
             134,
             134,
             134,
@@ -71,16 +375,100 @@
             134,
             134,
             134,
+            272,
+            272,
+            272,
+            272,
+            272,
+            272,
+            22,
+            22,
+            22,
+            22,
+            213,
+            215,
+            215,
+            215,
             134,
             134,
             134,
             134,
             134,
             134,
+            272,
+            272,
+            272,
+            272,
+            272,
+            272,
+            22,
+            22,
+            22,
+            22,
+            22,
+            22,
+            22,
+            22,
             134,
             134,
             134,
             134,
+            134,
+            134,
+            272,
+            272,
+            272,
+            272,
+            272,
+            272,
+            22,
+            22,
+            22,
+            22,
+            22,
+            22,
+            22,
+            22,
+            134,
+            134,
+            134,
+            134,
+            134,
+            134,
+            272,
+            272,
+            272,
+            272,
+            272,
+            272,
+            22,
+            22,
+            22,
+            22,
+            22,
+            22,
+            22,
+            22,
+            134,
+            134,
+            134,
+            134,
+            134,
+            134,
+            272,
+            272,
+            272,
+            272,
+            272,
+            272,
+            22,
+            22,
+            22,
+            22,
+            22,
+            22,
+            22,
+            22,
             134,
             134,
             134,
@@ -90,12 +478,12 @@
         ]
     },
     "player": {
-        "rotation": 270.0,
-        "x": 2,
-        "y": 3
+        "rotation": 0.0,
+        "x": 1,
+        "y": 12
     },
-    "tileCountX": 8,
-    "tileCountY": 4,
+    "tileCountX": 20,
+    "tileCountY": 16,
     "tileSizeX": 16,
     "tileSizeY": 16,
     "wall": {
@@ -103,7 +491,7 @@
         "walls": [
             {
                 "end": {
-                    "x": 8,
+                    "x": 20,
                     "y": 0
                 },
                 "id": "Horizontal_0",
@@ -111,6 +499,12 @@
                     "BrickWall_H",
                     "BrickWall_H",
                     "BrickWall_H",
+                    "BrickWall_H",
+                    "BrickWall_H",
+                    "BrickWall_H",
+                    "BrickWall_H",
+                    "BrickWall_H",
+                    "BrickWall_H",
                     "BrickWall_H"
                 ],
                 "start": {
@@ -120,11 +514,17 @@
             },
             {
                 "end": {
-                    "x": 8,
-                    "y": 4
+                    "x": 20,
+                    "y": 16
                 },
-                "id": "Horizontal_4",
+                "id": "Horizontal_10",
                 "ids": [
+                    "BrickWall_H",
+                    "BrickWall_H",
+                    "BrickWall_H",
+                    "BrickWall_H",
+                    "BrickWall_H",
+                    "BrickWall_H",
                     "BrickWall_H",
                     "BrickWall_H",
                     "BrickWall_H",
@@ -132,18 +532,159 @@
                 ],
                 "start": {
                     "x": 0,
-                    "y": 4
+                    "y": 16
+                }
+            },
+            {
+                "end": {
+                    "x": 10,
+                    "y": 10
+                },
+                "id": "Horizontal_20",
+                "ids": [
+                    "SoftWall_H",
+                    "SoftWall_H",
+                    "SoftWall_H",
+                    "SoftWall_H",
+                    "SoftWall_H"
+                ],
+                "start": {
+                    "x": 0,
+                    "y": 10
+                }
+            },
+            {
+                "end": {
+                    "x": 14,
+                    "y": 12
+                },
+                "id": "Horizontal_25",
+                "ids": [
+                    "SoftWall_H",
+                    "SoftWall_H"
+                ],
+                "start": {
+                    "x": 10,
+                    "y": 12
+                }
+            },
+            {
+                "end": {
+                    "x": 14,
+                    "y": 9
+                },
+                "id": "Horizontal_27",
+                "ids": [
+                    "SoftWall_H"
+                ],
+                "start": {
+                    "x": 12,
+                    "y": 9
+                }
+            },
+            {
+                "end": {
+                    "x": 14,
+                    "y": 11
+                },
+                "id": "Horizontal_28",
+                "ids": [
+                    "SoftWall_H"
+                ],
+                "start": {
+                    "x": 12,
+                    "y": 11
+                }
+            },
+            {
+                "end": {
+                    "x": 16,
+                    "y": 7
+                },
+                "id": "Horizontal_29",
+                "ids": [
+                    "PorchWall_H"
+                ],
+                "start": {
+                    "x": 14,
+                    "y": 7
+                }
+            },
+            {
+                "end": {
+                    "x": 20,
+                    "y": 7
+                },
+                "id": "Horizontal_30",
+                "ids": [
+                    "PorchWall_H"
+                ],
+                "start": {
+                    "x": 18,
+                    "y": 7
+                }
+            },
+            {
+                "end": {
+                    "x": 14,
+                    "y": 3
+                },
+                "id": "Horizontal_31",
+                "ids": [
+                    "PorchWall_H",
+                    "PorchWall_H",
+                    "PorchWall_H",
+                    "PorchWall_H",
+                    "PorchWall_H"
+                ],
+                "start": {
+                    "x": 4,
+                    "y": 3
+                }
+            },
+            {
+                "end": {
+                    "x": 2,
+                    "y": 3
+                },
+                "id": "Horizontal_35",
+                "ids": [
+                    "PorchWall_H"
+                ],
+                "start": {
+                    "x": 0,
+                    "y": 3
+                }
+            },
+            {
+                "end": {
+                    "x": 14,
+                    "y": 6
+                },
+                "id": "Horizontal_37",
+                "ids": [
+                    "WindowWall_H_1"
+                ],
+                "start": {
+                    "x": 12,
+                    "y": 6
                 }
             },
             {
                 "end": {
                     "x": 0,
-                    "y": 4
+                    "y": 16
                 },
                 "id": "Vertical_0",
                 "ids": [
-                    "PorchWall_V",
-                    "PorchWall_V"
+                    "BrickWall_V",
+                    "BrickWall_V",
+                    "BrickWall_V",
+                    "BrickWall_V",
+                    "BrickWall_V",
+                    "BrickWall_V",
+                    "BrickWall_V",
+                    "BrickWall_V"
                 ],
                 "start": {
                     "x": 0,
@@ -152,17 +693,112 @@
             },
             {
                 "end": {
-                    "x": 8,
-                    "y": 4
+                    "x": 20,
+                    "y": 16
                 },
-                "id": "Vertical_2",
+                "id": "Vertical_8",
                 "ids": [
-                    "PorchWall_V",
-                    "PorchWall_V"
+                    "BrickWall_V",
+                    "BrickWall_V",
+                    "BrickWall_V",
+                    "BrickWall_V",
+                    "BrickWall_V",
+                    "BrickWall_V",
+                    "BrickWall_V",
+                    "BrickWall_V"
                 ],
                 "start": {
-                    "x": 8,
+                    "x": 20,
                     "y": 0
+                }
+            },
+            {
+                "end": {
+                    "x": 6,
+                    "y": 12
+                },
+                "id": "Vertical_16",
+                "ids": [
+                    "SoftWall_V"
+                ],
+                "start": {
+                    "x": 6,
+                    "y": 10
+                }
+            },
+            {
+                "end": {
+                    "x": 6,
+                    "y": 16
+                },
+                "id": "Vertical_17",
+                "ids": [
+                    "SoftWall_V"
+                ],
+                "start": {
+                    "x": 6,
+                    "y": 14
+                }
+            },
+            {
+                "end": {
+                    "x": 10,
+                    "y": 12
+                },
+                "id": "Vertical_18",
+                "ids": [
+                    "WindowWall_V_1",
+                    "WindowWall_V_1",
+                    "SoftWall_V"
+                ],
+                "start": {
+                    "x": 10,
+                    "y": 6
+                }
+            },
+            {
+                "end": {
+                    "x": 14,
+                    "y": 14
+                },
+                "id": "Vertical_19",
+                "ids": [
+                    "SoftWall_V",
+                    "SoftWall_V"
+                ],
+                "start": {
+                    "x": 14,
+                    "y": 10
+                }
+            },
+            {
+                "end": {
+                    "x": 14,
+                    "y": 9
+                },
+                "id": "Vertical_21",
+                "ids": [
+                    "PorchWall_V",
+                    "PorchWall_V",
+                    "SoftWall_V"
+                ],
+                "start": {
+                    "x": 14,
+                    "y": 3
+                }
+            },
+            {
+                "end": {
+                    "x": 12,
+                    "y": 11
+                },
+                "id": "Vertical_22",
+                "ids": [
+                    "SoftWall_V"
+                ],
+                "start": {
+                    "x": 12,
+                    "y": 9
                 }
             }
         ]
@@ -172,10 +808,53 @@
             {
                 "id": "weapon_1",
                 "rotation": 0,
+                "type": 0,
+                "x": 4,
+                "y": 11
+            },
+            {
+                "id": "weapon_2",
+                "rotation": 0,
                 "type": 2,
-                "x": 2,
-                "y": 0
+                "x": 13,
+                "y": 15
+            },
+            {
+                "id": "weapon_3",
+                "rotation": 0,
+                "type": 3,
+                "x": 15,
+                "y": 7
+            },
+            {
+                "id": "weapon_4",
+                "rotation": 0,
+                "type": 2,
+                "x": 4,
+                "y": 2
+            },
+            {
+                "id": "weapon_5",
+                "rotation": 0,
+                "type": 3,
+                "x": 5,
+                "y": 2
+            },
+            {
+                "id": "weapon_6",
+                "rotation": 0,
+                "type": 0,
+                "x": 8,
+                "y": 2
+            },
+            {
+                "id": "weapon_7",
+                "rotation": 0,
+                "type": 1,
+                "x": 10,
+                "y": 2
             }
         ]
     }
+    
 }
