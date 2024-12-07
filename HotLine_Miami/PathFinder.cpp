@@ -72,13 +72,13 @@ std::vector<sf::Vector2i> PathFinder::GetNeighborNodes(sf::Vector2i pos)
     std::vector<sf::Vector2i> neighbors;
     std::vector<sf::Vector2i> directions = {
         {0, -1},
-        //{1, -1},
+        {1, -1},
         {1, 0},
-        //{1, 1},
+        {1, 1},
         {0, 1},
-        //{-1, 1},
+        {-1, 1},
         {-1, 0},
-        //{-1, -1}
+        {-1, -1}
     };
 
     for (const auto& dir : directions)

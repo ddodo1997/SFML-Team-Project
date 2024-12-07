@@ -76,7 +76,6 @@ void Boss1::Reset()
 	meleeHitBox.setOutlineThickness(1.f);
 	meleeHitBox.setSize({ 20.f,20.f });
 	Utils::SetOrigin(meleeHitBox, Origins::ML);
-	SetPosition(sf::Vector2f(100.f, 100.f));
 	SetPatterns();
 	SetWeaponStatus();
 	ChangePattern(Patterns::None);
@@ -111,11 +110,6 @@ void Boss1::Update(float dt)
 {
 	if (player == nullptr)
 		return;
-	if (InputMgr::GetKeyDown(sf::Keyboard::M))
-	{
-	/*	OnDie();*/
-		ChangePattern(Patterns::Crawl);
-	}
 
 	animatorBody.Update(dt);
 	if (isWalking)

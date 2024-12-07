@@ -47,13 +47,18 @@ void SceneGame::Enter()
 {
 	SetWalls(); // ��¥ �� ����� ��
 	Scene::Enter();
+	//보스2 테스트
 	player->SetPosition({ -1000.f,-1000.f });
 	// SetWalls_2(); // ���� �� ����� �� 
 	SetEnemies();
 	SetDecorations();
 	SetWeapons();
 	boss2->SetPosition({ -1000.f, -1000.f, });
-	player->SetPosition({ 50.f, 100.f });
+
+	//기존맵 테스트
+	//player->SetPosition({ 50.f, 100.f });
+	
+
 	tileMap->SetTexture(&TEXTURE_MGR.Get(STAGE_TABLE->GetTileTextureId()));
 	tileMap->Initialize(STAGE_TABLE->GetTileSize(), STAGE_TABLE->GetTileCount(), STAGE_TABLE->GetFloorTiles());
 
@@ -344,6 +349,7 @@ MafiaBoss* SceneGame::GetMafiaBoss()
 {
 	return boss2->GetMafiaBoss();
 }
+
 void SceneGame::SetWeapons()
 {
 	const auto& weaponTable = STAGE_TABLE->GetWeaponTable();

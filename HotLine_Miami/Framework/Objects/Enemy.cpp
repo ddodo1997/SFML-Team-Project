@@ -92,7 +92,7 @@ void Enemy::Reset()
 	viewAngle.setPoint(1, { 100.f, -30.f });
 	viewAngle.setPoint(2, { 100.f, 30.f });
 
-	collisionBox.setSize({ 10.f,10.f });
+	collisionBox.setSize({ 5.f,5.f });
 	Utils::SetOrigin(collisionBox, Origins::MC);
 
 	weaponSearchRange.setRadius(30.f);
@@ -418,6 +418,7 @@ void Enemy::FixedUpdate(float dt)
 
 void Enemy::SetStatus(Status stat)
 {
+	speed = 30.f;
 	auto prevStatus = currentStatus;
 	currentStatus = stat;
 	animatorLegs.Play("animations/Enemy/enemy_legs.json");
@@ -493,6 +494,10 @@ void Enemy::SetStatus(Status stat)
 		}
 		break;
 	case Status::PathFinding:
+		if (prevStatus == Status::Aggro)
+		{
+			SetStatus(Status::Aggro);
+		}
 		SetWayPoints(pathFinder.FindPath(position, player->GetPosition()));
 		patrol.currentWayPoint = 1;
 		speed = 70.f;
@@ -582,11 +587,11 @@ void Enemy::SetWayPoints(std::vector<sf::Vector2f> pos)
 	for (auto& vec2f : pos)
 	{
 		Patrol::WayPoint temp(vec2f);
-		temp.point.setRadius(0.1f);
-		temp.point.setFillColor(sf::Color::Transparent);
+		//temp.point.setRadius(0.1f);
+		//temp.point.setFillColor(sf::Color::Transparent);
 		
-		//temp.point.setRadius(3.f);
-		//temp.point.setFillColor(sf::Color::Blue);
+		temp.point.setRadius(3.f);
+		temp.point.setFillColor(sf::Color::Blue);
 
 		patrol.wayPoints.push_back(temp);
 	}
@@ -605,8 +610,7 @@ void Enemy::Draw(sf::RenderWindow& window)
 	if (isWalking)
 		window.draw(legs);
 
-	if(currentStatus != Status::Pounded)
-		window.draw(body);
+	window.draw(body);
 
 	for (auto& point : patrol.wayPoints)
 		window.draw(point.point);
@@ -682,6 +686,7 @@ void Enemy::Attack()
 			if (weaponStatus.remainingBullet <= 0)
 				break;
 			sceneGame->SpawnBullet()->Fire(Utils::AngleSpread(direction, 10), this, weaponStatus);
+			SOUND_MGR.PlaySfx("sound/Attack/sndEM16.wav");
 			weaponStatus.remainingBullet--;
 			animatorBody.Play("animations/Enemy/enemy_m16_attack.json");
 			animatorBody.PlayQueue("animations/Enemy/enemy_m16_search.json");
@@ -691,6 +696,7 @@ void Enemy::Attack()
 				break;
 			for (int i = 0; i < 6; i++)
 				sceneGame->SpawnBullet()->Fire(Utils::AngleSpread(direction, 10), this, weaponStatus);
+			SOUND_MGR.PlaySfx("sound/Attack/sndShotgun.wav");
 			weaponStatus.remainingBullet--;
 			animatorBody.Play("animations/Enemy/enemy_shotgun_attack.json");
 			animatorBody.PlayQueue("animations/Enemy/enemy_shotgun_search.json");

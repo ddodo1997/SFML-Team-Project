@@ -109,11 +109,6 @@ void BodyGuard::Update(float dt)
 	if (isWalking)
 		animatorLegs.Update(dt);
 
-	if (InputMgr::GetKeyDown(sf::Keyboard::N))
-	{
-		SetStatus(Status::Die);
-	}
-
 	direction = Utils::GetNormal(player->GetPosition() - position);
 
 	switch (pattern.currentStatus)
@@ -128,7 +123,7 @@ void BodyGuard::Update(float dt)
 
 void BodyGuard::Phase2(float dt)
 {
-	if (player->IsDead())
+	if (player->IsDead() || !IsActive())
 		return;
 
 	switch (pattern.currentStatus)

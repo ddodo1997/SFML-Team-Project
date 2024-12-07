@@ -89,10 +89,6 @@ void Panther::Update(float dt)
 {
 	animator.Update(dt);
 	hitBox.UpdateTr(collisionBox, collisionBox.getLocalBounds());
-	if (InputMgr::GetKeyDown(sf::Keyboard::M))
-	{
-		OnHit();
-	}
 }
 
 void Panther::Phase1(float dt)
@@ -109,6 +105,9 @@ void Panther::Phase1(float dt)
 		break;
 	case Status::Attack:
 		OnAttack(dt);
+		break;
+	case Status::HappyMeal:
+		SetPosition(player->GetPosition());
 		break;
 	case Status::Stun:
 		OnStun(dt);
