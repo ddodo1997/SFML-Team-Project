@@ -109,6 +109,8 @@ void Boss1::SetWeaponStatus()
 
 void Boss1::Update(float dt)
 {
+	if (player == nullptr)
+		return;
 	if (InputMgr::GetKeyDown(sf::Keyboard::M))
 		OnDie();
 

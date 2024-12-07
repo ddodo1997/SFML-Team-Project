@@ -18,7 +18,8 @@ class SceneDevS : public SceneGame
 protected:
 	int minX, minY;
 
-	Player* player;
+	Player* player = nullptr;
+	Boss1* boss1 = nullptr;
 	TileMap* tileMap;
 	TileMapEditor* tileMapEditor;
 	Enemy* patrolEnemy;
@@ -33,9 +34,11 @@ protected:
 	std::vector<DataWall> mergedHorizontalWalls;
 	std::vector<DataWall> mergedVerticalWalls;
 
-	std::vector<std::pair<Enemy::Status, Enemy*>> savedEnemies;
+	std::vector<std::pair<Enemy::Status, Enemy*>> createdEnemies;
 	std::vector<WayPoint*> waypoints;
 	sf::Vector2f direction;
+
+	std::vector<Weapon*> createdWeapons;
 
 	float zoomNoun = 0.5f;
 	bool isWayPointMode;
@@ -60,6 +63,10 @@ public:
 	void StartWayPointMode(Enemy* enemy);
 	void AddWayPoints(const sf::Vector2f& pos);
 
+	void CreateWeapon(const sf::Vector2f& pos);
+	void CreatePlayer(const sf::Vector2f& pos);
+	void CreateBoss1(const sf::Vector2f& pos);
+
 	void LoadWalls();
 	void LoadDecorations();
 	void LoadEnemies();
@@ -78,6 +85,9 @@ public:
 	void SaveMap();
 	void SaveWall();
 	void SaveEnemies(json& mapData);
+	void SaveWeapons(json& mapData);
+	void SavePlayer(json& mapData);
+	void SaveBoss(json& mapData);
 
 	std::string EnemyStatusToString(const Enemy::Status& state);
 	std::string EnemyWeaponToString(const Weapon::WeaponType& type);

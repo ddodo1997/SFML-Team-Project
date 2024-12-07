@@ -16,6 +16,7 @@ class Panther;
 class BodyGuard;
 class MafiaBoss;
 class Cleaver;
+class PathFinder;
 
 class SceneGame :
     public Scene
@@ -27,6 +28,7 @@ protected:
 	Boss1* boss;
 	Boss2* boss2;
 	Cleaver* cleaver;
+	PathFinder* pathFinder;
 
 	sf::Vector2f directionXY;
 	float directionX = 0.f;
@@ -57,11 +59,13 @@ public:
 	void LoadWalls();
 	void LoadDecorations();
 	void LoadEnemies();
+	void LoadWeapons();
 
 	void SetWalls();
 	void SetWalls_2();
 	void SetDecorations();
 	void SetEnemies();
+	void SetWeapons();
 	Player* GetPlayer() { return player; }
 	Boss1* GetBoss1() { return boss; }
 	Cleaver* GetCleaver() { return cleaver; }
@@ -83,7 +87,7 @@ public:
 
 
 	// Test Code
-	void SpawnWeapon(Weapon::WeaponType weaponType, sf::Vector2f pos);
+	Weapon* SpawnWeapon(Weapon::WeaponType weaponType, sf::Vector2f pos);
 
 	Bullet* SpawnBullet();
 	void ReturnBullet(Bullet* val);

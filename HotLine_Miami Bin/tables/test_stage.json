@@ -180,6 +180,38 @@
       "rotation" : 270,
       "waypoint": []
     }
-  ]
-  }
+    ]
+  },
+  "weapon": {
+        "weapons": [
+            {
+                "id": "weapon_1",
+                "rotation": 0,
+                "type": 3,
+                "x": 5,
+                "y": 5
+            },
+            {
+                "id": "weapon_2",
+                "rotation": 0,
+                "type": 2,
+                "x": 5,
+                "y": 6
+            },
+            {
+                "id": "weapon_3",
+                "rotation": 90,
+                "type": 1,
+                "x": 5,
+                "y": 7
+            },
+            {
+                "id": "weapon_4",
+                "rotation": 270,
+                "type": 0,
+                "x": 5,
+                "y": 8
+            }
+        ]
+    }
 }

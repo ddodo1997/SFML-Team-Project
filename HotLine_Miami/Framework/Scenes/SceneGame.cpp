@@ -14,6 +14,7 @@
 #include "Boss2.h"
 #include "BodyGuard.h"
 #include "Cleaver.h"
+#include "PathFinder.h"
 SceneGame::SceneGame() : Scene(SceneIds::SceneGame)
 {
 
@@ -27,9 +28,10 @@ void SceneGame::Init()
 	boss = AddGo(new Boss1("Boss1"));
 	boss2 = AddGo(new Boss2("Boss2"));
 	cleaver = AddGo(new Cleaver("Cleaver"));
+	pathFinder = new PathFinder();
 	uiHud->SetPlayer(player);
 
-	LoadWalls(); // ÅëÂ¥ º® ¾µ¶§¸¸ »ç¿ëÇÏ±â
+	LoadWalls(); // ï¿½ï¿½Â¥ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï±ï¿½
 	LoadDecorations();
 	LoadEnemies();
 
@@ -43,15 +45,15 @@ void SceneGame::Release()
 
 void SceneGame::Enter()
 {
-	SetWalls(); // ÅëÂ¥ º® »ç¿ëÇÒ ¶§
+	SetWalls(); // ï¿½ï¿½Â¥ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
 	Scene::Enter();
 	player->SetPosition({ -1000.f,-1000.f });
-	// SetWalls_2(); // °³º° º® »ç¿ëÇÒ ¶§ 
+	// SetWalls_2(); // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ 
 	SetEnemies();
 	SetDecorations();
-
+	SetWeapons();
 	boss2->SetPosition({ -1000.f, -1000.f, });
-
+	player->SetPosition({ 50.f, 100.f });
 	tileMap->SetTexture(&TEXTURE_MGR.Get(STAGE_TABLE->GetTileTextureId()));
 	tileMap->Initialize(STAGE_TABLE->GetTileSize(), STAGE_TABLE->GetTileCount(), STAGE_TABLE->GetFloorTiles());
 
@@ -175,7 +177,15 @@ void SceneGame::Update(float dt)
 	{
 		Variables::isDrawHitBox = !Variables::isDrawHitBox;
 	}
-
+	if (InputMgr::GetKeyDown(sf::Keyboard::L))
+	{
+		std::vector<sf::Vector2f> path = pathFinder->FindPath(player->GetPosition(), enemies[3]->GetPosition());
+		for (auto& pos : path)
+		{
+			std::cout << "(" << (int)pos.x / 16 << ", " << (int)pos.y / 16 << ")" << std::endl;
+			player->SetPosition(pos);
+		}
+	}
 	if (std::fabs(directionX) > 1000.f)
 	{
 		directionX = 0;
@@ -328,6 +338,16 @@ BodyGuard* SceneGame::GetBodyGuard()
 MafiaBoss* SceneGame::GetMafiaBoss()
 {
 	return boss2->GetMafiaBoss();
+void SceneGame::SetWeapons()
+{
+	const auto& weaponTable = STAGE_TABLE->GetWeaponTable();
+	for (const auto& weaponPair : weaponTable)
+	{
+		const DataWeapon& weaponData = weaponPair.second;
+
+		auto weapon = SpawnWeapon(weaponData.weaponState.weaponType, { (weaponData.pos.x * STAGE_TABLE->GetTileSize().x) + 8.f,  (weaponData.pos.y * STAGE_TABLE->GetTileSize().y) + 8.f });
+		weapon->SetRotation(weaponData.rotation);
+	}
 }
 
 void SceneGame::OnWeaponDrop(Weapon::WeaponStatus weapon, sf::Vector2f pos)
@@ -367,7 +387,7 @@ void SceneGame::OnWeaponThrow(Weapon::WeaponStatus weapon, sf::Vector2f dir, sf:
 }
 
 
-void SceneGame::SpawnWeapon(Weapon::WeaponType weaponType, sf::Vector2f pos)
+Weapon* SceneGame::SpawnWeapon(Weapon::WeaponType weaponType, sf::Vector2f pos)
 {
 	Weapon* weapon = weaponPool.Take();
 	weapons.push_back(weapon);
@@ -375,7 +395,7 @@ void SceneGame::SpawnWeapon(Weapon::WeaponType weaponType, sf::Vector2f pos)
 	weapon->SetStatus(WEAPON_TABLE->Get(weaponType));
 	weapon->SetPosition(pos);
 	weapon->SetActive(true);
-	AddGo(weapon);
+	return AddGo(weapon);
 }
 
 Bullet* SceneGame::SpawnBullet()

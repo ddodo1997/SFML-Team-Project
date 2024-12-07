@@ -2,6 +2,8 @@
 #include "Enemy.h"
 
 class Button;
+class Player;
+class Boss1;
 class TileMapEditor : public GameObject
 {
 public:
@@ -11,6 +13,8 @@ public:
 		WallMode,
 		DecorationMode,
 		EnemyMode,
+		WeaponMode,
+		PlayerAndBossMode
 	};
 protected:
 	sf::Texture* texture = nullptr;
@@ -31,6 +35,15 @@ protected:
 	Button* idleButton;
 	Button* patrolButton;
 
+	Player* player;
+	Boss1* boss_1;
+	Player* selectedPlayer = nullptr;
+	Boss1* selectedBoss_1 = nullptr;
+	std::string selectedPlayerOrBoss;
+
+	std::vector<Weapon*> weaponsUI;
+	int seletedWeaponIndex = -1;
+	Weapon selectedWeapon;
 
 	EditorMode currentMode;
 	sf::RectangleShape background;
@@ -55,6 +68,8 @@ public:
 	void UpdateWallMode(float dt);
 	void UpdateDecoMode(float dt);
 	void UpdateEnemyMode(float dt);
+	void UpdateWeaponMode(float dt);
+	void UpdatePlayerAndBossMode(float dt);
 	void UpdateSelectedSpritePosition();
 	void UpdateEnemyModeButtons(sf::Vector2f worldPos);
 	void Draw(sf::RenderWindow& window) override;
@@ -69,6 +84,12 @@ public:
 
 	Enemy GetSelectedEnemy() const { return selectedEnemy; }
 	Enemy::Status GetSelectedEnemyStatus() const { return selectedEnemyStatus; }
+
+	Weapon GetSelectedWeapon() const { return selectedWeapon; }
+
+	std::string GetSelectedPlayerOrBoss() const { return selectedPlayerOrBoss; }
+	Player* GetPlayer() const { return selectedPlayer; }
+	Boss1* GetBoss1() const { return selectedBoss_1; }
 
 	void SetMode(EditorMode mode);
 	EditorMode GetMode() const { return currentMode; }

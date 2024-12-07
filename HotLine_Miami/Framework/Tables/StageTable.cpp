@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "StageTable.h"
 #include "WallTable.h"
+#include "WeaponTable.h"
 bool StageTable::Load()
 {
 	Release();
@@ -78,6 +79,18 @@ bool StageTable::Load()
 		wallTable.insert({ wallData.id, wallData });
 	}
 
+	for (const auto& weapon : data["weapon"]["weapons"])
+	{
+		DataWeapon weaponData;
+		weaponData.id = weapon["id"];
+		weaponData.pos = { weapon["x"], weapon["y"] };
+		weaponData.rotation = weapon["rotation"];
+		Weapon::WeaponType temp = weapon["type"];
+		weaponData.weaponState = WEAPON_TABLE->Get(temp);
+
+		weaponTable.insert({ weaponData.id, weaponData });
+	}
+
 	inFile.close();
 	return true;
 }
@@ -88,4 +101,5 @@ void StageTable::Release()
 	enemyTable.clear();
 	decoTable.clear();
 	wallTable.clear();
+	weaponTable.clear();
 }
