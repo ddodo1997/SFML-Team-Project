@@ -88,6 +88,7 @@ public:
 
     const sf::Vector2i GetTileSize() const { return tileSize; }
     const DataStage& GetCurrentStage() const;
+    void SetCurrentStageIndex(int idx);
     void NextStage();
 };
 
