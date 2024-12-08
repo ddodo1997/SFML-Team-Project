@@ -456,7 +456,6 @@ void SceneGame::LoadCurrentStage()
 	ClearStage();
 	tileMap->SetTexture(&TEXTURE_MGR.Get(STAGE_TABLE->GetCurrentStage().GetTileTextureId()));
 	tileMap->Initialize(STAGE_TABLE->GetTileSize(), STAGE_TABLE->GetCurrentStage().GetTileCount(), STAGE_TABLE->GetCurrentStage().GetFloorTiles());
-	player->Reset();
 	player->SetPosition(STAGE_TABLE->GetCurrentStage().GetPlayerData().pos * tileSize.x);
 	player->SetRotation(STAGE_TABLE->GetCurrentStage().GetPlayerData().rotation);
 
@@ -479,6 +478,8 @@ void SceneGame::LoadCurrentStage()
 	LoadEnemies();
 	LoadWeapons();
 
+
+	player->Reset();
 	SetWalls();
 	SetDecorations();
 	SetEnemies();
