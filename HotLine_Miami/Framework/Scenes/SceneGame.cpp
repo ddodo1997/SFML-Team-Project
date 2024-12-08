@@ -25,10 +25,6 @@ void SceneGame::Init()
 	player = AddGo(new Player("Player"));
 	tileMap = AddGo(new TileMap("Tile Map"));
 	uiHud = AddGo(new UiHudL());
-<<<<<<< HEAD
-
-=======
->>>>>>> Dev_S
 	cleaver = AddGo(new Cleaver("Cleaver"));
 	pathFinder = new PathFinder();
 	uiHud->SetPlayer(player);
