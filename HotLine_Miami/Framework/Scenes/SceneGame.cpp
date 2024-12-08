@@ -60,6 +60,7 @@ void SceneGame::Enter()
 void SceneGame::Exit()
 {
 	RemoveAllObjPool();
+	ClearStage();
 	Scene::Exit();
 	uiHud = nullptr;
 }
@@ -206,8 +207,6 @@ void SceneGame::LoadWalls()
 
 		Wall* wall = AddGo(new Wall(wallData.id));
 		wall->Init();
-		wall->DrawWall(wallData);
-		wall->Reset();
 		walls.push_back(wall);
 	}
 }
@@ -221,7 +220,6 @@ void SceneGame::LoadDecorations()
 
 		Decoration* deco = AddGo(new Decoration(decoData.id));
 		deco->Init();
-		deco->Reset();
 		deco->SetTexture(decoData.textureId);
 		deco->SetRotation(decoData.rotation);
 		deco->SetPosition(decoData.pos);
@@ -238,12 +236,6 @@ void SceneGame::LoadEnemies()
 
 		Enemy* enemy = AddGo(new Enemy(enemyData.id));
 		enemy->Init();
-		enemy->Reset();
-		enemy->SetPosition({ (enemyData.pos.x * STAGE_TABLE->GetTileSize().x) + 8.f,  (enemyData.pos.y * STAGE_TABLE->GetTileSize().y) + 8.f });
-		enemy->SetRotation(enemyData.rotation);
-		enemy->SetWeapon(enemyData.weaponType);
-		enemy->SetStatus(enemyData.state);
-		enemy->SetWayPoints(enemyData.waypoints);
 		enemies.push_back(enemy);
 	}
 }
@@ -256,8 +248,11 @@ void SceneGame::SetWalls()
 	for (const auto& WallPair : wallTable)
 	{
 		const DataWall& wallData = WallPair.second;
-		walls[i++]->DrawWall(wallData);
+		walls[i]->Reset();
+		walls[i]->DrawWall(wallData);
+		i++;
 	}
+
 }
 
 void SceneGame::SetWalls_2()
@@ -324,6 +319,7 @@ void SceneGame::SetEnemies()
 	for (const auto& enemyPair : enemyTable)
 	{
 		const DataEnemy& enemyData = enemyPair.second;
+		enemies[i]->Reset();
 		enemies[i]->SetPosition({(enemyData.pos.x * STAGE_TABLE->GetTileSize().x) + 8.f,  (enemyData.pos.y * STAGE_TABLE->GetTileSize().y) + 8.f});
 		enemies[i]->SetRotation(enemyData.rotation);
 		enemies[i]->SetWeapon(enemyData.weaponType);
@@ -460,6 +456,7 @@ void SceneGame::LoadCurrentStage()
 	ClearStage();
 	tileMap->SetTexture(&TEXTURE_MGR.Get(STAGE_TABLE->GetCurrentStage().GetTileTextureId()));
 	tileMap->Initialize(STAGE_TABLE->GetTileSize(), STAGE_TABLE->GetCurrentStage().GetTileCount(), STAGE_TABLE->GetCurrentStage().GetFloorTiles());
+	player->Reset();
 	player->SetPosition(STAGE_TABLE->GetCurrentStage().GetPlayerData().pos * tileSize.x);
 	player->SetRotation(STAGE_TABLE->GetCurrentStage().GetPlayerData().rotation);
 
@@ -481,6 +478,11 @@ void SceneGame::LoadCurrentStage()
 	LoadDecorations();
 	LoadEnemies();
 	LoadWeapons();
+
+	SetWalls();
+	SetDecorations();
+	SetEnemies();
+
 }
 
 void SceneGame::LoadNextStage()
@@ -489,6 +491,7 @@ void SceneGame::LoadNextStage()
 	STAGE_TABLE->NextStage();
 	tileMap->SetTexture(&TEXTURE_MGR.Get(STAGE_TABLE->GetCurrentStage().GetTileTextureId()));
 	tileMap->Initialize(STAGE_TABLE->GetTileSize(), STAGE_TABLE->GetCurrentStage().GetTileCount(), STAGE_TABLE->GetCurrentStage().GetFloorTiles());
+	player->Reset();
 	player->SetPosition(STAGE_TABLE->GetCurrentStage().GetPlayerData().pos * tileSize.x);
 	player->SetRotation(STAGE_TABLE->GetCurrentStage().GetPlayerData().rotation);
 
@@ -505,11 +508,16 @@ void SceneGame::LoadNextStage()
 		boss2->Reset();
 		boss2->SetPosition(STAGE_TABLE->GetCurrentStage().GetBoss2Position() * tileSize.x);
 	}
-	
+
 	LoadWalls(); // ��¥ �� ������ ����ϱ�
 	LoadDecorations();
 	LoadEnemies();
 	LoadWeapons();
+
+	SetWalls();
+	SetDecorations();
+	SetEnemies();
+
 }
 
 void SceneGame::ClearStage()
