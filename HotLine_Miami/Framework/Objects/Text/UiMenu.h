@@ -34,6 +34,9 @@ protected:
 	bool isOnVolume = false;
 	int volumeIndex = 0;
 
+	float keyInputDuration = 0.f;
+	bool keyInputEnabled = true;
+
 	bool repeatPreventerEnterKey = false;
 	bool repeatPreventerEscKey = false;
 
