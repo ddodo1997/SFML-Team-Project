@@ -17,6 +17,7 @@ protected:
 	bool isPaused = false;
 	bool wasPaused = false;
 	bool isResuming = false;
+	bool isClearedStage = false;
 
 	sf::RectangleShape pauseShader;
 	sf::RectangleShape pauseTopBox;
@@ -101,6 +102,8 @@ public:
 	void UpdatePausedContent(float realDt);
 
 	bool IsPaused() { return isPaused; }
+
+	void SetIsCleared(bool isCleared) { this->isClearedStage = isCleared; }
 
 	void Draw(sf::RenderWindow& window) override;
 };

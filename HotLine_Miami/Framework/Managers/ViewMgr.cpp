@@ -207,7 +207,7 @@ void ViewMgr::UpdateFurtherViewMousePos(float dt)
 
 void ViewMgr::UpdateBackground(float realDt)
 {
-	flashEffectTimer += realDt * 1000.f;
+	flashEffectTimer += realDt * 800.f;
 	colorRotator += realDt;
 	if (colorRotator > colorCyclingDuration)
 		colorRotator -= colorCyclingDuration;

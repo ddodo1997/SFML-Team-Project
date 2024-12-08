@@ -55,6 +55,8 @@ void UiHudL::Release()
 
 void UiHudL::Reset()
 {	
+	isClearedStage = false;
+
 	currentWeaponStatus.setFont(FONT_MGR.Get("fonts/DS-DIGI.ttf"));
 	currentWeaponStatus.setCharacterSize(30.f);
 	currentWeaponStatus.setFillColor(sf::Color::White);

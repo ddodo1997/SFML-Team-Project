@@ -249,6 +249,13 @@ void UiMenu::ResetMenuContent()
 
 void UiMenu::Update(float dt)
 {
+	keyInputDuration += FRAMEWORK.GetRealDeltaTime();
+	if (keyInputDuration > 0.02f)
+	{
+		keyInputDuration = 0.f;
+		keyInputEnabled = true;
+	}
+
 	if (isOnMainMenu)
 		UpdateMainMenuKey(FRAMEWORK.GetRealDeltaTime());
 	if (isOnOption)
@@ -490,40 +497,44 @@ void UiMenu::UpdateVolumeKey(float realDt)
 		volumeIndex = Utils::Clamp(volumeIndex, 0, 1);
 	}
 
-	if (volumeIndex == 0 && (InputMgr::GetKey(sf::Keyboard::A) || InputMgr::GetKey(sf::Keyboard::Left)))
+	if (keyInputEnabled)
 	{
-		int newVol = SOUND_MGR.GetBgmVolume();
-		newVol--;
-		newVol = Utils::Clamp(newVol, 0, 100);
-		SOUND_MGR.SetBgmVolume(newVol);
-		OnVolumeChange();
-	}
+		if (volumeIndex == 0 && (InputMgr::GetKey(sf::Keyboard::A) || InputMgr::GetKey(sf::Keyboard::Left)))
+		{
+			int newVol = SOUND_MGR.GetBgmVolume();
+			newVol--;
+			newVol = Utils::Clamp(newVol, 0, 100);
+			SOUND_MGR.SetBgmVolume(newVol);
+			OnVolumeChange();
+		}
 
-	if (volumeIndex == 0 && (InputMgr::GetKey(sf::Keyboard::D) || InputMgr::GetKey(sf::Keyboard::Right)))
-	{
-		int newVol = SOUND_MGR.GetBgmVolume();
-		newVol++;
-		newVol = Utils::Clamp(newVol, 0, 100);
-		SOUND_MGR.SetBgmVolume(newVol);
-		OnVolumeChange();
-	}
+		if (volumeIndex == 0 && (InputMgr::GetKey(sf::Keyboard::D) || InputMgr::GetKey(sf::Keyboard::Right)))
+		{
+			int newVol = SOUND_MGR.GetBgmVolume();
+			newVol++;
+			newVol = Utils::Clamp(newVol, 0, 100);
+			SOUND_MGR.SetBgmVolume(newVol);
+			OnVolumeChange();
+		}
 
-	if (volumeIndex == 1 && (InputMgr::GetKey(sf::Keyboard::A) || InputMgr::GetKey(sf::Keyboard::Left)))
-	{
-		int newVol = SOUND_MGR.GetSfxVolume();
-		newVol--;
-		newVol = Utils::Clamp(newVol, 0, 100);
-		SOUND_MGR.SetSfxVolume(newVol);
-		OnVolumeChange(false);
-	}
+		if (volumeIndex == 1 && (InputMgr::GetKey(sf::Keyboard::A) || InputMgr::GetKey(sf::Keyboard::Left)))
+		{
+			int newVol = SOUND_MGR.GetSfxVolume();
+			newVol--;
+			newVol = Utils::Clamp(newVol, 0, 100);
+			SOUND_MGR.SetSfxVolume(newVol);
+			OnVolumeChange(false);
+		}
 
-	if (volumeIndex == 1 && (InputMgr::GetKey(sf::Keyboard::D) || InputMgr::GetKey(sf::Keyboard::Right)))
-	{
-		int newVol = SOUND_MGR.GetSfxVolume();
-		newVol++;
-		newVol = Utils::Clamp(newVol, 0, 100);
-		SOUND_MGR.SetSfxVolume(newVol);
-		OnVolumeChange(false);
+		if (volumeIndex == 1 && (InputMgr::GetKey(sf::Keyboard::D) || InputMgr::GetKey(sf::Keyboard::Right)))
+		{
+			int newVol = SOUND_MGR.GetSfxVolume();
+			newVol++;
+			newVol = Utils::Clamp(newVol, 0, 100);
+			SOUND_MGR.SetSfxVolume(newVol);
+			OnVolumeChange(false);
+		}
+		keyInputEnabled = false;
 	}
 
 	if (!repeatPreventerEscKey && InputMgr::GetKeyDown(sf::Keyboard::Escape))
