@@ -115,6 +115,10 @@ void SceneGame::Update(float dt)
 	{
 		LoadCurrentStage();
 	}
+	if (InputMgr::GetKeyDown(sf::Keyboard::T))
+	{
+		LoadNextStage();
+	}
 	if (InputMgr::GetKey(sf::Keyboard::Numpad7))
 	{
 		int newVol = SOUND_MGR.GetBgmVolume();
@@ -506,7 +510,7 @@ void SceneGame::LoadNextStage()
 	{
 		boss2 = AddGo(new Boss2("Boss2"));
 		boss2->Reset();
-		boss2->SetPosition(STAGE_TABLE->GetCurrentStage().GetBoss2Position() * tileSize.x);
+		boss2->SetPosition(STAGE_TABLE->GetCurrentStage().GetBoss2Position());
 	}
 
 	LoadWalls(); // ��¥ �� ������ ����ϱ�
@@ -535,7 +539,19 @@ void SceneGame::ClearStage()
 	{
 		RemoveGo(enemy);
 	}
+
 	walls.clear();
 	decorations.clear();
 	enemies.clear();
+
+	if (boss != nullptr)
+	{
+		RemoveGo(boss);
+		boss = nullptr;
+	}
+	if (boss2 != nullptr)
+	{
+		RemoveGo(boss2);
+		boss2 = nullptr;
+	}
 }
