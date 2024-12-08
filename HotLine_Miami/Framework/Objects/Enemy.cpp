@@ -563,6 +563,7 @@ void Enemy::SetStatus(Status stat)
 		break;
 	case Status::Die:
 		SetActive(true);
+		VIEW_MGR.ResetFlashEffectTimer();
 		animatorBody.Play("animations/Enemy/enemy_back_bashed.json");
 		isWalking = false;
 		break;
