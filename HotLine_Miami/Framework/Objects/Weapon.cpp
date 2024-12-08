@@ -110,6 +110,7 @@ void Weapon::FixedUpdate(float dt)
 		{
 			onThrowTimer = 0.f;
 			mafisBoss->OnHit();
+			scenePointer->ReturnWeapon(this);
 			std::string sfxFilePath = "sound/Attack/sndHit.wav";
 
 			SOUND_MGR.PlaySfx(sfxFilePath);

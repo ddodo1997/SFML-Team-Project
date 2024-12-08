@@ -8,6 +8,7 @@ protected:
 	
 	std::vector<sf::Sprite*> mainTextStartGame;
 	std::vector<sf::Sprite*> mainTextOption;
+	std::vector<sf::Sprite*> mainEditorMode;
 	std::vector<sf::Sprite*> mainTextExit;
 
 	std::vector<sf::Sprite*> optionTextVolume;

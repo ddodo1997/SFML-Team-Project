@@ -49,6 +49,7 @@ protected:
 
 	BodyGuard* bodyGuard;
 	MafiaBoss* mafiaBoss;
+	std::vector<Panther*> panthers;
 
 	std::vector<Enemy*> enemies;
 
@@ -83,7 +84,9 @@ protected:
 	bool isOnPound = false;
 	bool isExecuting = false;
 	bool isExecutionOnWall = false;
-	bool isPoundingBoss = false;
+	bool isPoundingBoss1 = false;
+	bool isPoundingBodyGuard = false;
+	int bodyGuardExecutionPhase = 1;
 	bool isControlable = true;
 	float executionTimer = 0.f;
 	int executionCount = 0;
@@ -114,12 +117,16 @@ public:
 	void Reset() override;
 	void ResetMask(bool ifInitialSetting = false);
 
+	void ResetAnimatorEvents();
+
 	void Update(float dt) override;
 	void UpdateBodyAnimationMoving();
 	void UpdateMask(float dt);
 	void UpdateExecution(float dt);
 
 	void UpdateExecutionBoss1(float dt);
+	void UpdateExecutionBodyGuardPhase1(float dt);
+	void UpdateExecutionBodyGuardPhase2(float dt);
 	void UpdateExecutionDefualt(float dt);
 	void UpdateExecutionBat(float dt);
 	void UpdateExecutionKnife(float dt);
@@ -130,10 +137,6 @@ public:
 	void SearchEnemy();
 	void SearchBiker();
 	void SearchPanther();
-	void SearchBodyGuard();
-	void SearchMafiaBoss();
-
-
 
 	void UpdateOnDie(float dt);
 

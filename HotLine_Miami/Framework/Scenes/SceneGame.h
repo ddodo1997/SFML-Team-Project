@@ -68,6 +68,7 @@ public:
 	void SetWeapons();
 	Player* GetPlayer() { return player; }
 	Boss1* GetBoss1() { return boss; }
+	Boss2* GetBoss2() { return boss2; }
 	Cleaver* GetCleaver() { return cleaver; }
 
 	BodyGuard* GetBodyGuard();

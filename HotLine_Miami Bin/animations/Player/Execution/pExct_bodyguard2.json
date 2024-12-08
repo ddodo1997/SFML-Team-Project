@@ -1,0 +1,13 @@
+{
+    "ID": "pExctBodyguard_Phase2",
+    "LoopType": 0,
+    "FPS": 16,
+    "texId": "graphics/player/Attack/Pound/boss2_bodyguard_finish2.png",
+    "Frames":
+    [
+        [0,0,64,32,40,17],
+        [64,0,64,32,39,17],
+        [0,32,64,32,38,17],
+        [64,32,64,32,38,17]
+    ]
+}

@@ -47,13 +47,12 @@ void SceneGame::Enter()
 {
 	SetWalls(); // ��¥ �� ����� ��
 	Scene::Enter();
-	player->SetPosition({ -1000.f,-1000.f });
+	player->SetPosition({ 50.f, 50.f });
 	// SetWalls_2(); // ���� �� ����� �� 
 	SetEnemies();
 	SetDecorations();
 	SetWeapons();
 	boss2->SetPosition({ -1000.f, -1000.f, });
-	player->SetPosition({ 50.f, 100.f });
 	tileMap->SetTexture(&TEXTURE_MGR.Get(STAGE_TABLE->GetTileTextureId()));
 	tileMap->Initialize(STAGE_TABLE->GetTileSize(), STAGE_TABLE->GetTileCount(), STAGE_TABLE->GetFloorTiles());
 

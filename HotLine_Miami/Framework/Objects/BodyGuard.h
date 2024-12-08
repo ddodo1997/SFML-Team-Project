@@ -87,6 +87,8 @@ public:
 
 	void Draw(sf::RenderWindow& window) override;
 
+	Status GetCurrentStauts() { return pattern.currentStatus; }
+
 	void Awaken();
 	void Attack();
 	void Throw();

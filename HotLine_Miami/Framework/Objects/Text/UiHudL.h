@@ -62,7 +62,7 @@ protected:
 
 	int weaponTypeIndex = -1;
 
-	int bgmVol;	
+	int bgmVol;
 
 public:
 	UiHudL(const std::string& name = "");
