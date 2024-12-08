@@ -150,7 +150,7 @@ void UiMenu::ResetMenuContent()
 		volumeTextMusic.push_back(alphabetSprite);
 	}
 
-	tempText = "OPTION";
+	tempText = "CONTINUE";
 	textPos = { 0.f,0.f };
 	alphabetScale = { 4.f,4.f };
 	totalAlphabetWidth = 0;
@@ -171,7 +171,7 @@ void UiMenu::ResetMenuContent()
 		alphabetSprite->setScale(alphabetScale);
 		alphabetSprite->setOrigin(alphabetOrigin * 0.2f);
 		textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
-		mainTextOption.push_back(alphabetSprite);
+		mainTextContinue.push_back(alphabetSprite);
 	}
 
 	tempVol = SOUND_MGR.GetSfxVolume();
@@ -196,6 +196,30 @@ void UiMenu::ResetMenuContent()
 		alphabetSprite->setOrigin(alphabetOrigin * 0.2f);
 		textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
 		volumeTextSfx.push_back(alphabetSprite);
+	}
+
+	tempText = "OPTION";
+	textPos = { 0.f,0.f };
+	alphabetScale = { 4.f,4.f };
+	totalAlphabetWidth = 0;
+	verticalTextInterval = 25.f * alphabetScale.y;
+
+	for (int i = 0; i < tempText.size(); ++i)
+	{
+		totalAlphabetWidth += ALPHABET_TABLE->Get(tempText[i]).characterWidth;
+	}
+
+	textDefaultPos.x = FRAMEWORK.GetWindowSizeF().x * 0.5f - totalAlphabetWidth * 0.5f * alphabetScale.x;
+	textDefaultPos.y += verticalTextInterval;
+
+	for (int i = 0; i < tempText.size(); ++i)
+	{
+		sf::Sprite* alphabetSprite = new sf::Sprite(TEXTURE_MGR.Get(path), ALPHABET_TABLE->Get(tempText[i]).texCoord);
+		alphabetSprite->setPosition(textDefaultPos + textPos + alphabetOrigin * 0.8f);
+		alphabetSprite->setScale(alphabetScale);
+		alphabetSprite->setOrigin(alphabetOrigin * 0.2f);
+		textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
+		mainTextOption.push_back(alphabetSprite);
 	}
 
 	tempText = "EDITOR MODE";
@@ -290,14 +314,14 @@ void UiMenu::UpdateMainMenu(float realDt)
 
 	if (mainMenuIndex == 1)
 	{
-		for (auto alphabetSprite : mainTextOption)
+		for (auto alphabetSprite : mainTextContinue)
 		{
 			alphabetSprite->setColor(sf::Color::Magenta);
 		}
 	}
 	else
 	{
-		for (auto alphabetSprite : mainTextOption)
+		for (auto alphabetSprite : mainTextContinue)
 		{
 			alphabetSprite->setColor(sf::Color::White);
 		}
@@ -305,6 +329,21 @@ void UiMenu::UpdateMainMenu(float realDt)
 
 	if (mainMenuIndex == 2)
 	{
+		for (auto alphabetSprite : mainTextOption)
+		{
+			alphabetSprite->setColor(sf::Color::Magenta);
+		}
+	}
+	else
+	{
+		for (auto alphabetSprite : mainTextOption)
+		{
+			alphabetSprite->setColor(sf::Color::White);
+		}
+	}
+
+	if (mainMenuIndex == 3)
+	{
 		for (auto alphabetSprite : mainEditorMode)
 		{
 			alphabetSprite->setColor(sf::Color::Magenta);
@@ -318,7 +357,7 @@ void UiMenu::UpdateMainMenu(float realDt)
 		}
 	}
 
-	if (mainMenuIndex == 3)
+	if (mainMenuIndex == 4)
 	{
 		for (auto alphabetSprite : mainTextExit)
 		{
@@ -341,19 +380,19 @@ void UiMenu::UpdateMainMenuKey(float realDt)
 		mainMenuIndex--;
 		if(mainMenuIndex == -1)
 		{
-			mainMenuIndex = 3;
+			mainMenuIndex = 4;
 		}
-		mainMenuIndex = Utils::Clamp(mainMenuIndex, 0, 3);
+		mainMenuIndex = Utils::Clamp(mainMenuIndex, 0, 4);
 	}
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::S) || InputMgr::GetKeyDown(sf::Keyboard::Down))
 	{
 		mainMenuIndex++;
-		if (mainMenuIndex == 4)
+		if (mainMenuIndex == 5)
 		{
 			mainMenuIndex = 0;
 		}
-		mainMenuIndex = Utils::Clamp(mainMenuIndex, 0, 3);
+		mainMenuIndex = Utils::Clamp(mainMenuIndex, 0, 4);
 	}
 
 	if (!repeatPreventerEnterKey && mainMenuIndex == 0 && InputMgr::GetKeyDown(sf::Keyboard::Enter))
@@ -366,19 +405,25 @@ void UiMenu::UpdateMainMenuKey(float realDt)
 	if (!repeatPreventerEnterKey &&
 		mainMenuIndex == 1 && InputMgr::GetKeyDown(sf::Keyboard::Enter))
 	{
+		// Continue 동작 넣으세요
+	}
+
+	if (!repeatPreventerEnterKey &&
+		mainMenuIndex == 2 && InputMgr::GetKeyDown(sf::Keyboard::Enter))
+	{		
 		repeatPreventerEnterKey = true;
 		isOnMainMenu = false;
 		isOnOption = true;
 	}
 
-	if (!repeatPreventerEnterKey && mainMenuIndex == 2 && InputMgr::GetKeyDown(sf::Keyboard::Enter))
+	if (!repeatPreventerEnterKey && mainMenuIndex == 3 && InputMgr::GetKeyDown(sf::Keyboard::Enter))
 	{
 		repeatPreventerEnterKey = true;
 		SCENE_MGR.ChangeScene(SceneIds::SceneEditor);
 		FRAMEWORK.SetTimeScale(1.f);
 	}
 
-	if (!repeatPreventerEnterKey && mainMenuIndex == 3 && InputMgr::GetKeyDown(sf::Keyboard::Enter))
+	if (!repeatPreventerEnterKey && mainMenuIndex == 4 && InputMgr::GetKeyDown(sf::Keyboard::Enter))
 	{
 		repeatPreventerEnterKey = true;
 		FRAMEWORK.GetWindow().close();
@@ -606,6 +651,10 @@ void UiMenu::Draw(sf::RenderWindow& window)
 		window.draw(mainSpr2);
 
 		for (auto alphabetSprite : mainTextStartGame)
+		{
+			window.draw(*alphabetSprite);
+		}
+		for (auto alphabetSprite : mainTextContinue)
 		{
 			window.draw(*alphabetSprite);
 		}
