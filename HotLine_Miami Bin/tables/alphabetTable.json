@@ -267,6 +267,61 @@
         "Character": " ",
         "RectPos":[61,155],
         "CharWidth": 6
+      },
+      {
+        "Character": "0",
+        "RectPos":[1,177],
+        "CharWidth": 15
+      },
+      {
+        "Character": "1",
+        "RectPos":[31,177],
+        "CharWidth": 10
+      },
+      {
+        "Character": "2",
+        "RectPos":[61,177],
+        "CharWidth": 15
+      },
+      {
+        "Character": "3",
+        "RectPos":[91,177],
+        "CharWidth": 16
+      },
+      {
+        "Character": "4",
+        "RectPos":[121,177],
+        "CharWidth": 16
+      },
+      {
+        "Character": "5",
+        "RectPos":[151,177],
+        "CharWidth": 16
+      },
+      {
+        "Character": "6",
+        "RectPos":[181,177],
+        "CharWidth": 16
+      },
+      {
+        "Character": "7",
+        "RectPos":[211,177],
+        "CharWidth": 15
+      },
+      {
+        "Character": "8",
+        "RectPos":[1,199],
+        "CharWidth": 15
+      },
+      {
+        "Character": "9",
+        "RectPos":[31,199],
+        "CharWidth": 15
+      },
+      {
+        "Character": "%",
+        "RectPos":[1,221],
+        "CharWidth": 22
       }
     ]
   }

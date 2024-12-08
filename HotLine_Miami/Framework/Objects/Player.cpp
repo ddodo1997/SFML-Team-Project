@@ -96,6 +96,7 @@ void Player::Reset()
 	executionCount = 10;
 	bodyGuardExecutionPhase = 1;
 	speed = 130;
+	storedSpeed = 130;
 	onDieSpeed = 300;
 	onDieEffectAccumTime = 0.6f;
 	bulletProofCount = 0;
@@ -228,6 +229,43 @@ void Player::ResetAnimatorEvents()
 		[]()
 		{
 			SOUND_MGR.PlaySfx("sound/Attack/sndWeaponHit.wav");
+		});
+
+
+	animatorBody.AddEvent("pExctBodyguard_Phase1", 32,
+		[this]()
+		{
+			UpdateBodyAnimationMoving();
+		});
+	animatorBody.AddEvent("pExctBodyguard_Phase2", 3,
+		[this]()
+		{
+			UpdateBodyAnimationMoving();
+		});
+	animatorBody.AddEvent("pExctBat", 7,
+		[this]()
+		{
+			UpdateBodyAnimationMoving();
+		});
+	animatorBody.AddEvent("pExctBat_boss1", 7,
+		[this]()
+		{
+			UpdateBodyAnimationMoving();
+		});
+	animatorBody.AddEvent("pExctDefault", 3,
+		[this]()
+		{
+			UpdateBodyAnimationMoving();
+		});
+	animatorBody.AddEvent("pExctKnife", 7,
+		[this]()
+		{
+			UpdateBodyAnimationMoving();
+		});
+	animatorBody.AddEvent("pExctWallKick", 7,
+		[this]()
+		{
+			UpdateBodyAnimationMoving();
 		});
 }
 
@@ -410,6 +448,54 @@ void Player::Update(float dt)
 }
 
 void Player::UpdateBodyAnimationMoving()
+{
+	switch (weaponStatus.weaponType)
+	{
+	case Weapon::WeaponType::None:
+		animatorBody.PlayP("animations/Player/pBodyAni_default.json");
+		if (isFlipped)
+		{
+			body.setScale(1.f, -1.f);
+		}
+		else
+		{
+			body.setScale(1.f, 1.f);
+		}
+		break;
+	case Weapon::WeaponType::Bat:
+		animatorBody.PlayP("animations/Player/pBodyAni_Bat.json");
+		if (isFlipped)
+		{
+			body.setScale(1.f, -1.f);
+		}
+		else
+		{
+			body.setScale(1.f, 1.f);
+		}
+		break;
+	case Weapon::WeaponType::Knife:
+		animatorBody.PlayP("animations/Player/pBodyAni_Knife.json");
+		if (isFlipped)
+		{
+			body.setScale(1.f, -1.f);
+		}
+		else
+		{
+			body.setScale(1.f, 1.f);
+		}
+		break;
+	case Weapon::WeaponType::Machinegun:
+		animatorBody.PlayP("animations/Player/pBodyAni_Machinegun.json");
+		body.setScale(1.f, 1.f);
+		break;
+	case Weapon::WeaponType::Shotgun:
+		animatorBody.PlayP("animations/Player/pBodyAni_Shotgun.json");
+		body.setScale(1.f, 1.f);
+		break;
+	}
+}
+
+void Player::UpdateBodyAnimationAfterExecution()
 {
 	switch (weaponStatus.weaponType)
 	{
@@ -1058,7 +1144,7 @@ void Player::ExecuteAgainstWall()
 	executionCount = 1;
 	isExecuting = true;
 	isExecutionOnWall = true;
-	executionTimer = 0.4f;
+	executionTimer = 0.625f;
 	animatorBody.PlayP("animations/Player/Execution/pExctWallKick.json");
 	Utils::SetOrigin(body, Origins::MC);
 }

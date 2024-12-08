@@ -126,7 +126,8 @@ void UiMenu::ResetMenuContent()
 		optionTextVolume.push_back(alphabetSprite);
 	}
 
-	tempText = "MUSIC  VOLUME";
+	int tempVol = SOUND_MGR.GetBgmVolume();
+	tempText = "MUSIC  VOLUME " + std::to_string(tempVol) + "%";
 	textPos = { 0.f,0.f };
 	alphabetScale = { 4.f,4.f };
 	totalAlphabetWidth = 0;
@@ -173,7 +174,8 @@ void UiMenu::ResetMenuContent()
 		mainTextOption.push_back(alphabetSprite);
 	}
 
-	tempText = "SFX  VOLUME";
+	tempVol = SOUND_MGR.GetSfxVolume();
+	tempText = "SFX  VOLUME " + std::to_string(tempVol) + "%";
 	textPos = { 0.f,0.f };
 	alphabetScale = { 4.f,4.f };
 	totalAlphabetWidth = 0;
@@ -340,7 +342,7 @@ void UiMenu::UpdateMainMenuKey(float realDt)
 	if (InputMgr::GetKeyDown(sf::Keyboard::S) || InputMgr::GetKeyDown(sf::Keyboard::Down))
 	{
 		mainMenuIndex++;
-		if (mainMenuIndex == -4)
+		if (mainMenuIndex == 4)
 		{
 			mainMenuIndex = 0;
 		}
@@ -400,12 +402,20 @@ void UiMenu::UpdateOptionKey(float realDt)
 	if (InputMgr::GetKeyDown(sf::Keyboard::W) || InputMgr::GetKeyDown(sf::Keyboard::Up))
 	{
 		optionIndex--;
+		if (optionIndex == -1)
+		{
+			optionIndex = 0;
+		}
 		optionIndex = Utils::Clamp(optionIndex, 0, 0);
 	}
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::S) || InputMgr::GetKeyDown(sf::Keyboard::Down))
 	{
 		optionIndex++;
+		if (optionIndex == 1)
+		{
+			optionIndex = 0;
+		}
 		optionIndex = Utils::Clamp(optionIndex, 0, 0);
 	}
 
@@ -463,45 +473,57 @@ void UiMenu::UpdateVolumeKey(float realDt)
 	if (InputMgr::GetKeyDown(sf::Keyboard::W) || InputMgr::GetKeyDown(sf::Keyboard::Up))
 	{
 		volumeIndex--;
+		if (volumeIndex == -1)
+		{
+			volumeIndex = 1;
+		}
 		volumeIndex = Utils::Clamp(volumeIndex, 0, 1);
 	}
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::S) || InputMgr::GetKeyDown(sf::Keyboard::Down))
 	{
 		volumeIndex++;
+		if (volumeIndex == 2)
+		{
+			volumeIndex = 0;
+		}
 		volumeIndex = Utils::Clamp(volumeIndex, 0, 1);
 	}
 
-	if (volumeIndex == 0 && (InputMgr::GetKeyDown(sf::Keyboard::A) || InputMgr::GetKeyDown(sf::Keyboard::Left)))
+	if (volumeIndex == 0 && (InputMgr::GetKey(sf::Keyboard::A) || InputMgr::GetKey(sf::Keyboard::Left)))
 	{
 		int newVol = SOUND_MGR.GetBgmVolume();
 		newVol--;
 		newVol = Utils::Clamp(newVol, 0, 100);
 		SOUND_MGR.SetBgmVolume(newVol);
+		OnVolumeChange();
 	}
 
-	if (volumeIndex == 0 && (InputMgr::GetKeyDown(sf::Keyboard::D) || InputMgr::GetKeyDown(sf::Keyboard::Right)))
+	if (volumeIndex == 0 && (InputMgr::GetKey(sf::Keyboard::D) || InputMgr::GetKey(sf::Keyboard::Right)))
 	{
 		int newVol = SOUND_MGR.GetBgmVolume();
 		newVol++;
 		newVol = Utils::Clamp(newVol, 0, 100);
 		SOUND_MGR.SetBgmVolume(newVol);
+		OnVolumeChange();
 	}
 
-	if (volumeIndex == 1 && (InputMgr::GetKeyDown(sf::Keyboard::A) || InputMgr::GetKeyDown(sf::Keyboard::Left)))
+	if (volumeIndex == 1 && (InputMgr::GetKey(sf::Keyboard::A) || InputMgr::GetKey(sf::Keyboard::Left)))
 	{
 		int newVol = SOUND_MGR.GetSfxVolume();
 		newVol--;
 		newVol = Utils::Clamp(newVol, 0, 100);
 		SOUND_MGR.SetSfxVolume(newVol);
+		OnVolumeChange(false);
 	}
 
-	if (volumeIndex == 1 && (InputMgr::GetKeyDown(sf::Keyboard::D) || InputMgr::GetKeyDown(sf::Keyboard::Right)))
+	if (volumeIndex == 1 && (InputMgr::GetKey(sf::Keyboard::D) || InputMgr::GetKey(sf::Keyboard::Right)))
 	{
 		int newVol = SOUND_MGR.GetSfxVolume();
 		newVol++;
 		newVol = Utils::Clamp(newVol, 0, 100);
 		SOUND_MGR.SetSfxVolume(newVol);
+		OnVolumeChange(false);
 	}
 
 	if (!repeatPreventerEscKey && InputMgr::GetKeyDown(sf::Keyboard::Escape))
@@ -509,6 +531,59 @@ void UiMenu::UpdateVolumeKey(float realDt)
 		repeatPreventerEscKey = true;
 		isOnOption = true;
 		isOnVolume = false;
+	}
+}
+
+void UiMenu::OnVolumeChange(bool isBgm)
+{
+	std::string path = ALPHABET_TABLE->GetSpirtePath();
+	std::string tempText;
+	sf::Vector2f textPos;
+	sf::Vector2f textDefaultPos = { 0.f,500.f };
+	sf::Vector2f alphabetScale = { 4.f,4.f };
+	sf::Vector2f alphabetOrigin = { 960.f,700.f };
+	int totalAlphabetWidth = 0;
+	float verticalTextInterval = 25.f * alphabetScale.y;
+
+	if (isBgm)
+	{
+		int tempVol = SOUND_MGR.GetBgmVolume();
+		tempText = "MUSIC  VOLUME " + std::to_string(tempVol) + "%";
+	}
+	else
+	{
+		int tempVol = SOUND_MGR.GetSfxVolume();
+		tempText = "SFX  VOLUME " + std::to_string(tempVol) + "%";
+	}
+	sf::Vector2i alphabetHalfsize = ALPHABET_TABLE->Get(tempText.front()).texCoord.getSize() / 2;
+	textPos = { 0.f,0.f };
+
+	for (int i = 0; i < tempText.size(); ++i)
+	{
+		totalAlphabetWidth += ALPHABET_TABLE->Get(tempText[i]).characterWidth;
+	}
+
+	textDefaultPos.x = FRAMEWORK.GetWindowSizeF().x * 0.5f - totalAlphabetWidth * 0.5f * alphabetScale.x;
+
+	if (isBgm)
+		volumeTextMusic.clear();
+	else
+		volumeTextSfx.clear();
+
+	if(!isBgm)
+		textDefaultPos.y += verticalTextInterval;
+
+	for (int i = 0; i < tempText.size(); ++i)
+	{
+		sf::Sprite* alphabetSprite = new sf::Sprite(TEXTURE_MGR.Get(path), ALPHABET_TABLE->Get(tempText[i]).texCoord);
+		alphabetSprite->setPosition(textDefaultPos + textPos + alphabetOrigin * 0.8f);
+		alphabetSprite->setScale(alphabetScale);
+		alphabetSprite->setOrigin(alphabetOrigin * 0.2f);
+		textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
+		if(isBgm)
+			volumeTextMusic.push_back(alphabetSprite);
+		else
+			volumeTextSfx.push_back(alphabetSprite);
 	}
 }
 

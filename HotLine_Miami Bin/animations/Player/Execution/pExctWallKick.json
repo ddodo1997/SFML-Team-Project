@@ -1,7 +1,7 @@
 {
     "ID": "pExctWallKick",
     "LoopType": 0,
-    "FPS": 20,
+    "FPS": 16,
     "texId": "graphics/player/Attack/Pound/pAttackFaceKick_1Line.png",
     "Frames":
     [

@@ -11,10 +11,19 @@ protected:
 	std::vector<sf::Sprite*> mainEditorMode;
 	std::vector<sf::Sprite*> mainTextExit;
 
+	std::vector<sf::Sprite*> mainTextStartGame2;
+	std::vector<sf::Sprite*> mainTextOption2;
+	std::vector<sf::Sprite*> mainEditorMode2;
+	std::vector<sf::Sprite*> mainTextExit2;
+
 	std::vector<sf::Sprite*> optionTextVolume;
+	std::vector<sf::Sprite*> optionTextVolume2;
 
 	std::vector<sf::Sprite*> volumeTextMusic;
 	std::vector<sf::Sprite*> volumeTextSfx;
+
+	std::vector<sf::Sprite*> volumeTextMusic2;
+	std::vector<sf::Sprite*> volumeTextSfx2;
 
 	bool isOnMainMenu = true;
 	int mainMenuIndex = 0;
@@ -53,6 +62,8 @@ public:
 	void UpdateOptionKey(float realDt);
 	void UpdateVolume(float realDt);
 	void UpdateVolumeKey(float realDt);
+	
+	void OnVolumeChange(bool isBgm = true);
 
 	void Draw(sf::RenderWindow& window) override;
 };

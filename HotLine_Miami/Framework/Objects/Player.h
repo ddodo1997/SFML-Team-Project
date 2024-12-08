@@ -93,6 +93,7 @@ protected:
 	int executionCount = 0;
 
 	int bulletProofCount = 0;
+	
 
 	std::map<std::string, AnimationClip> aniClipMap;
 
@@ -122,6 +123,8 @@ public:
 
 	void Update(float dt) override;
 	void UpdateBodyAnimationMoving();
+	void UpdateBodyAnimationAfterExecution();
+
 	void UpdateMask(float dt);
 	void UpdateExecution(float dt);
 

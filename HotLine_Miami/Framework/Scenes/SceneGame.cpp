@@ -80,8 +80,6 @@ void SceneGame::Enter()
 	VIEW_MGR.SetCurrentScenePlayer(player);
 
 	SOUND_MGR.PlayBgm("sound/bgm/Paris2.ogg");
-	SOUND_MGR.SetBgmVolume(0);
-	SOUND_MGR.SetSfxVolume(20);
 }
 
 void SceneGame::Exit()
