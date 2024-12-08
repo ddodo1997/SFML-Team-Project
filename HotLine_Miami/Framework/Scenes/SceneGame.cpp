@@ -599,7 +599,8 @@ bool SceneGame::IsClearStage()
 	if (boss2 != nullptr)
 		result = boss2->IsClear();
 
-	uiHud->SetIsCleared(result);
+	if(uiHud != nullptr)
+		uiHud->SetIsCleared(result);
 
 	return result;
 }

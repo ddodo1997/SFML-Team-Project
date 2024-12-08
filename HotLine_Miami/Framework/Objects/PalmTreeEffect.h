@@ -14,6 +14,8 @@ protected:
 
 	float timer;
 
+	sf::Vector2f bscb = { 100, 255 };
+
 public:
 	PalmTreeEffect(const std::string& name = "");
 	~PalmTreeEffect() = default;

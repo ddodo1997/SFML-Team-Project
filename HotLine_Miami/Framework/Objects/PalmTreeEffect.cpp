@@ -100,6 +100,11 @@ void PalmTreeEffect::Update(float dt)
 
 	sf::Vector2f timerPair = { timer ,timer};
 	SetScale(scale + timerPair * dt);
+	
+	sf::Color tempColor; 
+	tempColor = { (sf::Uint8)(bscb.x + (bscb.y - bscb.x) * VIEW_MGR.GetG()), (sf::Uint8)(bscb.x + (bscb.y - bscb.x) * VIEW_MGR.GetR()), (sf::Uint8)bscb.y };
+
+	treeSprite.setColor(tempColor);
 
 	if (timer > 4.f)
 		SetActive(false);

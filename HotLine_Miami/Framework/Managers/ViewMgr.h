@@ -56,6 +56,9 @@ protected:
 
 	float flashEffectTimer;
 
+	float valR;
+	float valG;
+
 public:
 	void Init();
 	void Reset();
@@ -101,6 +104,9 @@ public:
 	void UnlockCursor();
 
 	void ResetFlashEffectTimer();
+
+	const float GetR() const { return valR; }
+	const float GetG() const { return valG; }
 };
 
 #define VIEW_MGR (ViewMgr::Instance())
