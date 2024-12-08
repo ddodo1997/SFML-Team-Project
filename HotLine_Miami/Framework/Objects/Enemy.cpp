@@ -496,6 +496,7 @@ void Enemy::SetStatus(Status stat)
 			SetStatus(Status::Aggro);
 		}
 		SetWayPoints(pathFinder.FindPath(position, player->GetPosition()));
+		patrol.originPoint.setRadius(3.f);
 		patrol.currentWayPoint = 1;
 		speed = 70.f;
 		switch (weaponStatus.weaponType)
@@ -593,6 +594,7 @@ void Enemy::SetWayPoints(std::vector<sf::Vector2f> pos)
 		temp.point.setFillColor(sf::Color::Blue);
 
 		patrol.wayPoints.push_back(temp);
+		patrol.originPoint.setRadius(0.1f);
 	}
 	patrol.wayPointCnt = patrol.wayPoints.size();
 }

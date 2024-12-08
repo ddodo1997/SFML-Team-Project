@@ -197,12 +197,12 @@ void Wall::FixedUpdate(float dt)
             if (boss1HitBox.points.left < hitBox.points.right && boss1HitBox.points.left > hitBox.points.center.x)
             {
                 //벽 우측 충돌
-                boss1->SetPosition({ hitBox.points.right + boss1HitBoxHalf, boss1Pos.y + boss1Dir.y * 0.5f });
+                boss1->SetPosition({ hitBox.points.right + boss1HitBoxHalf, boss1Pos.y });
             }
             else if (boss1HitBox.points.right > hitBox.points.left && boss1HitBox.points.right < hitBox.points.center.x)
             {
                 //벽 좌측 충돌
-                boss1->SetPosition({ hitBox.points.left - boss1HitBoxHalf, boss1Pos.y + boss1Dir.y * 0.5f });
+                boss1->SetPosition({ hitBox.points.left - boss1HitBoxHalf, boss1Pos.y  });
             }
         }
         else
@@ -210,12 +210,12 @@ void Wall::FixedUpdate(float dt)
             if (boss1HitBox.points.bottom > hitBox.points.top && boss1HitBox.points.bottom < hitBox.points.center.y)
             {
                 //벽 상부 충돌
-                boss1->SetPosition({ boss1Pos.x + boss1Dir.x * 0.5f, hitBox.points.top - boss1HitBoxHalf });
+                boss1->SetPosition({ boss1Pos.x, hitBox.points.top - boss1HitBoxHalf });
             }
             else if (boss1HitBox.points.top < hitBox.points.bottom && boss1HitBox.points.top > hitBox.points.center.y)
             {
                 //벽 하부 충돌
-                boss1->SetPosition({ boss1Pos.x + boss1Dir.x * 0.5f, hitBox.points.bottom + boss1HitBoxHalf });
+                boss1->SetPosition({ boss1Pos.x, hitBox.points.bottom + boss1HitBoxHalf });
             }
         }
     }
