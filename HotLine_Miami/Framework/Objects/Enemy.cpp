@@ -100,6 +100,7 @@ void Enemy::Reset()
 	SetStatus(Status::Patrol);
 	direction = { 0.f, 0.f };
 	SetPatterns();
+	SetActive(true);
 	speed = 30.f;
 	attackTimer = weaponStatus.attackInterval;
 	hp = 1;
@@ -561,12 +562,13 @@ void Enemy::SetStatus(Status stat)
 		isWalking = false;
 		break;
 	case Status::Die:
+		SetActive(true);
 		animatorBody.Play("animations/Enemy/enemy_back_bashed.json");
 		isWalking = false;
 		break;
 	case Status::Pounded:
-		animatorBody.Play("animations/Enemy/enemy_stun.json");
-		isWalking = false;
+		if(player->GetWeaponStatus().weaponType != Weapon::WeaponType::Bat)
+			SetActive(false);
 		break;
 	}
 }
@@ -612,9 +614,6 @@ void Enemy::Draw(sf::RenderWindow& window)
 
 	window.draw(body);
 
-	for (auto& point : patrol.wayPoints)
-		window.draw(point.point);
-
 	window.draw(patrol.originPoint);
 	hitBox.Draw(window);
 
@@ -622,6 +621,9 @@ void Enemy::Draw(sf::RenderWindow& window)
 	{
 		window.draw(viewAngle);
 		window.draw(collisionBox);
+		for (auto& point : patrol.wayPoints)
+			window.draw(point.point);
+
 	}
 }
 

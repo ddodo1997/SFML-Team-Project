@@ -5,7 +5,7 @@
 bool StageTable::Load()
 {
 	Release();
-	std::ifstream inFile("tables/Test_Save.json");
+	std::ifstream inFile("tables/stage_0.json");
 
 	if (!inFile)
 	{

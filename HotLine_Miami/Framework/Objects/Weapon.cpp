@@ -97,6 +97,8 @@ void Weapon::FixedUpdate(float dt)
 				SOUND_MGR.PlaySfx(sfxFilePath);
 			}
 		}
+		if (mafisBoss == nullptr || bodyguard == nullptr)
+			return;
 
 		if (weaponSprite.getGlobalBounds().intersects(bodyguard->GetCollisionBox().getGlobalBounds()) && weaponStatus.weaponType == WeaponType::Bat)
 		{
@@ -200,7 +202,7 @@ void Weapon::OnThrow(sf::Vector2f direction)
 	onDropTimer = 0.f;
 	onThrowTimer = 2.f;
 	onThrowTimer = Utils::RandomRange(1.9f, 2.1f);
-	this->direction = Utils::AngleSpread(direction, 10);
+	this->direction = Utils::AngleSpread(direction, 5);
 	currentOwner = Owner::Player;
 }
 

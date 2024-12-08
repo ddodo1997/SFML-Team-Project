@@ -149,6 +149,8 @@ void Boss2::Phase2(float dt)
 
 void Boss2::Phase3(float dt)
 {
+	if (mafiaBoss.IsDead())
+		ChangePhase(Phase::Clear);
 	mafiaBoss.Phase3(dt);
 }
 

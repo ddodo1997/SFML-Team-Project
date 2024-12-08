@@ -59,6 +59,8 @@ public:
 	void Phase2(float dt);
 	void Phase3(float dt);
 
+	bool IsClear()const  { return currentPhase == Phase::Clear; }
+
 	void ChangePhase(Phase phase);
 
 	void Draw(sf::RenderWindow& window) override;

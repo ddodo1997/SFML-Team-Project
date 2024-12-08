@@ -68,6 +68,7 @@ protected:
 	sf::Vector2f look;
 
 	float speed = 130;
+	float storedSpeed = 130;
 	float onDieSpeed = 300;
 	float onDieEffectAccumTime = 0.6f;
 

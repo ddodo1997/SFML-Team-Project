@@ -25,8 +25,7 @@ void SceneGame::Init()
 	player = AddGo(new Player("Player"));
 	tileMap = AddGo(new TileMap("Tile Map"));
 	uiHud = AddGo(new UiHudL());
-	boss = AddGo(new Boss1("Boss1"));
-	boss2 = AddGo(new Boss2("Boss2"));
+
 	cleaver = AddGo(new Cleaver("Cleaver"));
 	pathFinder = new PathFinder();
 	uiHud->SetPlayer(player);
@@ -54,9 +53,19 @@ void SceneGame::Enter()
 	SetWeapons();
 	player->SetPosition(STAGE_TABLE->GetPlayerData().pos * tileSize.x);
 	player->SetRotation(STAGE_TABLE->GetPlayerData().rotation);
-	boss->SetPosition(STAGE_TABLE->GetBoss1Data().pos * tileSize.x);
-	boss->SetRotation(STAGE_TABLE->GetBoss1Data().rotation);
-	boss2->SetPosition({ -1000.f, -1000.f, });
+	if (sf::Vector2f({ -1.f,-1.f }) != STAGE_TABLE->GetBoss1Data().pos)
+	{
+		boss = AddGo(new Boss1("Boss1"));
+		boss->Reset();
+		boss->SetPosition(STAGE_TABLE->GetBoss1Data().pos * tileSize.x);
+		boss->SetRotation(STAGE_TABLE->GetBoss1Data().rotation);
+	}	
+	if (sf::Vector2f({ -1.f,-1.f }) != STAGE_TABLE->GetBoss2Position())
+	{
+		boss2 = AddGo(new Boss2("Boss2"));
+		boss2->Reset();
+		boss2->SetPosition({ -1000.f, -1000.f, });
+	}
 	tileMap->SetTexture(&TEXTURE_MGR.Get(STAGE_TABLE->GetTileTextureId()));
 	tileMap->Initialize(STAGE_TABLE->GetTileSize(), STAGE_TABLE->GetTileCount(), STAGE_TABLE->GetFloorTiles());
 
@@ -341,10 +350,14 @@ void SceneGame::SetEnemies()
 
 BodyGuard* SceneGame::GetBodyGuard()
 {
+	if (boss2 == nullptr)
+		return nullptr;
 	return boss2->GetBodyGuard();
 }
 MafiaBoss* SceneGame::GetMafiaBoss()
 {
+	if (boss2 == nullptr)
+		return nullptr;
 	return boss2->GetMafiaBoss();
 }
 
@@ -411,7 +424,9 @@ Weapon* SceneGame::SpawnWeapon(Weapon::WeaponType weaponType, sf::Vector2f pos)
 Bullet* SceneGame::SpawnBullet()
 {
 	Bullet* bullet = bulletPool.Take();
-	bullet->SetFountains(boss2->GetFountain1(), boss2->GetFountain2());
+
+	if(boss != nullptr)
+		bullet->SetFountains(boss2->GetFountain1(), boss2->GetFountain2());
 	activeBullets.push_back(bullet);
 	return AddGo(bullet);
 }

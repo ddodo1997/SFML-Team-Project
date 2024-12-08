@@ -91,15 +91,7 @@ void Bullet::FixedUpdate(float dt)
 		}
 	}
 
-	for (auto fountain : fountains)
-	{
-		auto fountainBounds = fountain->GetGlobalBounds();
-		if (fountainBounds.intersects(body.getGlobalBounds()))
-		{
-			dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene())->ReturnBullet(this);
-			return;
-		}
-	}
+
 
 	switch (currentOwner)
 	{
@@ -110,6 +102,20 @@ void Bullet::FixedUpdate(float dt)
 		FixedUpdateEnemies(dt);
 		break;
 	}
+
+	if (fountains.empty())
+		return;
+
+	for (auto fountain : fountains)
+	{
+		auto fountainBounds = fountain->GetGlobalBounds();
+		if (fountainBounds.intersects(body.getGlobalBounds()))
+		{
+			dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene())->ReturnBullet(this);
+			return;
+		}
+	}
+
 }
 
 void Bullet::FixedUpdatePlayer(float dt)
@@ -133,7 +139,7 @@ void Bullet::FixedUpdateEnemies(float dt)
 	auto player = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene())->GetPlayer();
 	if (player->GetCollisionBox().getGlobalBounds().intersects(body.getGlobalBounds()))
 	{
-		//player->OnHit(weaponStatus, direction);
+		player->OnHit(weaponStatus, direction);
 		if (!player->IsDead())
 			dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene())->ReturnBullet(this);
 	}

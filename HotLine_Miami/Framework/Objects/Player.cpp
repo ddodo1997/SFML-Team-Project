@@ -136,7 +136,7 @@ void Player::Reset()
 	attackHitBoxCheck.setOutlineThickness(1.f);
 	Utils::SetOrigin(attackHitBoxCheck, Origins::ML);
 
-	weaponStatus.weaponType = Weapon::WeaponType::Bat;
+	weaponStatus.weaponType = Weapon::WeaponType::None;
 	weaponStatus = WEAPON_TABLE->Get(weaponStatus.weaponType);
 	attackHitBoxCheck.setSize({ weaponStatus.hitBoxWidth, weaponStatus.hitBoxHeight });
 
@@ -233,6 +233,11 @@ void Player::ResetAnimatorEvents()
 
 void Player::Update(float dt)
 {
+	if (isOnPound)
+		speed = 0.f;
+	else
+		speed = storedSpeed;
+
 	if (!IsControlable())
 	{
 		speed = 0.f;
@@ -946,7 +951,7 @@ void Player::TryExecute()
 		{
 			if (GetHitBox().rect.getGlobalBounds().intersects(enemy->GetHitBox().rect.getGlobalBounds()))
 			{
-				enemy->SetStatus(Enemy::Status::Die);
+				enemy->SetStatus(Enemy::Status::Pounded);
 				look = enemy->GetDirection();
 				SetRotation(Utils::Angle(look));
 				SetPosition(enemy->GetPosition());
