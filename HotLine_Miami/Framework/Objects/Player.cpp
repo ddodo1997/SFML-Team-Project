@@ -91,14 +91,15 @@ void Player::Reset()
 	isControlable = true;
 	isExecutionOnWall = false;
 	isFlipped = false;
-	isPoundingBoss = false;
+	isPoundingBoss1 = false;
 	executionTimer = 10.f;
 	executionCount = 10;
+	bodyGuardExecutionPhase = 1;
 	speed = 130;
 	onDieSpeed = 300;
 	onDieEffectAccumTime = 0.6f;
 	bulletProofCount = 0;
-	position = { 50.f, 100.f };
+	position = { -1000.f, -1000.f };
 	SetScale({ 1.f, 1.f });
 	body.setTexture(TEXTURE_MGR.Get("graphics/player/Walk/pWalkUnArmdNoMask.png"));
 	body.setTextureRect(sf::IntRect(0, 0, 32, 32));
@@ -112,6 +113,14 @@ void Player::Reset()
 	walls = sceneGame->GetWalls();
 	decorations = sceneGame->GetDecorations();
 	boss1 = sceneGame->GetBoss1();
+	boss2 = sceneGame->GetBoss2();
+
+	if (boss2 != nullptr)
+	{
+		bodyGuard = boss2->GetBodyGuard();
+		mafiaBoss = boss2->GetMafiaBoss();
+		panthers = boss2->GetPanthers();
+	}
 
 	enemies = sceneGame->GetEnemies();
 	collisionBox.setSize({ 10.f,10.f });
@@ -130,6 +139,8 @@ void Player::Reset()
 	weaponStatus.weaponType = Weapon::WeaponType::Bat;
 	weaponStatus = WEAPON_TABLE->Get(weaponStatus.weaponType);
 	attackHitBoxCheck.setSize({ weaponStatus.hitBoxWidth, weaponStatus.hitBoxHeight });
+
+	ResetAnimatorEvents();
 }
 
 void Player::ResetMask(bool ifInitialSetting)
@@ -196,6 +207,30 @@ void Player::ResetMask(bool ifInitialSetting)
 	}
 }
 
+void Player::ResetAnimatorEvents()
+{
+	animatorBody.AddEvent("pExctBodyguard_Phase1", 0, 
+		[]() 
+		{
+			SOUND_MGR.PlaySfx("sound/Attack/sndWeaponHit.wav");
+		});
+	animatorBody.AddEvent("pExctBodyguard_Phase1", 4,
+		[]()
+		{
+			SOUND_MGR.PlaySfx("sound/Attack/sndWeaponHit.wav");
+		});
+	animatorBody.AddEvent("pExctBodyguard_Phase1", 21,
+		[]()
+		{
+			SOUND_MGR.PlaySfx("sound/Attack/sndWeaponHit.wav");
+		});
+	animatorBody.AddEvent("pExctBodyguard_Phase1", 25,
+		[]()
+		{
+			SOUND_MGR.PlaySfx("sound/Attack/sndWeaponHit.wav");
+		});
+}
+
 void Player::Update(float dt)
 {
 	if (!IsControlable())
@@ -254,9 +289,35 @@ void Player::Update(float dt)
 
 	if (isOnPound)
 	{
-		if (isPoundingBoss)
+		if (isPoundingBoss1)
 		{			
 			UpdateExecutionBoss1(dt);
+		}
+		else if (isPoundingBodyGuard)
+		{
+			if (executionCount > 0)
+			{
+				if (bodyGuardExecutionPhase == 1)
+				{
+					UpdateExecutionBodyGuardPhase1(dt);
+				}
+				else
+				{
+					UpdateExecutionBodyGuardPhase2(dt);
+				}
+			}
+			else
+			{
+				if (bodyGuardExecutionPhase == 1)
+				{
+					isOnPound = false;
+				}
+				else
+				{
+					bodyGuard->SetStatus(BodyGuard::Status::Die);
+					isOnPound = false;
+				}
+			}
 		}
 		else
 		{
@@ -443,7 +504,59 @@ void Player::UpdateExecutionBoss1(float dt)
 			SOUND_MGR.PlaySfx("sound/Attack/sndHit.wav");
 			animatorBody.PlayP("animations/Player/Execution/pExctBat_boss1.json");
 			isOnPound = false;
-			isPoundingBoss = false;
+			isPoundingBoss1 = false;
+		}
+	}
+}
+
+void Player::UpdateExecutionBodyGuardPhase1(float dt)
+{	
+	if (isExecuting)
+	{
+		if (executionTimer > 0)
+		{
+			executionTimer -= dt;
+			executionTimer = Utils::Clamp(executionTimer, 0.f, 10.f);
+			//animatorBody.Play("animations/Player/Execution/pExctKnife.json");
+		}
+		else
+		{
+			executionCount--;
+			isExecuting = false;
+			bodyGuard->SetStatus(BodyGuard::Status::Crawl);
+			SOUND_MGR.PlaySfx("sound/Attack/sndHit.wav");
+			animatorBody.PlayP("animations/Player/Execution/pExctBat_boss1.json");
+			isOnPound = false;
+			isPoundingBodyGuard = false;
+		}
+	}
+}
+
+void Player::UpdateExecutionBodyGuardPhase2(float dt)
+{	
+	if (isExecuting)
+	{
+		if (executionTimer > 0)
+		{
+			executionTimer -= dt;
+			executionTimer = Utils::Clamp(executionTimer, 0.f, 10.f);
+		}
+		else
+		{
+			executionCount--;
+			isExecuting = false;
+		}
+	}
+	else
+	{
+		executionTimer = 10.f;
+		animatorBody.PlayP("animations/Player/Execution/pExct_bodyguard2.json");
+		Utils::SetOrigin(body, Origins::MC);
+		if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
+		{
+			isExecuting = true;
+			executionTimer = 0.25f;
+			SOUND_MGR.PlaySfx("sound/Attack/sndWeaponHit.wav");
 		}
 	}
 }
@@ -555,7 +668,10 @@ void Player::FixedUpdate(float dt)
 	{
 		SearchEnemy();
 		SearchBiker();
-
+		if (boss2 != nullptr)
+		{
+			SearchPanther();
+		}
 	}
 }
 
@@ -605,14 +721,19 @@ void Player::SearchBiker()
 
 void Player::SearchPanther()
 {
-}
-
-void Player::SearchBodyGuard()
-{
-}
-
-void Player::SearchMafiaBoss()
-{
+	for (auto panther : panthers)
+	{
+		if (panther != nullptr)
+		{
+			if (weaponStatus.weaponType == Weapon::WeaponType::Bat)
+			{
+				if (attackHitBoxCheck.getGlobalBounds().intersects(panther->GetCollisionBox().getGlobalBounds()))
+				{
+					panther->OnHit();
+				}
+			}
+		}
+	}
 }
 
 void Player::UpdateOnDie(float dt)
@@ -851,9 +972,50 @@ void Player::TryExecute()
 				executionCount = 1;
 				isExecuting = true;
 				isOnPound = true;
-				isPoundingBoss = true;
+				isPoundingBoss1 = true;
 				executionTimer = 0.5f;
 				animatorBody.PlayP("animations/Player/Execution/pExctBat_boss1.json");
+				return;
+			}
+		}
+	}
+
+	if (bodyGuard != nullptr)
+	{
+		if (GetHitBox().rect.getGlobalBounds().intersects(bodyGuard->GetCollisionBox().getGlobalBounds()))
+		{
+			if (bodyGuard->GetCurrentStauts() == BodyGuard::Status::Stun)
+			{
+				bodyGuard->SetStatus(BodyGuard::Status::Pounded1); // Pounded 추가시 로 변경 필요
+				look = bodyGuard->GetDirection();
+				SetRotation(Utils::Angle(look));
+				SetPosition(bodyGuard->GetPosition());
+				Utils::SetOrigin(body, Origins::MC);
+				executionCount = 1;
+				isExecuting = true;
+				isOnPound = true;
+				isPoundingBodyGuard = true;
+				bodyGuardExecutionPhase = 1;
+				executionTimer = 3.3f;
+				animatorBody.PlayP("animations/Player/Execution/pExct_bodyguard.json");
+				DropWeapon();
+				return;
+			}
+			if (bodyGuard->GetCurrentStauts() == BodyGuard::Status::Crawl)
+			{
+				bodyGuard->SetStatus(BodyGuard::Status::Pounded2); // Pounded 추가시 로 변경 필요
+				look = bodyGuard->GetDirection();
+				SetRotation(Utils::Angle(-look));
+				SetPosition(bodyGuard->GetPosition());
+				Utils::SetOrigin(body, Origins::MC);
+				executionCount = 4;
+				isExecuting = false;
+				isOnPound = true;
+				isPoundingBodyGuard = true;
+				bodyGuardExecutionPhase = 2;
+				executionTimer = 0.25f;
+				animatorBody.PlayP("animations/Player/Execution/pExct_bodyguard2.json");
+				DropWeapon();
 				return;
 			}
 		}

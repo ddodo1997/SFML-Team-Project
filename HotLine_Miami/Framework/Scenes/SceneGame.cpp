@@ -56,6 +56,7 @@ void SceneGame::Enter()
 	player->SetRotation(STAGE_TABLE->GetPlayerData().rotation);
 	boss->SetPosition(STAGE_TABLE->GetBoss1Data().pos * tileSize.x);
 	boss->SetRotation(STAGE_TABLE->GetBoss1Data().rotation);
+	boss2->SetPosition({ -1000.f, -1000.f, });
 	tileMap->SetTexture(&TEXTURE_MGR.Get(STAGE_TABLE->GetTileTextureId()));
 	tileMap->Initialize(STAGE_TABLE->GetTileSize(), STAGE_TABLE->GetTileCount(), STAGE_TABLE->GetFloorTiles());
 

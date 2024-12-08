@@ -300,14 +300,14 @@ sf::Vector2f ViewMgr::GetUiViewSize()
 void ViewMgr::LockCursor(sf::RenderWindow& window)
 {
 	RECT rect;
-	HWND hwnd = window.getSystemHandle(); // SFML Ã¢ÀÇ ÇÚµéÀ» °¡Á®¿É´Ï´Ù.
+	HWND hwnd = window.getSystemHandle(); // SFML Ã¢ï¿½ï¿½ ï¿½Úµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½É´Ï´ï¿½.
 
-	GetClientRect(hwnd, &rect);           // Ã¢ ³»ºÎÀÇ Å¬¶óÀÌ¾ðÆ® ¿µ¿ªÀ» °¡Á®¿É´Ï´Ù.
-	MapWindowPoints(hwnd, nullptr, reinterpret_cast<POINT*>(&rect), 2); // È­¸é ÁÂÇ¥·Î º¯È¯
-	ClipCursor(&rect);                    // Ä¿¼­¸¦ ÇØ´ç ¿µ¿ª¿¡ Á¦ÇÑÇÕ´Ï´Ù.
+	GetClientRect(hwnd, &rect);           // Ã¢ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½É´Ï´ï¿½.
+	MapWindowPoints(hwnd, nullptr, reinterpret_cast<POINT*>(&rect), 2); // È­ï¿½ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½È¯
+	ClipCursor(&rect);                    // Ä¿ï¿½ï¿½ï¿½ï¿½ ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
 }
 
 void ViewMgr::UnlockCursor()
 {
-	ClipCursor(nullptr);                  // Á¦ÇÑÀ» ÇØÁ¦ÇÕ´Ï´Ù.
+	ClipCursor(nullptr);                  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
 }

@@ -276,8 +276,21 @@ void UiHudL::UpdateBoxBL(float dt)
 		textBL.setString("NO GUNS!");
 		textBL2.setString("NO GUNS!");
 	}
+
+	float rotationMultiplier = 1.f;
+	float rotationAmplitude = 1.f;
+	float speedMultiplier = 1.f;
+
+	if (player->IsDead())
+	{
+		boxBLtargetPos = { 0.f,960.f };
+		textBL.setString("R to restart!");
+		textBL2.setString("R to restart!");
+		rotationMultiplier = 8.f;
+		rotationAmplitude = 2.f;
+		speedMultiplier = 3.f;
+	}
 	
-	float speedMultiplier = 2.f;
 	if (boxBLpos.y < boxBLtargetPos.y)
 	{
 		boxBLpos = boxBLpos + boxBLdir * boxBLspeed * dt;
@@ -302,6 +315,14 @@ void UiHudL::UpdateBoxBL(float dt)
 		textBLrotationTimer -= 2.f * Utils::PI;
 	if (textBL2rotationTimer > 2.f * Utils::PI)
 		textBL2rotationTimer -= 2.f * Utils::PI;
+
+	float rotationTimer1 = textBLrotationTimer * speedMultiplier;
+	float rotationTimer2 = textBL2rotationTimer * speedMultiplier;
+
+	if (rotationTimer1 > 2.f * Utils::PI)
+		rotationTimer1 -= 2.f * Utils::PI;
+	if (rotationTimer1 > 2.f * Utils::PI)
+		rotationTimer1 -= 2.f * Utils::PI;
 
 	if (textBLrotationTimer > 1.5f * Utils::PI)
 	{
@@ -336,12 +357,13 @@ void UiHudL::UpdateBoxBL(float dt)
 	{
 		textBL2axisX = textBL2rotationTimer;
 	}
+	
 		
-	textBL.setRotation(std::sin(textBLrotationTimer) * textBLrotationDuration);
+	textBL.setRotation(std::sin(textBLrotationTimer * rotationMultiplier) * textBLrotationDuration * rotationAmplitude);
 	textBL.setPosition(boxBL.getPosition().x + boxBL.getSize().x / 2.f - 3.f * textBLaxisX, boxBL.getPosition().y + 20.f + 3.f * textBLaxisX);
 	Utils::SetOrigin(textBL, Origins::MC);
 
-	textBL2.setRotation(std::sin(textBLrotationTimer) * textBLrotationDuration);
+	textBL2.setRotation(std::sin(textBLrotationTimer * rotationMultiplier) * textBLrotationDuration * rotationAmplitude);
 	textBL2.setPosition(boxBL.getPosition().x + boxBL.getSize().x / 2.f - 3.f * textBL2axisX, boxBL.getPosition().y + 20.f - 3.f * textBL2axisX);
 	Utils::SetOrigin(textBL2, Origins::MC);
 }
