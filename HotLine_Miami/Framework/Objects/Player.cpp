@@ -100,7 +100,6 @@ void Player::Reset()
 	onDieSpeed = 300;
 	onDieEffectAccumTime = 0.6f;
 	bulletProofCount = 0;
-	position = { -1000.f, -1000.f };
 	SetScale({ 1.f, 1.f });
 	body.setTexture(TEXTURE_MGR.Get("graphics/player/Walk/pWalkUnArmdNoMask.png"));
 	body.setTextureRect(sf::IntRect(0, 0, 32, 32));

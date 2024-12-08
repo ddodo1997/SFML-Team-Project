@@ -40,9 +40,9 @@ void SceneGame::Release()
 void SceneGame::Enter()
 {
 	tileSize = static_cast<sf::Vector2f>(STAGE_TABLE->GetTileSize());
+	LoadNextStage();
 	Scene::Enter();
 	// SetWalls_2(); // ���� �� ����� �� 
-	LoadNextStage();
 
 	worldView.setSize(windowSize * 0.2f);
 	//worldView.setCenter(player->GetPosition());
@@ -477,10 +477,10 @@ void SceneGame::LoadNextStage()
 		boss2->SetPosition(STAGE_TABLE->GetCurrentStage().GetBoss2Position() * tileSize.x);
 	}
 	
-	LoadWalls(); // ��¥ �� ������ ����ϱ�
-	LoadDecorations();
 	LoadEnemies();
+	LoadWalls(); // ��¥ �� ������ ����ϱ�
 	LoadWeapons();
+	LoadDecorations();
 	STAGE_TABLE->NextStage();
 }
 
