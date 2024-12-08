@@ -233,5 +233,6 @@ void Panther::OnHit()
 {
 	if (pattern.currentStatus != Status::Attack)
 		return;
+	SOUND_MGR.PlaySfx("sound/Attack/sndWeaponHit.wav");
 	pattern.stunStack == 0 ? SetStatus(Status::Stun) : SetStatus(Status::Die);
 }
