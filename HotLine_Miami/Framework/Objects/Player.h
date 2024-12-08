@@ -68,6 +68,8 @@ protected:
 	sf::Vector2f look;
 
 	float speed = 130;
+	float storedSpeed = 130;
+
 	float onDieSpeed = 300;
 	float onDieEffectAccumTime = 0.6f;
 
@@ -92,6 +94,7 @@ protected:
 	int executionCount = 0;
 
 	int bulletProofCount = 0;
+	
 
 	std::map<std::string, AnimationClip> aniClipMap;
 
@@ -121,6 +124,8 @@ public:
 
 	void Update(float dt) override;
 	void UpdateBodyAnimationMoving();
+	void UpdateBodyAnimationAfterExecution();
+
 	void UpdateMask(float dt);
 	void UpdateExecution(float dt);
 

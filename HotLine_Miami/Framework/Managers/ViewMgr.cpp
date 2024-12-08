@@ -31,6 +31,8 @@ void ViewMgr::Reset()
 	vaBackground[2].position = { 1920.f,1080.f };
 	vaBackground[3].position = { 0.f,1080.f };
 
+	flashEffectTimer = 200.f;
+
 	FRAMEWORK.GetWindow().setMouseCursorVisible(isCursorVisible);
 }
 
@@ -205,6 +207,7 @@ void ViewMgr::UpdateFurtherViewMousePos(float dt)
 
 void ViewMgr::UpdateBackground(float realDt)
 {
+	flashEffectTimer += realDt * 1000.f;
 	colorRotator += realDt;
 	if (colorRotator > colorCyclingDuration)
 		colorRotator -= colorCyclingDuration;
@@ -230,6 +233,16 @@ void ViewMgr::UpdateBackground(float realDt)
 
 	sf::Color brightSideColor = { (sf::Uint8)(bscb.x + (bscb.y - bscb.x) * valR), (sf::Uint8)(bscb.x + (bscb.y - bscb.x) * valG), (sf::Uint8)bscb.y };
 	sf::Color darkSideColor = { (sf::Uint8)(dscb.x + (dscb.y - dscb.x) * valR), (sf::Uint8)(dscb.x + (dscb.y - dscb.x) * valG), (sf::Uint8)dscb.y };
+
+	if (flashEffectTimer < 200.f)
+	{
+		float temp = flashEffectTimer / 15;
+		if ((int)temp % 2 == 0)
+		{
+			brightSideColor = sf::Color(193, 65, 53);
+			darkSideColor = sf::Color(193, 65, 53);
+		}
+	}
 
 	vaBackground[0].color = brightSideColor;
 	vaBackground[1].color = brightSideColor;
@@ -310,4 +323,9 @@ void ViewMgr::LockCursor(sf::RenderWindow& window)
 void ViewMgr::UnlockCursor()
 {
 	ClipCursor(nullptr);                  // ������ �����մϴ�.
+}
+
+void ViewMgr::ResetFlashEffectTimer()
+{
+	flashEffectTimer = 0.f;
 }

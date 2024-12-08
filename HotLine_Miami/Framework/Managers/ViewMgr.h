@@ -54,6 +54,8 @@ protected:
 	float viewRotation;
 	float pausedViewTimer;
 
+	float flashEffectTimer;
+
 public:
 	void Init();
 	void Reset();
@@ -93,8 +95,12 @@ public:
 
 	sf::Vector2f GetWorldViewCenterPos() { return worldViewCenterPos; }
 
+	void ResetPlayerDefaultPos(sf::Vector2f newPlayerDefaultPos) { this->defaultPlayerPos = newPlayerDefaultPos; }
+
 	void LockCursor(sf::RenderWindow& window);
 	void UnlockCursor();
+
+	void ResetFlashEffectTimer();
 };
 
 #define VIEW_MGR (ViewMgr::Instance())
