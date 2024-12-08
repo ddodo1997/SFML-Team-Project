@@ -847,6 +847,7 @@ void UiHud::Restart()
 void UiHud::Quit()
 {
 	selectedFunctionPause = 0;
+	STAGE_TABLE->SetCurrentStageIndex(0);
 	SCENE_MGR.ChangeScene(SceneIds::SceneMenu);
 	isPaused = false;
 	wasPaused = false;

@@ -183,6 +183,14 @@ const DataStage& StageTable::GetCurrentStage() const
 	}
 }
 
+void StageTable::SetCurrentStageIndex(int idx)
+{
+	if (idx >= 0 || idx < stageDatas.size())
+	{
+		currentStageIndex = idx;
+	}
+}
+
 void StageTable::NextStage()
 {
 	if (currentStageIndex + 1 < stageDatas.size())
