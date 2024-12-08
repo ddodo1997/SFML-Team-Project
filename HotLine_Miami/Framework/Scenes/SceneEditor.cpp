@@ -876,6 +876,20 @@ void SceneEditor::SaveMap()
 	{
 		std::cerr << "save Failed.." << std::endl;
 	}
+
+	tileMap->InitializeEmpty(STAGE_TABLE->GetTileSize(), { 40, 40 });
+	DeleteWalls();
+	DeleteEnemies();
+	DeleteWaypoints();
+	DeleteWeapons();
+	DeletePlayer();
+	DeleteBoss1();
+	DeleteBoss2();
+	DeleteEndPoints();
+
+	minX = 0;
+	minY = 0;
+	zoomNoun = 0.5f;
 }
 
 void SceneEditor::SaveWall(json& mapData)

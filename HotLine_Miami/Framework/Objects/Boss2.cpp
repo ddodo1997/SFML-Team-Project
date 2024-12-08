@@ -15,8 +15,8 @@ void Boss2::SetPosition(const sf::Vector2f& pos)
 	panther2.SetPosition({ position.x + 32.f, position.y + -160.f });
 	bodyGuard.SetPosition({ position.x + 64.f, position.y + -250.f });
 	mafiaBoss.SetPosition({ position.x, position.y + -230.f });
-	fountain1.SetPosition({ position.x + -160.f , position.y });
-	fountain2.SetPosition({ position.x + 160.f, position.y });
+	fountain1.SetPosition({ position.x + -160.f , position.y - 100.f});
+	fountain2.SetPosition({ position.x + 160.f, position.y  - 100.f});
 	awakeBound = { position.x + 0.f,position.y + 0.f, 640.f, 1120.f };
 }
 
@@ -110,8 +110,9 @@ void Boss2::Update(float dt)
 	
 	panther1.Update(dt);
 	panther2.Update(dt);
-	bodyGuard.Update(dt);
 	mafiaBoss.Update(dt);
+	if (bodyGuard.IsActive())
+		bodyGuard.Update(dt);
 	fountain1.Update(dt);
 	fountain2.Update(dt);
 	switch (currentPhase)
@@ -122,7 +123,8 @@ void Boss2::Update(float dt)
 		Phase1(dt);
 		break;
 	case Phase::BodyGuard:
-		Phase2(dt);
+		if (bodyGuard.IsActive())
+			Phase2(dt);
 		break;
 	case Phase::MafiaBoss:
 		Phase3(dt);
@@ -184,7 +186,8 @@ void Boss2::Draw(sf::RenderWindow& window)
 {
 	panther1.Draw(window);
 	panther2.Draw(window);
-	bodyGuard.Draw(window);
+	if(bodyGuard.IsActive())
+		bodyGuard.Draw(window);
 	mafiaBoss.Draw(window);
 	fountain1.Draw(window);
 	fountain2.Draw(window);

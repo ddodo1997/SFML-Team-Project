@@ -46,6 +46,8 @@ protected:
 	std::list<Bullet*> activeBullets;
 
 	sf::Vector2f tileSize;
+
+	sf::FloatRect endPoint;
 public:
 	SceneGame();
 	~SceneGame() = default;
@@ -66,6 +68,7 @@ public:
 	void SetWalls_2();
 	void SetDecorations();
 	void SetEnemies();
+	void SetEndPoint();
 	void LoadWeapons();
 	Player* GetPlayer() { return player; }
 	Boss1* GetBoss1() { return boss; }
@@ -103,5 +106,6 @@ public:
 	void LoadCurrentStage();
 	void LoadNextStage(); 
 	void ClearStage();
+	bool IsClearStage();
 };
 
