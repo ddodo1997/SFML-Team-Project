@@ -22,6 +22,7 @@ SceneDevS::SceneDevS() : SceneGame()
 
 void SceneDevS::Init()
 {
+	VIEW_MGR.Init();
 	tileMap = AddGo(new TileMap("Tile Map"));
 	tileMapEditor = AddGo(new TileMapEditor("Tile Map Editor"));
 	// LoadDecorations();
@@ -34,6 +35,7 @@ void SceneDevS::Init()
 void SceneDevS::Enter()
 {
 	Scene::Enter();
+	FRAMEWORK.GetWindow().setMouseCursorVisible(true);
 	tileMap->SetTexture(&TEXTURE_MGR.Get(STAGE_TABLE->GetTileTextureId()));
 	tileMap->InitializeEmpty(STAGE_TABLE->GetTileSize(), { 40, 40 });
 	//tileMap->Initialize(STAGE_TABLE->GetTileSize(), STAGE_TABLE->GetTileCount(), STAGE_TABLE->GetFloorTiles());
@@ -42,6 +44,8 @@ void SceneDevS::Enter()
 	worldView.setCenter(0, 0);
 	uiView.setSize(windowSize);
 	uiView.setCenter(windowSize * 0.5f);
+	VIEW_MGR.SetCurrentSceneWorldView(&worldView);
+	VIEW_MGR.SetCurrentSceneUiView(&uiView);
 	tileSize = STAGE_TABLE->GetTileSize();
 	tileCount = tileMap->GetTileCount();
 	isWayPointMode = false;
@@ -55,7 +59,7 @@ void SceneDevS::Exit()
 void SceneDevS::Update(float dt)
 {
 	Scene::Update(dt);
-
+	VIEW_MGR.Update(dt);
 	float cameraSpeed = 300.f * dt;
 	sf::Vector2i mousePos = InputMgr::GetMousePosition();
 	sf::Vector2f worldPos = ScreenToWorld(mousePos);
@@ -83,6 +87,12 @@ void SceneDevS::Update(float dt)
 	zoomNoun = Utils::Clamp(zoomNoun, 0.2f, 0.5f);
 
 	worldView.setSize(windowSize * zoomNoun);
+
+	if (InputMgr::GetKeyDown(sf::Keyboard::Escape))
+	{
+		SCENE_MGR.ChangeScene(SceneIds::SceneMenu);
+	}
+
 	if(!isWayPointMode)
 	{
 		if (InputMgr::GetKeyDown(sf::Keyboard::Num1))
@@ -162,10 +172,66 @@ void SceneDevS::Update(float dt)
 			}
 		}
 
-		if (tileMapEditor->GetMode() == TileMapEditor::EditorMode::TileMode && InputMgr::GetMouseButtonDown(sf::Mouse::Right))
+		if (InputMgr::GetMouseButtonDown(sf::Mouse::Right) && tileMapEditor->GetMode() == TileMapEditor::EditorMode::TileMode)
 		{
 			CreateEndPoint(worldPos);
 		}
+
+		if (InputMgr::GetMouseButton(sf::Mouse::Right))
+		{
+			if (tileMapEditor->GetGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
+			{
+				return;
+			}
+
+			switch (tileMapEditor->GetMode())
+			{
+			case TileMapEditor::EditorMode::TileMode:
+				break;
+			case TileMapEditor::EditorMode::WallMode:
+				if (worldPos.x <  0.f || worldPos.x > tileSize.x * tileCount.x || worldPos.y <  0.f || worldPos.y > tileSize.y * tileCount.y)
+				{
+					break;
+				}
+				DeleteWall(worldPos);
+				break;
+			case TileMapEditor::EditorMode::DecorationMode:
+				break;
+			case TileMapEditor::EditorMode::EnemyMode:
+				if (worldPos.x <  0.f || worldPos.x > tileSize.x * tileCount.x || worldPos.y <  0.f || worldPos.y > tileSize.y * tileCount.y)
+				{
+					break;
+				}
+				DeleteEnemy(worldPos);
+				break;
+			case TileMapEditor::EditorMode::WeaponMode:
+				if (worldPos.x <  0.f || worldPos.x > tileSize.x * tileCount.x || worldPos.y <  0.f || worldPos.y > tileSize.y * tileCount.y)
+				{
+					break;
+				}
+				DeleteWeapon(worldPos);
+				break;
+			case TileMapEditor::EditorMode::PlayerAndBossMode:
+				if (worldPos.x <  0.f || worldPos.x > tileSize.x * tileCount.x || worldPos.y <  0.f || worldPos.y > tileSize.y * tileCount.y)
+				{
+					break;
+				}
+				if (tileMapEditor->GetSelectedPlayerOrBoss() == "Player")
+				{
+					DeletePlayer();
+				}
+				else if (tileMapEditor->GetSelectedPlayerOrBoss() == "Boss1")
+				{
+					DeleteBoss1();
+				}
+				else if (tileMapEditor->GetSelectedPlayerOrBoss() == "Boss2")
+				{
+					DeleteBoss2();
+				}
+				break;
+			}
+		}
+
 		if (InputMgr::GetKeyDown(sf::Keyboard::F9))
 		{
 			Variables::isDrawHitBox = !Variables::isDrawHitBox;
@@ -177,6 +243,16 @@ void SceneDevS::Update(float dt)
 			DeleteWalls();
 			DeleteEnemies();
 			DeleteWaypoints();
+			DeleteWeapons();
+			DeletePlayer();
+			DeleteBoss1();
+			DeleteBoss2();
+			DeleteEndPoints();
+
+			minX = 0;
+			minY = 0;
+			zoomNoun = 0.5f;
+			// SCENE_MGR.ChangeScene(SceneIds::DevS);
 		}
 		if (InputMgr::GetKeyDown(sf::Keyboard::Enter))
 		{
@@ -191,6 +267,10 @@ void SceneDevS::Update(float dt)
 		{
 			AddWayPoints(worldPos);
 		}
+		if (InputMgr::GetMouseButtonDown(sf::Mouse::Right))
+		{
+			DeleteWaypoint(worldPos);
+		}
 		if (InputMgr::GetKeyDown(sf::Keyboard::Enter))
 		{
 			patrolEnemy = nullptr;
@@ -201,6 +281,7 @@ void SceneDevS::Update(float dt)
 
 void SceneDevS::Draw(sf::RenderWindow& window)
 {
+	VIEW_MGR.DrawBackground();
 	Scene::Draw(window);
 }
 
@@ -477,10 +558,12 @@ void SceneDevS::CreateEndPoint(const sf::Vector2f& pos)
 
 	sf::Vector2f pointPosition = { (xIndex * tileSize.x) + tileSize.x * 0.5f, (yIndex * tileSize.y) + tileSize.y * 0.5f };
 
-	for (const auto& endPoint : endPoints)
+	for (int i = 0; i < endPoints.size(); i++)
 	{
-		if (pointPosition == endPoint->GetPosition())
+		if (endPoints[i]->GetGlobalBounds().contains(pos))
 		{
+			RemoveGo(endPoints[i]);
+			endPoints.erase(endPoints.begin() + i);
 			return;
 		}
 	}
@@ -552,6 +635,74 @@ void SceneDevS::SetStatusEnemies()
 	}
 }
 
+void SceneDevS::DeleteWall(const sf::Vector2f& pos)
+{
+	for (int i = 0; i < wallsHorizontal.size(); i++)
+	{
+		if (wallsHorizontal[i]->GetGlobalBounds().contains(pos))
+		{
+			RemoveGo(wallsHorizontal[i]);
+			wallsHorizontal.erase(wallsHorizontal.begin() + i);
+		}
+	}
+	for (int i = 0; i < wallsVertical.size(); i++)
+	{
+		if (wallsVertical[i]->GetGlobalBounds().contains(pos))
+		{
+			RemoveGo(wallsVertical[i]);
+			wallsVertical.erase(wallsVertical.begin() + i);
+		}
+	}
+}
+
+void SceneDevS::DeleteEnemy(const sf::Vector2f& pos)
+{
+	for (int i = 0; i < createdEnemies.size(); i++)
+	{
+		if (createdEnemies[i].second->GetGlobalBounds().contains(pos))
+		{
+			RemoveGo(createdEnemies[i].second);
+			createdEnemies.erase(createdEnemies.begin() + i);
+		}
+	}
+}
+
+void SceneDevS::DeleteWaypoint(const sf::Vector2f& pos)
+{
+	for (int i = 0; i < waypoints.size(); i++)
+	{
+		if (waypoints[i]->GetGlobalBounds().contains(pos))
+		{
+			RemoveGo(waypoints[i]);
+			waypoints.erase(waypoints.begin() + i);
+		}
+	}
+}
+
+void SceneDevS::DeleteWeapon(const sf::Vector2f& pos)
+{
+	for (int i = 0; i < createdWeapons.size(); i++)
+	{
+		if (createdWeapons[i]->GetGlobalBounds().contains(pos))
+		{
+			RemoveGo(createdWeapons[i]);
+			createdWeapons.erase(createdWeapons.begin() + i);
+		}
+	}
+}
+
+void SceneDevS::DeleteEndPoint(const sf::Vector2f& pos)
+{
+	for (int i = 0; i < endPoints.size(); i++)
+	{
+		if (endPoints[i]->GetGlobalBounds().contains(pos))
+		{
+			RemoveGo(endPoints[i]);
+			endPoints.erase(endPoints.begin() + i);
+		}
+	}
+}
+
 void SceneDevS::DeleteWalls()
 {
 	for (auto& wall : wallsHorizontal)
@@ -582,6 +733,42 @@ void SceneDevS::DeleteWaypoints()
 		RemoveGo(waypoint);
 	}
 	waypoints.clear();
+}
+
+void SceneDevS::DeleteWeapons()
+{
+	for (auto& weapon : createdWeapons)
+	{
+		RemoveGo(weapon);
+	}
+	weapons.clear();
+}
+
+void SceneDevS::DeletePlayer()
+{
+	RemoveGo(player);
+	player = nullptr;
+}
+
+void SceneDevS::DeleteBoss1()
+{
+	RemoveGo(boss1);
+	boss1 = nullptr;
+}
+
+void SceneDevS::DeleteBoss2()
+{
+	RemoveGo(boss2);
+	boss2 = nullptr;
+}
+
+void SceneDevS::DeleteEndPoints()
+{
+	for (auto& endPoint : endPoints)
+	{
+		RemoveGo(endPoint);
+	}
+	endPoints.clear();
 }
 
 void SceneDevS::SaveMap()

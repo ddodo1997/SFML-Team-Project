@@ -83,9 +83,20 @@ public:
 	std::vector<Decoration*> GetDecorations() const { return decorations; }
 	std::vector<Wall*> GetWalls() const { return walls; }
 
+	void DeleteWall(const sf::Vector2f& pos);
+	void DeleteEnemy(const sf::Vector2f& pos);
+	void DeleteWaypoint(const sf::Vector2f& pos);
+	void DeleteWeapon(const sf::Vector2f& pos);
+	void DeleteEndPoint(const sf::Vector2f& pos);
+
 	void DeleteWalls();
 	void DeleteEnemies();
 	void DeleteWaypoints();
+	void DeleteWeapons();
+	void DeletePlayer();
+	void DeleteBoss1();
+	void DeleteBoss2();
+	void DeleteEndPoints();
 
 	void SaveMap();
 	void SaveWall(json& mapData);

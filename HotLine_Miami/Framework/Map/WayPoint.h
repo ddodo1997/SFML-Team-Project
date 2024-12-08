@@ -16,6 +16,8 @@ public:
 	void SetOrigin(Origins preset) override;
 	void SetOrigin(const sf::Vector2f& newOrigin) override;
 
+	sf::FloatRect GetGlobalBounds() const override { return waypointShape.getGlobalBounds(); }
+
 	void Init() override;
 	void Release() override;
 	void Reset() override;
