@@ -110,6 +110,8 @@ void SceneGame::Update(float dt)
 		}
 	}
 
+	IsClearStage();
+
 	if (player->GetGlobalBounds().intersects(endPoint) && IsClearStage())
 		LoadNextStage();
 
@@ -477,7 +479,7 @@ void SceneGame::LoadCurrentStage()
 	tileMap->Initialize(STAGE_TABLE->GetTileSize(), STAGE_TABLE->GetCurrentStage().GetTileCount(), STAGE_TABLE->GetCurrentStage().GetFloorTiles());
 	player->SetPosition(STAGE_TABLE->GetCurrentStage().GetPlayerData().pos * tileSize.x);
 	player->SetRotation(STAGE_TABLE->GetCurrentStage().GetPlayerData().rotation);
-
+	VIEW_MGR.ResetPlayerDefaultPos(STAGE_TABLE->GetCurrentStage().GetPlayerData().pos * tileSize.x);
 
 	LoadWalls(); // ��¥ �� ������ ����ϱ�
 	LoadDecorations();
@@ -513,6 +515,7 @@ void SceneGame::LoadNextStage()
 	tileMap->Initialize(STAGE_TABLE->GetTileSize(), STAGE_TABLE->GetCurrentStage().GetTileCount(), STAGE_TABLE->GetCurrentStage().GetFloorTiles());
 	player->SetPosition(STAGE_TABLE->GetCurrentStage().GetPlayerData().pos * tileSize.x);
 	player->SetRotation(STAGE_TABLE->GetCurrentStage().GetPlayerData().rotation);
+	VIEW_MGR.ResetPlayerDefaultPos(STAGE_TABLE->GetCurrentStage().GetPlayerData().pos * tileSize.x);
 
 
 	LoadWalls(); // ��¥ �� ������ ����ϱ�
@@ -595,6 +598,8 @@ bool SceneGame::IsClearStage()
 
 	if (boss2 != nullptr)
 		result = boss2->IsClear();
+
+	uiHud->SetIsCleared(result);
 
 	return result;
 }
