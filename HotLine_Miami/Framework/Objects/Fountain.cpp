@@ -91,12 +91,12 @@ void Fountain::Update(float dt)
             if (playerHitBox.points.left < hitBox.points.right && playerHitBox.points.left > hitBox.points.center.x)
             {
                 //벽 우측 충돌
-                player->SetPosition({ hitBox.points.right + playerHitBoxHalf, playerPos.y + playerDir.y * 0.5f });
+                player->SetPosition({ hitBox.points.right + playerHitBoxHalf, playerPos.y });
             }
             else if (playerHitBox.points.right > hitBox.points.left && playerHitBox.points.right < hitBox.points.center.x)
             {
                 //벽 좌측 충돌
-                player->SetPosition({ hitBox.points.left - playerHitBoxHalf, playerPos.y + playerDir.y * 0.5f });
+                player->SetPosition({ hitBox.points.left - playerHitBoxHalf, playerPos.y });
             }
         }
         else
@@ -104,12 +104,12 @@ void Fountain::Update(float dt)
             if (playerHitBox.points.bottom > hitBox.points.top && playerHitBox.points.bottom < hitBox.points.center.y)
             {
                 //벽 상부 충돌
-                player->SetPosition({ playerPos.x + playerDir.x * 0.5f, hitBox.points.top - playerHitBoxHalf });
+                player->SetPosition({ playerPos.x , hitBox.points.top - playerHitBoxHalf });
             }
             else if (playerHitBox.points.top < hitBox.points.bottom && playerHitBox.points.top > hitBox.points.center.y)
             {
                 //벽 하부 충돌
-                player->SetPosition({ playerPos.x + playerDir.x * 0.5f, hitBox.points.bottom + playerHitBoxHalf });
+                player->SetPosition({ playerPos.x , hitBox.points.bottom + playerHitBoxHalf });
             }
         }
     }
@@ -127,12 +127,12 @@ void Fountain::Update(float dt)
             if (panther1HitBox.points.left < hitBox.points.right && panther1HitBox.points.left > hitBox.points.center.x)
             {
                 //벽 우측 충돌
-                panther1->SetPosition({ hitBox.points.right + panther1HitBoxHalf, panther1Pos.y + panther1Dir.y * 0.5f });
+                panther1->SetPosition({ hitBox.points.right + panther1HitBoxHalf, panther1Pos.y});
             }
             else if (panther1HitBox.points.right > hitBox.points.left && panther1HitBox.points.right < hitBox.points.center.x)
             {
                 //벽 좌측 충돌
-                panther1->SetPosition({ hitBox.points.left - panther1HitBoxHalf, panther1Pos.y + panther1Dir.y * 0.5f });
+                panther1->SetPosition({ hitBox.points.left - panther1HitBoxHalf, panther1Pos.y });
             }
         }
         else
@@ -140,12 +140,12 @@ void Fountain::Update(float dt)
             if (panther1HitBox.points.bottom > hitBox.points.top && panther1HitBox.points.bottom < hitBox.points.center.y)
             {
                 //벽 상부 충돌
-                panther1->SetPosition({ panther1Pos.x + panther1Dir.x * 0.5f, hitBox.points.top - panther1HitBoxHalf });
+                panther1->SetPosition({ panther1Pos.x, hitBox.points.top - panther1HitBoxHalf });
             }
             else if (panther1HitBox.points.top < hitBox.points.bottom && panther1HitBox.points.top > hitBox.points.center.y)
             {
                 //벽 하부 충돌
-                panther1->SetPosition({ panther1Pos.x + panther1Dir.x * 0.5f, hitBox.points.bottom + panther1HitBoxHalf });
+                panther1->SetPosition({ panther1Pos.x, hitBox.points.bottom + panther1HitBoxHalf });
             }
         }
     }
@@ -163,12 +163,12 @@ void Fountain::Update(float dt)
             if (bodyguardHitBox.points.left < hitBox.points.right && bodyguardHitBox.points.left > hitBox.points.center.x)
             {
                 //벽 우측 충돌
-                bodyguard->SetPosition({ hitBox.points.right + bodyguardHitBoxHalf, bodyguardPos.y + bodyguardDir.y * 0.5f });
+                bodyguard->SetPosition({ hitBox.points.right + bodyguardHitBoxHalf, bodyguardPos.y  });
             }
             else if (bodyguardHitBox.points.right > hitBox.points.left && bodyguardHitBox.points.right < hitBox.points.center.x)
             {
                 //벽 좌측 충돌
-                bodyguard->SetPosition({ hitBox.points.left - bodyguardHitBoxHalf, bodyguardPos.y + bodyguardDir.y * 0.5f });
+                bodyguard->SetPosition({ hitBox.points.left - bodyguardHitBoxHalf, bodyguardPos.y   });
             }
         }
         else
@@ -176,12 +176,12 @@ void Fountain::Update(float dt)
             if (bodyguardHitBox.points.bottom > hitBox.points.top && bodyguardHitBox.points.bottom < hitBox.points.center.y)
             {
                 //벽 상부 충돌
-                bodyguard->SetPosition({ bodyguardPos.x + bodyguardDir.x * 0.5f, hitBox.points.top - bodyguardHitBoxHalf });
+                bodyguard->SetPosition({ bodyguardPos.x , hitBox.points.top - bodyguardHitBoxHalf });
             }
             else if (bodyguardHitBox.points.top < hitBox.points.bottom && bodyguardHitBox.points.top > hitBox.points.center.y)
             {
                 //벽 하부 충돌
-                bodyguard->SetPosition({ bodyguardPos.x + bodyguardDir.x * 0.5f, hitBox.points.bottom + bodyguardHitBoxHalf });
+                bodyguard->SetPosition({ bodyguardPos.x , hitBox.points.bottom + bodyguardHitBoxHalf });
             }
         }
     }
@@ -199,12 +199,12 @@ void Fountain::Update(float dt)
             if (panther2HitBox.points.left < hitBox.points.right && panther2HitBox.points.left > hitBox.points.center.x)
             {
                 //벽 우측 충돌
-                panther2->SetPosition({ hitBox.points.right + panther2HitBoxHalf, panther2Pos.y + panther2Dir.y * 0.5f });
+                panther2->SetPosition({ hitBox.points.right + panther2HitBoxHalf, panther2Pos.y });
             }
             else if (panther2HitBox.points.right > hitBox.points.left && panther2HitBox.points.right < hitBox.points.center.x)
             {
                 //벽 좌측 충돌
-                panther2->SetPosition({ hitBox.points.left - panther2HitBoxHalf, panther2Pos.y + panther2Dir.y * 0.5f });
+                panther2->SetPosition({ hitBox.points.left - panther2HitBoxHalf, panther2Pos.y  });
             }
         }
         else
@@ -212,12 +212,12 @@ void Fountain::Update(float dt)
             if (panther2HitBox.points.bottom > hitBox.points.top && panther2HitBox.points.bottom < hitBox.points.center.y)
             {
                 //벽 상부 충돌
-                panther2->SetPosition({ panther2Pos.x + panther2Dir.x * 0.5f, hitBox.points.top - panther2HitBoxHalf });
+                panther2->SetPosition({ panther2Pos.x, hitBox.points.top - panther2HitBoxHalf });
             }
             else if (panther2HitBox.points.top < hitBox.points.bottom && panther2HitBox.points.top > hitBox.points.center.y)
             {
                 //벽 하부 충돌
-                panther2->SetPosition({ panther2Pos.x + panther2Dir.x * 0.5f, hitBox.points.bottom + panther2HitBoxHalf });
+                panther2->SetPosition({ panther2Pos.x , hitBox.points.bottom + panther2HitBoxHalf });
             }
         }
     }

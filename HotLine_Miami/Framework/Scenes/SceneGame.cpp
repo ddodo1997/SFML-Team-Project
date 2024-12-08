@@ -109,6 +109,9 @@ void SceneGame::Update(float dt)
 		}
 	}
 
+	if (player->GetGlobalBounds().intersects(endPoint) && IsClearStage())
+		LoadNextStage();
+
 	Scene::Update(dt);
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::R))
@@ -333,6 +336,21 @@ void SceneGame::SetEnemies()
 	}
 }
 
+void SceneGame::SetEndPoint()
+{
+	auto& vec = STAGE_TABLE->GetCurrentStage().GetEndPointArea();
+	if (vec.empty())
+		return;
+	if (vec[0].x == vec[1].x)
+	{
+		endPoint = { vec[0].x * tileSize.x, vec[0].y * tileSize.y, 10.f ,(vec[1].y - vec[0].y + 1) * tileSize.y};
+	}
+	else
+	{
+		endPoint = { vec[0].x * tileSize.x, vec[0].y * tileSize.y,(vec[1].x - vec[0].x + 1) * tileSize.x , 10.f };
+	}
+}
+
 BodyGuard* SceneGame::GetBodyGuard()
 {
 	if (boss2 == nullptr)
@@ -410,7 +428,7 @@ Bullet* SceneGame::SpawnBullet()
 {
 	Bullet* bullet = bulletPool.Take();
 
-	if(boss != nullptr)
+	if(boss2 != nullptr)
 		bullet->SetFountains(boss2->GetFountain1(), boss2->GetFountain2());
 	activeBullets.push_back(bullet);
 	return AddGo(bullet);
@@ -463,6 +481,13 @@ void SceneGame::LoadCurrentStage()
 	player->SetPosition(STAGE_TABLE->GetCurrentStage().GetPlayerData().pos * tileSize.x);
 	player->SetRotation(STAGE_TABLE->GetCurrentStage().GetPlayerData().rotation);
 
+
+	LoadWalls(); // ��¥ �� ������ ����ϱ�
+	LoadDecorations();
+	LoadEnemies();
+	LoadWeapons();
+
+
 	if (STAGE_TABLE->GetCurrentStage().GetBoss1Data().pos != sf::Vector2f{ -1.f, -1.f })
 	{
 		boss = AddGo(new Boss1("Boss1"));
@@ -474,20 +499,13 @@ void SceneGame::LoadCurrentStage()
 	{
 		boss2 = AddGo(new Boss2("Boss2"));
 		boss2->Reset();
-		boss2->SetPosition(STAGE_TABLE->GetCurrentStage().GetBoss2Position() * tileSize.x);
+		boss2->SetPosition(STAGE_TABLE->GetCurrentStage().GetBoss2Position());
 	}
-
-	LoadWalls(); // ��¥ �� ������ ����ϱ�
-	LoadDecorations();
-	LoadEnemies();
-	LoadWeapons();
-
-
 	player->Reset();
 	SetWalls();
 	SetDecorations();
 	SetEnemies();
-
+	SetEndPoint();
 }
 
 void SceneGame::LoadNextStage()
@@ -496,9 +514,14 @@ void SceneGame::LoadNextStage()
 	STAGE_TABLE->NextStage();
 	tileMap->SetTexture(&TEXTURE_MGR.Get(STAGE_TABLE->GetCurrentStage().GetTileTextureId()));
 	tileMap->Initialize(STAGE_TABLE->GetTileSize(), STAGE_TABLE->GetCurrentStage().GetTileCount(), STAGE_TABLE->GetCurrentStage().GetFloorTiles());
-	player->Reset();
 	player->SetPosition(STAGE_TABLE->GetCurrentStage().GetPlayerData().pos * tileSize.x);
 	player->SetRotation(STAGE_TABLE->GetCurrentStage().GetPlayerData().rotation);
+
+
+	LoadWalls(); // ��¥ �� ������ ����ϱ�
+	LoadDecorations();
+	LoadEnemies();
+	LoadWeapons();
 
 	if(STAGE_TABLE->GetCurrentStage().GetBoss1Data().pos != sf::Vector2f{-1.f, -1.f})
 	{
@@ -513,16 +536,11 @@ void SceneGame::LoadNextStage()
 		boss2->Reset();
 		boss2->SetPosition(STAGE_TABLE->GetCurrentStage().GetBoss2Position());
 	}
-
-	LoadWalls(); // ��¥ �� ������ ����ϱ�
-	LoadDecorations();
-	LoadEnemies();
-	LoadWeapons();
-
+	player->Reset();
 	SetWalls();
 	SetDecorations();
 	SetEnemies();
-
+	SetEndPoint();
 }
 
 void SceneGame::ClearStage()
@@ -555,4 +573,31 @@ void SceneGame::ClearStage()
 		RemoveGo(boss2);
 		boss2 = nullptr;
 	}
+
+	endPoint = { 0,0,0,0 };
+}
+
+bool SceneGame::IsClearStage()
+{
+	bool result = false;
+	if (!enemies.empty())
+	{
+		for (auto enemy : enemies)
+		{
+			if (!enemy->isDie())
+			{
+				result = false;
+				break;
+			}
+			result = true;
+		}
+	}
+
+	if (boss != nullptr)
+		result = boss->IsDead();
+
+	if (boss2 != nullptr)
+		result = boss2->IsClear();
+
+	return result;
 }

@@ -300,6 +300,7 @@ void Boss1::ChangePattern(Patterns pattern)
 	Patterns prevPattern = currentPattern;
 	currentPattern = pattern;
 	isWalking = true;
+	SetActive(true);
 	switch (currentPattern)
 	{
 	case Patterns::None:
@@ -329,6 +330,7 @@ void Boss1::ChangePattern(Patterns pattern)
 		isWalking = false;
 		break;
 	case Patterns::Pounded:
+		SetActive(false);
 		speed = 0.f;
 		animatorBody.Stop();
 		isWalking = false;
