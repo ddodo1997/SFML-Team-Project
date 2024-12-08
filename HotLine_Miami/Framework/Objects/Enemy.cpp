@@ -94,7 +94,6 @@ void Enemy::Reset()
 
 	weaponSearchRange.setRadius(30.f);
 	SetOrigin(Origins::MC);
-	SetStatus(Status::Patrol);
 	direction = { 0.f, 0.f };
 	SetPatterns();
 	SetActive(true);

@@ -60,7 +60,7 @@ void Wall::FixedUpdate(float dt)
     auto& playerHitBox = player->GetHitBox();
     if (playerHitBox.rect.getGlobalBounds().intersects(hitBox.rect.getGlobalBounds()))
     {
-        auto& playerDir = player->GetDirection();
+        auto playerDir = Utils::GetNormal(player->GetDirection());
         auto playerPos = player->GetPosition();
         auto playerHitBoxHalf = playerHitBox.rect.getLocalBounds().width * 0.5f;
 
@@ -69,12 +69,12 @@ void Wall::FixedUpdate(float dt)
             if (playerHitBox.points.left < hitBox.points.right && playerHitBox.points.left > hitBox.points.center.x)
             {
                 //벽 우측 충돌
-                player->SetPosition({ hitBox.points.right + playerHitBoxHalf, playerPos.y + playerDir.y * 0.5f });
+                player->SetPosition({ hitBox.points.right + playerHitBoxHalf, playerPos.y});
             }
             else if (playerHitBox.points.right > hitBox.points.left && playerHitBox.points.right < hitBox.points.center.x)
             {
                 //벽 좌측 충돌
-                player->SetPosition({ hitBox.points.left - playerHitBoxHalf, playerPos.y + playerDir.y * 0.5f });
+                player->SetPosition({ hitBox.points.left - playerHitBoxHalf, playerPos.y});
             }
         }
         else 
@@ -82,12 +82,12 @@ void Wall::FixedUpdate(float dt)
             if (playerHitBox.points.bottom > hitBox.points.top && playerHitBox.points.bottom < hitBox.points.center.y)
             {
                 //벽 상부 충돌
-                player->SetPosition({ playerPos.x + playerDir.x * 0.5f, hitBox.points.top - playerHitBoxHalf });
+                player->SetPosition({ playerPos.x, hitBox.points.top - playerHitBoxHalf });
             }
             else if (playerHitBox.points.top < hitBox.points.bottom && playerHitBox.points.top > hitBox.points.center.y)
             {
                 //벽 하부 충돌
-                player->SetPosition({ playerPos.x + playerDir.x * 0.5f, hitBox.points.bottom + playerHitBoxHalf });
+                player->SetPosition({ playerPos.x, hitBox.points.bottom + playerHitBoxHalf });
             }
         }
     }
@@ -109,12 +109,12 @@ void Wall::FixedUpdate(float dt)
                 if (enemyHitBox.points.left < hitBox.points.right && enemyHitBox.points.left > hitBox.points.center.x)
                 {
                     //벽 우측 충돌
-                    enemy->SetPosition({ hitBox.points.right + enemyHitBoxHalf, enemyPos.y + enemyDir.y * 0.5f });
+                    enemy->SetPosition({ hitBox.points.right + enemyHitBoxHalf, enemyPos.y });
                 }
                 else if (enemyHitBox.points.right > hitBox.points.left && enemyHitBox.points.right < hitBox.points.center.x)
                 {
                     //벽 좌측 충돌
-                    enemy->SetPosition({ hitBox.points.left - enemyHitBoxHalf, enemyPos.y + enemyDir.y * 0.5f });
+                    enemy->SetPosition({ hitBox.points.left - enemyHitBoxHalf, enemyPos.y });
                 }
             }
             else
@@ -122,12 +122,12 @@ void Wall::FixedUpdate(float dt)
                 if (enemyHitBox.points.bottom > hitBox.points.top && enemyHitBox.points.bottom < hitBox.points.center.y)
                 {
                     //벽 상부 충돌
-                    enemy->SetPosition({ enemyPos.x + enemyDir.x * 0.5f, hitBox.points.top - enemyHitBoxHalf });
+                    enemy->SetPosition({ enemyPos.x , hitBox.points.top - enemyHitBoxHalf });
                 }
                 else if (enemyHitBox.points.top < hitBox.points.bottom && enemyHitBox.points.top > hitBox.points.center.y)
                 {
                     //벽 하부 충돌
-                    enemy->SetPosition({ enemyPos.x + enemyDir.x * 0.5f, hitBox.points.bottom + enemyHitBoxHalf });
+                    enemy->SetPosition({ enemyPos.x , hitBox.points.bottom + enemyHitBoxHalf });
                 }
             }
         }
@@ -150,14 +150,14 @@ void Wall::FixedUpdate(float dt)
                 if (weaponHitBox.points.left < hitBox.points.right && weaponHitBox.points.left > hitBox.points.center.x)
                 {
                     //벽 우측 충돌
-                    weapon->SetPosition({ hitBox.points.right + weaponHitBoxHalf, weaponPos.y + weaponDir.y * 0.5f });
+                    weapon->SetPosition({ hitBox.points.right + weaponHitBoxHalf, weaponPos.y});
                     weapon->FlipDirectionX();
                     SOUND_MGR.PlaySfx("sound/Attack/sndHitWall.wav");
                 }
                 else if (weaponHitBox.points.right > hitBox.points.left && weaponHitBox.points.right < hitBox.points.center.x)
                 {
                     //벽 좌측 충돌
-                    weapon->SetPosition({ hitBox.points.left - weaponHitBoxHalf, weaponPos.y + weaponDir.y * 0.5f });
+                    weapon->SetPosition({ hitBox.points.left - weaponHitBoxHalf, weaponPos.y});
                     weapon->FlipDirectionX();
                     SOUND_MGR.PlaySfx("sound/Attack/sndHitWall.wav");
                 }
@@ -167,14 +167,14 @@ void Wall::FixedUpdate(float dt)
                 if (weaponHitBox.points.bottom > hitBox.points.top && weaponHitBox.points.bottom < hitBox.points.center.y)
                 {
                     //벽 상부 충돌
-                    weapon->SetPosition({ weaponPos.x + weaponDir.x * 0.5f, hitBox.points.top - weaponHitBoxHalf });
+                    weapon->SetPosition({ weaponPos.x, hitBox.points.top - weaponHitBoxHalf });
                     weapon->FlipDirectionY();
                     SOUND_MGR.PlaySfx("sound/Attack/sndHitWall.wav");
                 }
                 else if (weaponHitBox.points.top < hitBox.points.bottom && weaponHitBox.points.top > hitBox.points.center.y)
                 {
                     //벽 하부 충돌
-                    weapon->SetPosition({ weaponPos.x + weaponDir.x * 0.5f, hitBox.points.bottom + weaponHitBoxHalf });
+                    weapon->SetPosition({ weaponPos.x , hitBox.points.bottom + weaponHitBoxHalf });
                     weapon->FlipDirectionY();
                     SOUND_MGR.PlaySfx("sound/Attack/sndHitWall.wav");
                 }
