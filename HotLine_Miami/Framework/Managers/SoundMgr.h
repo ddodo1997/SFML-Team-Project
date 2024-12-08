@@ -16,8 +16,8 @@ protected:
 	std::list<sf::Sound*> playing;
 	std::list<sf::Sound*> waiting;
 
-	float sfxVolume = 100.f;
-	float bgmVolume = 100.f;
+	float sfxVolume = 20.f;
+	float bgmVolume = 20.f;
 
 public:
 	void SetBgmVolume(float v) 

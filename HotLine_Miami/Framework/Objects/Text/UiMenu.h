@@ -7,6 +7,7 @@ protected:
 	sf::Sprite mainSpr2;
 	
 	std::vector<sf::Sprite*> mainTextStartGame;
+	std::vector<sf::Sprite*> mainTextContinue;
 	std::vector<sf::Sprite*> mainTextOption;
 	std::vector<sf::Sprite*> mainEditorMode;
 	std::vector<sf::Sprite*> mainTextExit;

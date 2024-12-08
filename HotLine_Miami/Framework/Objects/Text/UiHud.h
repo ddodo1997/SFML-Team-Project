@@ -25,6 +25,8 @@ protected:
 	float pauseTimer = 0.0;
 	float resumeTimer = 0.0;
 
+	std::vector<sf::Sprite*> stageClearText;
+
 	std::vector<sf::Sprite*> pauseText;
 	std::vector<sf::Sprite*> pauseTextResume;
 	std::vector<sf::Sprite*> pauseTextRestart;

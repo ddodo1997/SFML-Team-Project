@@ -132,13 +132,39 @@ void UiHud::ResetPauseContent()
 	}
 
 	path = ALPHABET_TABLE->GetSpirtePath();
+	tempText = "STAGE CLEAR";
+	textPos = { 0.f,0.f };
+	textDefaultPos = { 0.f,500.f };
+	alphabetScale = { 3.f,3.f };
+	totalAlphabetWidth = 0;
+	verticalTextInterval = 25.f * alphabetScale.y;
+	sf::Vector2f text2posCalibration = { 4.f,4.f };
+
+	for (int i = 0; i < tempText.size(); ++i)
+	{
+		totalAlphabetWidth += ALPHABET_TABLE->Get(tempText[i]).characterWidth;
+	}
+
+	textDefaultPos.x = FRAMEWORK.GetWindowSizeF().x * 0.5f - totalAlphabetWidth * 0.5f * alphabetScale.x;
+
+	for (int i = 0; i < tempText.size(); ++i)
+	{
+		sf::Sprite* alphabetSprite = new sf::Sprite(TEXTURE_MGR.Get(path, true), ALPHABET_TABLE->Get(tempText[i]).texCoord);
+		alphabetSprite->setPosition(textDefaultPos + textPos);
+		alphabetSprite->setScale(alphabetScale);
+		Utils::SetOrigin(*alphabetSprite, Origins::TL);
+		alphabetSprite->setColor(sf::Color::Yellow);
+		stageClearText.push_back(alphabetSprite);
+		textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
+	}
+
+	path = ALPHABET_TABLE->GetSpirtePath();
 	tempText = "Resume";
 	textPos = { 0.f,0.f };
 	textDefaultPos = { 0.f,500.f };
 	alphabetScale = { 4.f,4.f };
 	totalAlphabetWidth = 0;
 	verticalTextInterval = 25.f * alphabetScale.y;
-	sf::Vector2f text2posCalibration = { 4.f,4.f };
 
 	for (int i = 0; i < tempText.size(); ++i)
 	{
@@ -896,6 +922,13 @@ void UiHud::Draw(sf::RenderWindow& window)
 			window.draw(*alphabetSprite);
 		}
 		for (auto alphabetSprite : pauseTextQuit)
+		{
+			window.draw(*alphabetSprite);
+		}
+	}
+	if (!isPaused && isClearedStage)
+	{
+		for (auto alphabetSprite : stageClearText)
 		{
 			window.draw(*alphabetSprite);
 		}
