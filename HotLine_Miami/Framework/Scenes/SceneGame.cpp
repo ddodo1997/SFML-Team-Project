@@ -42,7 +42,7 @@ void SceneGame::Enter()
 	tileSize = static_cast<sf::Vector2f>(STAGE_TABLE->GetTileSize());
 	Scene::Enter();
 	// SetWalls_2(); // ���� �� ����� �� 
-	LoadNextStage();
+	LoadCurrentStage();
 
 	worldView.setSize(windowSize * 0.2f);
 	//worldView.setCenter(player->GetPosition());
@@ -112,7 +112,7 @@ void SceneGame::Update(float dt)
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::R))
 	{
-		SCENE_MGR.ChangeScene(SceneIds::SceneGame);
+		LoadCurrentStage();
 	}
 	if (InputMgr::GetKey(sf::Keyboard::Numpad7))
 	{
@@ -455,9 +455,38 @@ void SceneGame::Draw(sf::RenderWindow& window)
 	Scene::Draw(window);
 }
 
+void SceneGame::LoadCurrentStage()
+{
+	ClearStage();
+	tileMap->SetTexture(&TEXTURE_MGR.Get(STAGE_TABLE->GetCurrentStage().GetTileTextureId()));
+	tileMap->Initialize(STAGE_TABLE->GetTileSize(), STAGE_TABLE->GetCurrentStage().GetTileCount(), STAGE_TABLE->GetCurrentStage().GetFloorTiles());
+	player->SetPosition(STAGE_TABLE->GetCurrentStage().GetPlayerData().pos * tileSize.x);
+	player->SetRotation(STAGE_TABLE->GetCurrentStage().GetPlayerData().rotation);
+
+	if (STAGE_TABLE->GetCurrentStage().GetBoss1Data().pos != sf::Vector2f{ -1.f, -1.f })
+	{
+		boss = AddGo(new Boss1("Boss1"));
+		boss->Reset();
+		boss->SetPosition(STAGE_TABLE->GetCurrentStage().GetBoss1Data().pos * tileSize.x);
+		boss->SetRotation(STAGE_TABLE->GetCurrentStage().GetBoss1Data().rotation);
+	}
+	if (STAGE_TABLE->GetCurrentStage().GetBoss2Position() != sf::Vector2f{ -1.f, -1.f })
+	{
+		boss2 = AddGo(new Boss2("Boss2"));
+		boss2->Reset();
+		boss2->SetPosition(STAGE_TABLE->GetCurrentStage().GetBoss2Position() * tileSize.x);
+	}
+
+	LoadWalls(); // ��¥ �� ������ ����ϱ�
+	LoadDecorations();
+	LoadEnemies();
+	LoadWeapons();
+}
+
 void SceneGame::LoadNextStage()
 {
 	ClearStage();
+	STAGE_TABLE->NextStage();
 	tileMap->SetTexture(&TEXTURE_MGR.Get(STAGE_TABLE->GetCurrentStage().GetTileTextureId()));
 	tileMap->Initialize(STAGE_TABLE->GetTileSize(), STAGE_TABLE->GetCurrentStage().GetTileCount(), STAGE_TABLE->GetCurrentStage().GetFloorTiles());
 	player->SetPosition(STAGE_TABLE->GetCurrentStage().GetPlayerData().pos * tileSize.x);
@@ -481,7 +510,6 @@ void SceneGame::LoadNextStage()
 	LoadDecorations();
 	LoadEnemies();
 	LoadWeapons();
-	STAGE_TABLE->NextStage();
 }
 
 void SceneGame::ClearStage()

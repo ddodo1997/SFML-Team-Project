@@ -100,6 +100,7 @@ public:
 
 	virtual void Draw(sf::RenderWindow& window);
 
+	void LoadCurrentStage();
 	void LoadNextStage(); 
 	void ClearStage();
 };
