@@ -2,7 +2,7 @@
 
 class Player;
 
-class UiHudL : public GameObject
+class UiHud : public GameObject
 {
 protected:	
 	Player* player;
@@ -30,9 +30,16 @@ protected:
 	std::vector<sf::Sprite*> pauseTextRestart;
 	std::vector<sf::Sprite*> pauseTextQuit;
 
+	std::vector<sf::Sprite*> pauseText2;
+	std::vector<sf::Sprite*> pauseTextResume2;
+	std::vector<sf::Sprite*> pauseTextRestart2;
+	std::vector<sf::Sprite*> pauseTextQuit2;
+
 	sf::Vector2f dscb = { 13, 41 };
-	float colorRotator = 0.f;
-	float colorCyclingDuration = 6.f;
+	float colorRotatorTimerShader = 0.f;
+	float colorCyclingDurationShader = 6.f;
+	float colorRotatorTimerPausedContent = 0.f;
+	float colorCyclingDurationPausedContent = 3.f;
 
 	int selectedFunctionPause = 0;
 
@@ -41,10 +48,6 @@ protected:
 	Animator cursorAnimator;
 
 	float realDt = 0.f;
-
-	sf::Text currentWeaponStatus;
-
-	sf::Text volumeDisplayer;
 
 	// BL Box ฐüทร
 	sf::RectangleShape boxBL;
@@ -66,8 +69,8 @@ protected:
 	int bgmVol;
 
 public:
-	UiHudL(const std::string& name = "");
-	~UiHudL();
+	UiHud(const std::string& name = "");
+	~UiHud();
 
 	void SetPosition(const sf::Vector2f& pos) override;
 	void SetRotation(float angle) override;
@@ -88,12 +91,14 @@ public:
 	void Update(float dt) override;
 	void UpdateBoxBL(float dt);
 	void UpdateMouseSprite(float dt);
-	void UpdateWeaponStatus(Weapon::WeaponStatus weaponStatus, int remainingBullet);
-	void UpdateVolumeDisplay(float dt);
+	//void UpdateWeaponStatus(Weapon::WeaponStatus weaponStatus, int remainingBullet);
+	//void UpdateVolumeDisplay(float dt);
 
 	void ResetPaused();
 	void UpdatePaused(float realDt);
 	void UpdatePausedContents(float realDt);
+
+	void UpdateSlideInEffect(float realDt);
 
 	void Resume();
 	void Restart();

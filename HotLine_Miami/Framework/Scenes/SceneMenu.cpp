@@ -36,8 +36,6 @@ void SceneMenu::Enter()
 	VIEW_MGR.SetCurrentSceneUiView(&uiView);
 
 	SOUND_MGR.PlayBgm("sound/bgm/HorseSteppin.ogg");
-	SOUND_MGR.SetBgmVolume(20);
-	SOUND_MGR.SetSfxVolume(20);
 	Scene::Enter();
 }
 

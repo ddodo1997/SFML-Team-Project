@@ -236,7 +236,7 @@ void ViewMgr::UpdateBackground(float realDt)
 
 	if (flashEffectTimer < 200.f)
 	{
-		float temp = flashEffectTimer / 15;
+		float temp = flashEffectTimer / 30;
 		if ((int)temp % 2 == 0)
 		{
 			brightSideColor = sf::Color(193, 65, 53);

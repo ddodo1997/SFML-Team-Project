@@ -36,7 +36,7 @@
     <ClCompile Include="Framework\Scenes\SceneGame.cpp" />
     <ClCompile Include="Framework\Map\TileMap.cpp" />
     <ClCompile Include="Framework\Map\TileMapEditor.cpp" />
-    <ClCompile Include="Framework\Objects\Text\UiHudL.cpp" />
+    <ClCompile Include="Framework\Objects\Text\UiHud.cpp" />
     <ClCompile Include="Framework\Managers\ViewMgr.cpp" />
     <ClCompile Include="Framework\Objects\Wall2.cpp" />
     <ClCompile Include="Framework\Objects\Weapon.cpp" />
@@ -44,15 +44,15 @@
     <ClCompile Include="Framework\Objects\Wall.cpp" />
     <ClCompile Include="Framework\Tables\WallTable.cpp" />
     <ClCompile Include="Framework\Map\WayPoint.cpp" />
-    <ClCompile Include="PathFinder.cpp" />
     <ClCompile Include="Framework\Objects\MafiaBoss.cpp" />
     <ClCompile Include="Framework\Objects\Panther.cpp" />
     <ClCompile Include="Framework\Objects\BodyGuard.cpp" />
     <ClCompile Include="Framework\Objects\Fountain.cpp" />
-    <ClCompile Include="AlphabetTable.cpp" />
-    <ClCompile Include="SceneMenu.cpp" />
-    <ClCompile Include="UiMenu.cpp" />
-    <ClCompile Include="PalmTreeEffect.cpp" />
+    <ClCompile Include="Framework\Tables\AlphabetTable.cpp" />
+    <ClCompile Include="Framework\Objects\PalmTreeEffect.cpp" />
+    <ClCompile Include="Framework\General\PathFinder.cpp" />
+    <ClCompile Include="Framework\Scenes\SceneMenu.cpp" />
+    <ClCompile Include="Framework\Objects\Text\UiMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Framework\Objects\Boss1.h" />
@@ -94,7 +94,7 @@
     <ClInclude Include="Framework\Scenes\SceneGame.h" />
     <ClInclude Include="Framework\Map\TileMap.h" />
     <ClInclude Include="Framework\Map\TileMapEditor.h" />
-    <ClInclude Include="Framework\Objects\Text\UiHudL.h" />
+    <ClInclude Include="Framework\Objects\Text\UiHud.h" />
     <ClInclude Include="Framework\Managers\ViewMgr.h" />
     <ClInclude Include="Framework\Objects\Wall2.h" />
     <ClInclude Include="Framework\Objects\Weapon.h" />
@@ -102,14 +102,14 @@
     <ClInclude Include="Framework\Objects\Wall.h" />
     <ClInclude Include="Framework\Tables\WallTable.h" />
     <ClInclude Include="Framework\Map\WayPoint.h" />
-    <ClInclude Include="PathFinder.h" />
     <ClInclude Include="Framework\Objects\MafiaBoss.h" />
     <ClInclude Include="Framework\Objects\Panther.h" />
     <ClInclude Include="Framework\Objects\BodyGuard.h" />
     <ClInclude Include="Framework\Objects\Fountain.h" />
-    <ClInclude Include="AlphabetTable.h" />
-    <ClInclude Include="SceneMenu.h" />
-    <ClInclude Include="UiMenu.h" />
-    <ClInclude Include="PalmTreeEffect.h" />
+    <ClInclude Include="Framework\Tables\AlphabetTable.h" />
+    <ClInclude Include="Framework\Objects\PalmTreeEffect.h" />
+    <ClInclude Include="Framework\General\PathFinder.h" />
+    <ClInclude Include="Framework\Scenes\SceneMenu.h" />
+    <ClInclude Include="Framework\Objects\Text\UiMenu.h" />
   </ItemGroup>
 </Project>

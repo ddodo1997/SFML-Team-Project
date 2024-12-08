@@ -1,35 +1,35 @@
 #include "stdafx.h"
-#include "UiHudL.h"
+#include "UiHud.h"
 #include "Player.h"
 
-UiHudL::UiHudL(const std::string& name)
+UiHud::UiHud(const std::string& name)
 	: GameObject(name)
 {
 	sortingLayer = SortingLayers::UI;
 	sortingOrder = 0;
 }
 
-UiHudL::~UiHudL()
+UiHud::~UiHud()
 {
 	ReleasePauseContent();
 }
 
-void UiHudL::SetPosition(const sf::Vector2f& pos)
+void UiHud::SetPosition(const sf::Vector2f& pos)
 {
 	position = pos;
 }
 
-void UiHudL::SetRotation(float angle)
+void UiHud::SetRotation(float angle)
 {
 	rotation = angle;
 }
 
-void UiHudL::SetScale(const sf::Vector2f& s)
+void UiHud::SetScale(const sf::Vector2f& s)
 {
 	scale = s;
 }
 
-void UiHudL::SetOrigin(Origins preset)
+void UiHud::SetOrigin(Origins preset)
 {
 	originPreset = preset;
 	if (originPreset != Origins::Custom)
@@ -38,38 +38,24 @@ void UiHudL::SetOrigin(Origins preset)
 	}
 }
 
-void UiHudL::SetOrigin(const sf::Vector2f& newOrigin)
+void UiHud::SetOrigin(const sf::Vector2f& newOrigin)
 {
 	originPreset = Origins::Custom;
 }
 
-void UiHudL::Init()
+void UiHud::Init()
 {
 	Reset();
 }
 
-void UiHudL::Release()
+void UiHud::Release()
 {
 	//ReleasePauseContent();
 }
 
-void UiHudL::Reset()
+void UiHud::Reset()
 {	
 	isClearedStage = false;
-
-	currentWeaponStatus.setFont(FONT_MGR.Get("fonts/DS-DIGI.ttf"));
-	currentWeaponStatus.setCharacterSize(30.f);
-	currentWeaponStatus.setFillColor(sf::Color::White);
-	currentWeaponStatus.setString(std::to_string(InputMgr::GetMousePosition().y));
-	currentWeaponStatus.setPosition({ 30.f,30.f });
-	Utils::SetOrigin(currentWeaponStatus, Origins::TL);
-
-	volumeDisplayer.setFont(FONT_MGR.Get("fonts/DS-DIGI.ttf"));
-	volumeDisplayer.setCharacterSize(30.f);
-	volumeDisplayer.setFillColor(sf::Color::White);
-	volumeDisplayer.setString(std::to_string(InputMgr::GetMousePosition().y));
-	volumeDisplayer.setPosition({ 30.f,280.f });
-	Utils::SetOrigin(volumeDisplayer, Origins::TL);
 
 	cursorAnimator.SetTarget(&mouseSprite);
 	cursorAnimator.Play("animations/cursor.json");
@@ -118,7 +104,7 @@ void UiHudL::Reset()
 	ResetPauseContent();
 }
 
-void UiHudL::ResetPauseContent()
+void UiHud::ResetPauseContent()
 {
 	std::string path = ALPHABET_TABLE->GetSpirtePath(true);
 	std::string tempText = "PAUSE"; // 이 5가지 외 스프라이트 없음
@@ -152,6 +138,7 @@ void UiHudL::ResetPauseContent()
 	alphabetScale = { 4.f,4.f };
 	totalAlphabetWidth = 0;
 	verticalTextInterval = 25.f * alphabetScale.y;
+	sf::Vector2f text2posCalibration = { 4.f,4.f };
 
 	for (int i = 0; i < tempText.size(); ++i)
 	{
@@ -162,12 +149,18 @@ void UiHudL::ResetPauseContent()
 
 	for (int i = 0; i < tempText.size(); ++i)
 	{
-		sf::Sprite* alphabetSprite = new sf::Sprite(TEXTURE_MGR.Get(path,true), ALPHABET_TABLE->Get(tempText[i]).texCoord);
+		sf::Sprite* alphabetSprite = new sf::Sprite(TEXTURE_MGR.Get(path, true), ALPHABET_TABLE->Get(tempText[i]).texCoord);
 		alphabetSprite->setPosition(textDefaultPos + textPos);
 		alphabetSprite->setScale(alphabetScale);
 		Utils::SetOrigin(*alphabetSprite, Origins::TL);
-		textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
 		pauseTextResume.push_back(alphabetSprite);
+
+		sf::Sprite* alphabetSprite2 = new sf::Sprite(TEXTURE_MGR.Get(path, true), ALPHABET_TABLE->Get(tempText[i]).texCoord);
+		alphabetSprite2->setPosition(textDefaultPos + textPos + text2posCalibration);
+		alphabetSprite2->setScale(alphabetScale);
+		Utils::SetOrigin(*alphabetSprite2, Origins::TL);
+		pauseTextResume2.push_back(alphabetSprite2);
+		textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
 	}
 
 	tempText = "Restart";
@@ -188,8 +181,14 @@ void UiHudL::ResetPauseContent()
 		alphabetSprite->setPosition(textDefaultPos + textPos);
 		alphabetSprite->setScale(alphabetScale);
 		Utils::SetOrigin(*alphabetSprite, Origins::TL);
-		textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
 		pauseTextRestart.push_back(alphabetSprite);
+
+		sf::Sprite* alphabetSprite2 = new sf::Sprite(TEXTURE_MGR.Get(path, true), ALPHABET_TABLE->Get(tempText[i]).texCoord);
+		alphabetSprite2->setPosition(textDefaultPos + textPos + text2posCalibration);
+		alphabetSprite2->setScale(alphabetScale);
+		Utils::SetOrigin(*alphabetSprite2, Origins::TL);
+		pauseTextRestart2.push_back(alphabetSprite2);
+		textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
 	}
 
 	tempText = "Quit";
@@ -210,12 +209,18 @@ void UiHudL::ResetPauseContent()
 		alphabetSprite->setPosition(textDefaultPos + textPos);
 		alphabetSprite->setScale(alphabetScale);
 		Utils::SetOrigin(*alphabetSprite, Origins::TL);
-		textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
 		pauseTextQuit.push_back(alphabetSprite);
+
+		sf::Sprite* alphabetSprite2 = new sf::Sprite(TEXTURE_MGR.Get(path, true), ALPHABET_TABLE->Get(tempText[i]).texCoord);
+		alphabetSprite2->setPosition(textDefaultPos + textPos + text2posCalibration);
+		alphabetSprite2->setScale(alphabetScale);
+		Utils::SetOrigin(*alphabetSprite2, Origins::TL);
+		pauseTextQuit2.push_back(alphabetSprite2);
+		textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
 	}
 }
 
-void UiHudL::ReleasePauseContent()
+void UiHud::ReleasePauseContent()
 {
 	for (auto alphabetSprite : pauseText)
 	{
@@ -228,24 +233,38 @@ void UiHudL::ReleasePauseContent()
 		delete alphabetSprite;
 	}
 	pauseTextResume.clear();
+	for (auto alphabetSprite : pauseTextResume2)
+	{
+		delete alphabetSprite;
+	}
+	pauseTextResume2.clear();
 
 	for (auto alphabetSprite : pauseTextRestart)
 	{
 		delete alphabetSprite;
 	}
 	pauseTextRestart.clear();
+	for (auto alphabetSprite : pauseTextRestart2)
+	{
+		delete alphabetSprite;
+	}
+	pauseTextRestart2.clear();
 
 	for (auto alphabetSprite : pauseTextQuit)
 	{
 		delete alphabetSprite;
 	}
 	pauseTextQuit.clear();
+	for (auto alphabetSprite : pauseTextQuit2)
+	{
+		delete alphabetSprite;
+	}
+	pauseTextQuit2.clear();
 }
 
-void UiHudL::Update(float dt)
+void UiHud::Update(float dt)
 {
 	realDt = FRAMEWORK.GetRealDeltaTime();
-	UpdateVolumeDisplay(dt);
 	UpdateMouseSprite(dt);
 	UpdateBoxBL(realDt);
 
@@ -263,7 +282,7 @@ void UiHudL::Update(float dt)
 	preventEscRepeat = false;
 }
 
-void UiHudL::UpdateBoxBL(float dt)
+void UiHud::UpdateBoxBL(float dt)
 {
 	auto ws = player->GetWeaponStatus();
 	if (ws.isRangedWeapon == true)
@@ -370,7 +389,7 @@ void UiHudL::UpdateBoxBL(float dt)
 	Utils::SetOrigin(textBL2, Origins::MC);
 }
 
-void UiHudL::UpdateMouseSprite(float dt)
+void UiHud::UpdateMouseSprite(float dt)
 {
 	if(!(cursorAnimator.IsPlaying()))
 		cursorAnimator.Play("animations/cursor.json");
@@ -379,47 +398,7 @@ void UiHudL::UpdateMouseSprite(float dt)
 	cursorAnimator.Update(dt);
 }
 
-void UiHudL::UpdateWeaponStatus(Weapon::WeaponStatus weaponStatus, int remainingBullet)
-{
-	weaponTypeIndex = (int)weaponStatus.weaponType;
-	std::string weaponId;
-	if ((int)weaponStatus.weaponType == -1)
-	{
-		weaponId = "None";
-	}
-	if ((int)weaponStatus.weaponType == 0)
-	{
-		weaponId = "Bat";
-	}
-	if ((int)weaponStatus.weaponType == 1)
-	{
-		weaponId = "Knife";
-	}
-	if ((int)weaponStatus.weaponType == 2)
-	{
-		weaponId = "Machinegun";
-	}
-	if ((int)weaponStatus.weaponType == 3)
-	{
-		weaponId = "Shotgun";
-	}
-	std::string bulletStatus = "\nNo guns";
-	if (weaponStatus.isRangedWeapon)
-		bulletStatus = "\nBullets : " + std::to_string(remainingBullet)
-		+ " \/ " + std::to_string(weaponStatus.maxBullet);
-	currentWeaponStatus.setString("Weapon ID: " + weaponId + bulletStatus);
-	Utils::SetOrigin(currentWeaponStatus, Origins::TL);
-}
-
-void UiHudL::UpdateVolumeDisplay(float dt)
-{
-	std::string bgmVol = std::to_string((int)SOUND_MGR.GetBgmVolume());
-	std::string sfxVol = std::to_string((int)SOUND_MGR.GetSfxVolume());
-	
-	volumeDisplayer.setString("Bgm Vol : " + bgmVol + "\nSfx Vol : " + sfxVol);
-}
-
-void UiHudL::ResetPaused()
+void UiHud::ResetPaused()
 {
 	for (auto alphabetSprite : pauseText)
 	{
@@ -429,7 +408,15 @@ void UiHudL::ResetPaused()
 	{
 		alphabetSprite->setColor(sf::Color::White);
 	}
+	for (auto alphabetSprite : pauseTextResume2)
+	{
+		alphabetSprite->setColor(sf::Color::White);
+	}
 	for (auto alphabetSprite : pauseTextRestart)
+	{
+		alphabetSprite->setColor(sf::Color::White);
+	}
+	for (auto alphabetSprite : pauseTextRestart2)
 	{
 		alphabetSprite->setColor(sf::Color::White);
 	}
@@ -437,9 +424,13 @@ void UiHudL::ResetPaused()
 	{
 		alphabetSprite->setColor(sf::Color::White);
 	}
+	for (auto alphabetSprite : pauseTextQuit2)
+	{
+		alphabetSprite->setColor(sf::Color::White);
+	}
 }
 
-void UiHudL::UpdatePaused(float realDt)
+void UiHud::UpdatePaused(float realDt)
 {
 	if (!wasPaused)
 		ResetPaused();
@@ -458,26 +449,31 @@ void UiHudL::UpdatePaused(float realDt)
 	//		fadingIn = true;
 	//}
 
-	colorRotator += realDt;
-	if (colorRotator > colorCyclingDuration)
-		colorRotator -= colorCyclingDuration;
+
+	colorRotatorTimerShader += realDt;
+	if (colorRotatorTimerShader > colorCyclingDurationShader)
+		colorRotatorTimerShader -= colorCyclingDurationShader;
+
+	colorRotatorTimerPausedContent += realDt;
+	if (colorRotatorTimerPausedContent > colorCyclingDurationPausedContent)
+		colorRotatorTimerPausedContent -= colorCyclingDurationPausedContent;
 
 	float valR = 0.f;
 	float valG = 0.f;
 
-	if (colorRotator < colorCyclingDuration / 3.f)
+	if (colorRotatorTimerShader < colorCyclingDurationShader / 3.f)
 	{
-		valR = 1.f - (colorRotator / (colorCyclingDuration / 3.f));
-		valG = colorRotator / (colorCyclingDuration / 3.f);
+		valR = 1.f - (colorRotatorTimerShader / (colorCyclingDurationShader / 3.f));
+		valG = colorRotatorTimerShader / (colorCyclingDurationShader / 3.f);
 	}
-	else if (colorRotator < colorCyclingDuration * 2.f / 3.f)
+	else if (colorRotatorTimerShader < colorCyclingDurationShader * 2.f / 3.f)
 	{
 		valR = 0.f;
-		valG = 1.f - (colorRotator - colorCyclingDuration / 3.f) / (colorCyclingDuration / 3.f);
+		valG = 1.f - (colorRotatorTimerShader - colorCyclingDurationShader / 3.f) / (colorCyclingDurationShader / 3.f);
 	}
 	else
 	{
-		valR = (colorRotator - colorCyclingDuration * 2.f / 3.f) / (colorCyclingDuration / 3.f);
+		valR = (colorRotatorTimerShader - colorCyclingDurationShader * 2.f / 3.f) / (colorCyclingDurationShader / 3.f);
 		valG = 0.f;
 	}
 	sf::Color shaderColor = { (sf::Uint8)(dscb.x + (dscb.y - dscb.x) * valR), (sf::Uint8)(dscb.x + (dscb.y - dscb.x) * valG), (sf::Uint8)dscb.y, 150 };
@@ -493,14 +489,23 @@ void UiHudL::UpdatePaused(float realDt)
 
 	UpdatePausedContent(realDt);
 
+	//if (pauseTimer < 0.4f)
+	//{
+	//	UpdateSlideInEffect(realDt);
+	//}
+
 	if (pauseTimer >= 0.4f && (InputMgr::GetKeyDown(sf::Keyboard::W) || InputMgr::GetKeyDown(sf::Keyboard::Up)))
 	{
 		selectedFunctionPause--;
+		if (selectedFunctionPause == -1)
+			selectedFunctionPause = 2;
 		selectedFunctionPause = Utils::Clamp(selectedFunctionPause, 0, 2);
 	}
 	if (pauseTimer >= 0.4f && (InputMgr::GetKeyDown(sf::Keyboard::S) || InputMgr::GetKeyDown(sf::Keyboard::Down)))
 	{
 		selectedFunctionPause++;
+		if (selectedFunctionPause == 3)
+			selectedFunctionPause = 0;
 		selectedFunctionPause = Utils::Clamp(selectedFunctionPause, 0, 2);
 	}
 
@@ -548,53 +553,278 @@ void UiHudL::UpdatePaused(float realDt)
 	}
 }
 
-void UiHudL::UpdatePausedContents(float realDt)
+void UiHud::UpdatePausedContents(float realDt)
 {
+	sf::Uint8 valA;
+	sf::Uint8 valB;
+
+	if (colorRotatorTimerPausedContent > colorCyclingDurationPausedContent * 0.5f)
+	{
+		valA = 255 * (colorRotatorTimerPausedContent / (colorCyclingDurationPausedContent * 0.5f));
+		valB = 255 - valA;
+	}
+	else
+	{
+		valB = 255 * (colorRotatorTimerPausedContent / (colorCyclingDurationPausedContent * 0.5f));
+		valA = 255 - valB;
+	}
+
+	sf::Color cMtoW = { 255,valB, 255, 255 };
+	sf::Color cWtoM = { 255, valA, 255, 255 };
+
+	sf::Color cCtoW = { valB, 255, 255, 255	};
+	sf::Color cWtoC = { valA, 255, 255, 255	};
+
 	if (selectedFunctionPause == 0)
 	{
 		for (auto alphabetSprite : pauseTextResume)
 		{
-			alphabetSprite->setColor(sf::Color::Magenta);
+			alphabetSprite->setColor(cMtoW);
+		}
+		for (auto alphabetSprite : pauseTextResume2)
+		{
+			alphabetSprite->setColor(cWtoM);
 		}
 	}
 	else
 	{
 		for (auto alphabetSprite : pauseTextResume)
 		{
-			alphabetSprite->setColor(sf::Color::White);
+			alphabetSprite->setColor(cCtoW);
+		}
+		for (auto alphabetSprite : pauseTextResume2)
+		{
+			alphabetSprite->setColor(cWtoC);
 		}
 	}
+
 	if (selectedFunctionPause == 1)
 	{
 		for (auto alphabetSprite : pauseTextRestart)
 		{
-			alphabetSprite->setColor(sf::Color::Magenta);
+			alphabetSprite->setColor(cMtoW);
+		}
+		for (auto alphabetSprite : pauseTextRestart2)
+		{
+			alphabetSprite->setColor(cWtoM);
 		}
 	}
 	else
 	{
 		for (auto alphabetSprite : pauseTextRestart)
 		{
-			alphabetSprite->setColor(sf::Color::White);
+			alphabetSprite->setColor(cCtoW);
+		}
+		for (auto alphabetSprite : pauseTextRestart2)
+		{
+			alphabetSprite->setColor(cWtoC);
 		}
 	}
+
 	if (selectedFunctionPause == 2)
 	{
 		for (auto alphabetSprite : pauseTextQuit)
 		{
-			alphabetSprite->setColor(sf::Color::Magenta);
+			alphabetSprite->setColor(cMtoW);
+		}
+		for (auto alphabetSprite : pauseTextQuit2)
+		{
+			alphabetSprite->setColor(cWtoM);
 		}
 	}
 	else
 	{
 		for (auto alphabetSprite : pauseTextQuit)
 		{
-			alphabetSprite->setColor(sf::Color::White);
+			alphabetSprite->setColor(cCtoW);
+		}
+		for (auto alphabetSprite : pauseTextQuit2)
+		{
+			alphabetSprite->setColor(cWtoC);
 		}
 	}
 }
 
-void UiHudL::Resume()
+void UiHud::UpdateSlideInEffect(float realDt)
+{
+	sf::Vector2f slideInFromR = { 1200.f / 0.4f , 0.f };
+	sf::Vector2f slideInFromL = { -1200.f / 0.4f , 0.f };
+
+	std::string path = ALPHABET_TABLE->GetSpirtePath(true);
+	std::string tempText = "PAUSE"; // 이 5가지 외 스프라이트 없음
+	sf::Vector2f textPos = { 0.f,0.f };
+	sf::Vector2f textDefaultPos = { 0.f,300.f };
+	sf::Vector2f alphabetScale = { 4.f,4.f };
+	sf::Vector2f text2posCalibration = { 4.f,4.f };
+	int totalAlphabetWidth = 0;
+	float verticalTextInterval = 25.f * alphabetScale.y;
+	int i = 0;
+
+	if (pauseTimer < 0.4f)
+	{
+		for (auto alphabetSprite : pauseText)
+		{
+			if (i <= tempText.size())
+			{
+				totalAlphabetWidth += ALPHABET_TABLE->Get(tempText[i], true).characterWidth;
+				++i;
+			}
+		}
+
+		i = 0;
+		textDefaultPos.x = FRAMEWORK.GetWindowSizeF().x * 0.5f - totalAlphabetWidth * 0.5f * alphabetScale.x;
+
+		for (auto alphabetSprite : pauseText)
+		{
+			if (i <= tempText.size())
+			{
+				alphabetSprite->setPosition(textDefaultPos + textPos + (slideInFromR * (0.4f - pauseTimer)));
+				Utils::SetOrigin(*alphabetSprite, Origins::TL);
+				textPos.x += ALPHABET_TABLE->Get(tempText[i], true).characterWidth * alphabetScale.x;
+				++i;
+			}
+		}
+
+		tempText = "Resume";
+		textPos = { 0.f,0.f };
+		textDefaultPos = { 0.f,500.f };
+		totalAlphabetWidth = 0;
+		verticalTextInterval = 25.f * alphabetScale.y;
+		i = 0;
+
+		for (auto alphabetSprite : pauseTextResume)
+		{
+			if (i <= tempText.size())
+			{
+				totalAlphabetWidth += ALPHABET_TABLE->Get(tempText[i]).characterWidth;
+				++i;
+			}
+		}
+
+		textDefaultPos.x = FRAMEWORK.GetWindowSizeF().x * 0.5f - totalAlphabetWidth * 0.5f * alphabetScale.x;
+		i = 0;
+
+		for (auto alphabetSprite : pauseTextResume)
+		{
+			if (i <= tempText.size())
+			{
+				alphabetSprite->setPosition(textDefaultPos + textPos + (slideInFromR * (0.4f - pauseTimer)));
+				Utils::SetOrigin(*alphabetSprite, Origins::TL);
+				textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
+				++i;
+			}
+		}
+
+		textPos = { 0.f,0.f };
+		i = 0;
+
+		for (auto alphabetSprite : pauseTextResume2)
+		{
+			if (i <= tempText.size())
+			{
+				alphabetSprite->setPosition(textDefaultPos + textPos + text2posCalibration + (slideInFromR * (0.4f - pauseTimer)));
+				Utils::SetOrigin(*alphabetSprite, Origins::TL);
+				textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
+				++i;
+			}
+		}
+
+		tempText = "Restart";
+		textPos = { 0.f,0.f };
+		textDefaultPos = { 0.f,500.f };
+		totalAlphabetWidth = 0;
+		verticalTextInterval = 25.f * alphabetScale.y;
+		i = 0;
+
+		for (auto alphabetSprite : pauseTextRestart)
+		{
+			if (i <= tempText.size())
+			{
+				totalAlphabetWidth += ALPHABET_TABLE->Get(tempText[i]).characterWidth;
+				++i;
+			}
+		}
+
+		textDefaultPos.x = FRAMEWORK.GetWindowSizeF().x * 0.5f - totalAlphabetWidth * 0.5f * alphabetScale.x;
+		textDefaultPos.y += verticalTextInterval;
+		i = 0;
+
+		for (auto alphabetSprite : pauseTextRestart)
+		{
+			if (i <= tempText.size())
+			{
+				alphabetSprite->setPosition(textDefaultPos + textPos + (slideInFromR * (0.4f - pauseTimer)));
+				Utils::SetOrigin(*alphabetSprite, Origins::TL);
+				textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
+				++i;
+			}
+		}
+
+		textPos = { 0.f,0.f };
+		i = 0;
+
+		for (auto alphabetSprite : pauseTextRestart2)
+		{
+			if (i <= tempText.size())
+			{
+				alphabetSprite->setPosition(textDefaultPos + textPos + text2posCalibration + (slideInFromR * (0.4f - pauseTimer)));
+				Utils::SetOrigin(*alphabetSprite, Origins::TL);
+				textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
+				++i;
+			}
+		}
+
+		tempText = "Quit";
+		textPos = { 0.f,0.f };
+		textDefaultPos = { 0.f,500.f };
+		totalAlphabetWidth = 0;
+		verticalTextInterval = 25.f * alphabetScale.y;
+		i = 0;
+
+		for (auto alphabetSprite : pauseTextQuit)
+		{
+			if (i <= tempText.size())
+			{
+				totalAlphabetWidth += ALPHABET_TABLE->Get(tempText[i]).characterWidth;
+				++i;
+			}
+		}
+
+		textDefaultPos.x = FRAMEWORK.GetWindowSizeF().x * 0.5f - totalAlphabetWidth * 0.5f * alphabetScale.x;
+		textDefaultPos.y += verticalTextInterval;
+		i = 0;
+
+		for (auto alphabetSprite : pauseTextQuit)
+		{
+			if (i <= tempText.size())
+			{
+				alphabetSprite->setPosition(textDefaultPos + textPos + (slideInFromR * (0.4f - pauseTimer)));
+				Utils::SetOrigin(*alphabetSprite, Origins::TL);
+				textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
+				++i;
+			}
+		}
+
+		textPos = { 0.f,0.f };
+		i = 0;
+
+		for (auto alphabetSprite : pauseTextQuit2)
+		{
+			if (i <= tempText.size())
+			{
+				alphabetSprite->setPosition(textDefaultPos + textPos + text2posCalibration + (slideInFromR * (0.4f - pauseTimer)));
+				Utils::SetOrigin(*alphabetSprite, Origins::TL);
+				textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
+				++i;
+			}
+		}
+
+	}
+
+
+}
+
+void UiHud::Resume()
 {
 	//fade = 0.f;
 	selectedFunctionPause = 0;
@@ -605,7 +835,7 @@ void UiHudL::Resume()
 	FRAMEWORK.SetTimeScale(1.f);
 }
 
-void UiHudL::Restart()
+void UiHud::Restart()
 {
 	selectedFunctionPause = 0;
 	SCENE_MGR.ChangeScene(SceneIds::SceneGame);
@@ -614,7 +844,7 @@ void UiHudL::Restart()
 	FRAMEWORK.SetTimeScale(1.f);
 }
 
-void UiHudL::Quit()
+void UiHud::Quit()
 {
 	selectedFunctionPause = 0;
 	SCENE_MGR.ChangeScene(SceneIds::SceneMenu);
@@ -623,19 +853,13 @@ void UiHudL::Quit()
 	FRAMEWORK.SetTimeScale(1.f);
 }
 
-void UiHudL::UpdatePausedContent(float realDt)
+void UiHud::UpdatePausedContent(float realDt)
 {
 	
 }
 
-void UiHudL::Draw(sf::RenderWindow& window)
+void UiHud::Draw(sf::RenderWindow& window)
 {
-	window.draw(currentWeaponStatus);
-	window.draw(volumeDisplayer);
-	if (weaponTypeIndex != -1)
-	{
-		window.draw(currentWeaponStatus);
-	}
 	window.draw(boxBL);
 	window.draw(textBL2);
 	window.draw(textBL);
@@ -650,11 +874,23 @@ void UiHudL::Draw(sf::RenderWindow& window)
 		{
 			window.draw(*alphabetSprite);
 		}
+		for (auto alphabetSprite : pauseTextResume2)
+		{
+			window.draw(*alphabetSprite);
+		}
 		for (auto alphabetSprite : pauseTextResume)
 		{
 			window.draw(*alphabetSprite);
 		}
+		for (auto alphabetSprite : pauseTextRestart2)
+		{
+			window.draw(*alphabetSprite);
+		}
 		for (auto alphabetSprite : pauseTextRestart)
+		{
+			window.draw(*alphabetSprite);
+		}
+		for (auto alphabetSprite : pauseTextQuit2)
 		{
 			window.draw(*alphabetSprite);
 		}

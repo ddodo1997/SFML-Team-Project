@@ -191,7 +191,7 @@
     <ClCompile Include="Framework\Scenes\SceneGame.cpp" />
     <ClCompile Include="Framework\Map\TileMap.cpp" />
     <ClCompile Include="Framework\Map\TileMapEditor.cpp" />
-    <ClCompile Include="Framework\Objects\Text\UiHudL.cpp" />
+    <ClCompile Include="Framework\Objects\Text\UiHud.cpp" />
     <ClCompile Include="Framework\Managers\ViewMgr.cpp" />
     <ClCompile Include="Framework\Objects\Wall2.cpp" />
     <ClCompile Include="Framework\Objects\Weapon.cpp" />
@@ -249,7 +249,7 @@
     <ClInclude Include="Framework\Scenes\SceneGame.h" />
     <ClInclude Include="Framework\Map\TileMap.h" />
     <ClInclude Include="Framework\Map\TileMapEditor.h" />
-    <ClInclude Include="Framework\Objects\Text\UiHudL.h" />
+    <ClInclude Include="Framework\Objects\Text\UiHud.h" />
     <ClInclude Include="Framework\Managers\ViewMgr.h" />
     <ClInclude Include="Framework\Objects\Wall2.h" />
     <ClInclude Include="Framework\Objects\Weapon.h" />

@@ -9,12 +9,13 @@
 #include "Bullet.h"
 #include "Player.h"
 #include "TileMap.h"
-#include "UiHudL.h"
+#include "UiHud.h"
 #include "Boss1.h"
 #include "Boss2.h"
 #include "BodyGuard.h"
 #include "Cleaver.h"
 #include "PathFinder.h"
+
 SceneGame::SceneGame() : Scene(SceneIds::SceneGame)
 {
 
@@ -24,7 +25,7 @@ void SceneGame::Init()
 {
 	player = AddGo(new Player("Player"));
 	tileMap = AddGo(new TileMap("Tile Map"));
-	uiHud = AddGo(new UiHudL());
+	uiHud = AddGo(new UiHud());
 	cleaver = AddGo(new Cleaver("Cleaver"));
 	pathFinder = new PathFinder();
 	uiHud->SetPlayer(player);
@@ -187,10 +188,6 @@ void SceneGame::Update(float dt)
 
 	directionXY = { directionX, directionY };
 
-	if(uiHud != nullptr)
-		uiHud->UpdateWeaponStatus(player->GetWeaponStatus(), player->GetRemainingBullet());
-
-	//worldView.setCenter(player->GetPosition());
 	FRAMEWORK.GetWindow().setView(worldView);
 
 	ClearInactivePoolObjects();

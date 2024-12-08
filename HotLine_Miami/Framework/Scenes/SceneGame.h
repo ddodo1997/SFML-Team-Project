@@ -9,7 +9,7 @@ class Decoration;
 class Wall;
 class Wall2;
 class Bullet;
-class UiHudL;
+class UiHud;
 class Boss1;
 class Boss2;
 class Panther;
@@ -24,7 +24,7 @@ class SceneGame :
 protected:
 	Player* player;
 	TileMap* tileMap;
-	UiHudL* uiHud;
+	UiHud* uiHud;
 	Boss1* boss;
 	Boss2* boss2;
 	Cleaver* cleaver;

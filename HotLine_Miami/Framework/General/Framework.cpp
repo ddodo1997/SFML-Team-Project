@@ -9,6 +9,8 @@ void Framework::Init(int width, int height, const std::string& name)
     Utils::Init();
     SCENE_MGR.Init();
     SOUND_MGR.Init();
+    SOUND_MGR.SetBgmVolume(20);
+    SOUND_MGR.SetSfxVolume(20);
     InputMgr::Init();
 }
 
