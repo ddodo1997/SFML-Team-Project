@@ -25,14 +25,13 @@ void SceneGame::Init()
 	player = AddGo(new Player("Player"));
 	tileMap = AddGo(new TileMap("Tile Map"));
 	uiHud = AddGo(new UiHudL());
+<<<<<<< HEAD
 
+=======
+>>>>>>> Dev_S
 	cleaver = AddGo(new Cleaver("Cleaver"));
 	pathFinder = new PathFinder();
 	uiHud->SetPlayer(player);
-
-	LoadWalls(); // ��¥ �� ������ ����ϱ�
-	LoadDecorations();
-	LoadEnemies();
 
 	Scene::Init();
 }
@@ -45,29 +44,9 @@ void SceneGame::Release()
 void SceneGame::Enter()
 {
 	tileSize = static_cast<sf::Vector2f>(STAGE_TABLE->GetTileSize());
-	SetWalls(); // ��¥ �� ����� ��
 	Scene::Enter();
 	// SetWalls_2(); // ���� �� ����� �� 
-	SetEnemies();
-	SetDecorations();
-	SetWeapons();
-	player->SetPosition(STAGE_TABLE->GetPlayerData().pos * tileSize.x);
-	player->SetRotation(STAGE_TABLE->GetPlayerData().rotation);
-	if (sf::Vector2f({ -1.f,-1.f }) != STAGE_TABLE->GetBoss1Data().pos)
-	{
-		boss = AddGo(new Boss1("Boss1"));
-		boss->Reset();
-		boss->SetPosition(STAGE_TABLE->GetBoss1Data().pos * tileSize.x);
-		boss->SetRotation(STAGE_TABLE->GetBoss1Data().rotation);
-	}	
-	if (sf::Vector2f({ -1.f,-1.f }) != STAGE_TABLE->GetBoss2Position())
-	{
-		boss2 = AddGo(new Boss2("Boss2"));
-		boss2->Reset();
-		boss2->SetPosition({ -1000.f, -1000.f, });
-	}
-	tileMap->SetTexture(&TEXTURE_MGR.Get(STAGE_TABLE->GetTileTextureId()));
-	tileMap->Initialize(STAGE_TABLE->GetTileSize(), STAGE_TABLE->GetTileCount(), STAGE_TABLE->GetFloorTiles());
+	LoadNextStage();
 
 	worldView.setSize(windowSize * 0.2f);
 	//worldView.setCenter(player->GetPosition());
@@ -223,40 +202,52 @@ void SceneGame::Update(float dt)
 
 void SceneGame::LoadWalls()
 {
-	const auto& wallTable = STAGE_TABLE->GetWallTable();
+	const auto& wallTable = STAGE_TABLE->GetCurrentStage().GetWallTable();
 
 	for (const auto& WallPair : wallTable)
 	{
 		const DataWall& wallData = WallPair.second;
 
 		Wall* wall = AddGo(new Wall(wallData.id));
+		wall->Init();
+		wall->DrawWall(wallData);
+		wall->Reset();
 		walls.push_back(wall);
 	}
 }
 
 void SceneGame::LoadDecorations()
 {
-	const auto& decoTable = STAGE_TABLE->GetDecoTable();
+	const auto& decoTable = STAGE_TABLE->GetCurrentStage().GetDecoTable();
 	for (const auto& decoPair : decoTable)
 	{
 		const DataDecoration& decoData = decoPair.second;
 
 		Decoration* deco = AddGo(new Decoration(decoData.id));
-		decorations.push_back(deco);
+		deco->Init();
+		deco->Reset();
 		deco->SetTexture(decoData.textureId);
 		deco->SetRotation(decoData.rotation);
 		deco->SetPosition(decoData.pos);
+		decorations.push_back(deco);
 	}
 }
 
 void SceneGame::LoadEnemies()
 {
-	const auto& enemyTable = STAGE_TABLE->GetEnemyTable();
+	const auto& enemyTable = STAGE_TABLE->GetCurrentStage().GetEnemyTable();
 	for (const auto& enemyPair : enemyTable)
 	{
 		const DataEnemy& enemyData = enemyPair.second;
 
 		Enemy* enemy = AddGo(new Enemy(enemyData.id));
+		enemy->Init();
+		enemy->Reset();
+		enemy->SetPosition({ (enemyData.pos.x * STAGE_TABLE->GetTileSize().x) + 8.f,  (enemyData.pos.y * STAGE_TABLE->GetTileSize().y) + 8.f });
+		enemy->SetRotation(enemyData.rotation);
+		enemy->SetWeapon(enemyData.weaponType);
+		enemy->SetStatus(enemyData.state);
+		enemy->SetWayPoints(enemyData.waypoints);
 		enemies.push_back(enemy);
 	}
 }
@@ -264,7 +255,7 @@ void SceneGame::LoadEnemies()
 void SceneGame::SetWalls()
 {
 	int i = 0;
-	const auto& wallTable = STAGE_TABLE->GetWallTable();
+	const auto& wallTable = STAGE_TABLE->GetCurrentStage().GetWallTable();
 
 	for (const auto& WallPair : wallTable)
 	{
@@ -276,7 +267,7 @@ void SceneGame::SetWalls()
 void SceneGame::SetWalls_2()
 {
 	int i = 0;
-	const auto& wallTable = STAGE_TABLE->GetWallTable();
+	const auto& wallTable = STAGE_TABLE->GetCurrentStage().GetWallTable();
 
 	for (const auto& WallPair : wallTable)
 	{
@@ -319,7 +310,7 @@ void SceneGame::SetWalls_2()
 void SceneGame::SetDecorations()
 {
 	int i = 0;
-	const auto& decoTable = STAGE_TABLE->GetDecoTable();
+	const auto& decoTable = STAGE_TABLE->GetCurrentStage().GetDecoTable();
 	for (const auto& decoPair : decoTable)
 	{
 		const DataDecoration& decoData = decoPair.second;
@@ -333,7 +324,7 @@ void SceneGame::SetDecorations()
 void SceneGame::SetEnemies()
 {
 	int i = 0;
-	const auto& enemyTable = STAGE_TABLE->GetEnemyTable();
+	const auto& enemyTable = STAGE_TABLE->GetCurrentStage().GetEnemyTable();
 	for (const auto& enemyPair : enemyTable)
 	{
 		const DataEnemy& enemyData = enemyPair.second;
@@ -359,9 +350,9 @@ MafiaBoss* SceneGame::GetMafiaBoss()
 	return boss2->GetMafiaBoss();
 }
 
-void SceneGame::SetWeapons()
+void SceneGame::LoadWeapons()
 {
-	const auto& weaponTable = STAGE_TABLE->GetWeaponTable();
+	const auto& weaponTable = STAGE_TABLE->GetCurrentStage().GetWeaponTable();
 	for (const auto& weaponPair : weaponTable)
 	{
 		const DataWeapon& weaponData = weaponPair.second;
@@ -466,4 +457,53 @@ void SceneGame::Draw(sf::RenderWindow& window)
 {
 	VIEW_MGR.DrawBackground();
 	Scene::Draw(window);
+}
+
+void SceneGame::LoadNextStage()
+{
+	ClearStage();
+	tileMap->SetTexture(&TEXTURE_MGR.Get(STAGE_TABLE->GetCurrentStage().GetTileTextureId()));
+	tileMap->Initialize(STAGE_TABLE->GetTileSize(), STAGE_TABLE->GetCurrentStage().GetTileCount(), STAGE_TABLE->GetCurrentStage().GetFloorTiles());
+	player->SetPosition(STAGE_TABLE->GetCurrentStage().GetPlayerData().pos * tileSize.x);
+	player->SetRotation(STAGE_TABLE->GetCurrentStage().GetPlayerData().rotation);
+
+	if(STAGE_TABLE->GetCurrentStage().GetBoss1Data().pos != sf::Vector2f{-1.f, -1.f})
+	{
+		boss = AddGo(new Boss1("Boss1"));
+		boss->Reset();
+		boss->SetPosition(STAGE_TABLE->GetCurrentStage().GetBoss1Data().pos * tileSize.x);
+		boss->SetRotation(STAGE_TABLE->GetCurrentStage().GetBoss1Data().rotation);
+	}
+	if (STAGE_TABLE->GetCurrentStage().GetBoss2Position() != sf::Vector2f{ -1.f, -1.f })
+	{
+		boss2 = AddGo(new Boss2("Boss2"));
+		boss2->Reset();
+		boss2->SetPosition(STAGE_TABLE->GetCurrentStage().GetBoss2Position() * tileSize.x);
+	}
+	
+	LoadWalls(); // ��¥ �� ������ ����ϱ�
+	LoadDecorations();
+	LoadEnemies();
+	LoadWeapons();
+	STAGE_TABLE->NextStage();
+}
+
+void SceneGame::ClearStage()
+{
+	RemoveAllObjPool();
+	for (auto& wall : walls)
+	{
+		RemoveGo(wall);
+	}
+	for (auto& deco : decorations)
+	{
+		RemoveGo(deco);
+	}
+	for (auto& enemy : enemies)
+	{
+		RemoveGo(enemy);
+	}
+	walls.clear();
+	decorations.clear();
+	enemies.clear();
 }

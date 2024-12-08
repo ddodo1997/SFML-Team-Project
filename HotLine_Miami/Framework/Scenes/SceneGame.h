@@ -61,13 +61,12 @@ public:
 	void LoadWalls();
 	void LoadDecorations();
 	void LoadEnemies();
-	void LoadWeapons();
 
 	void SetWalls();
 	void SetWalls_2();
 	void SetDecorations();
 	void SetEnemies();
-	void SetWeapons();
+	void LoadWeapons();
 	Player* GetPlayer() { return player; }
 	Boss1* GetBoss1() { return boss; }
 	Boss2* GetBoss2() { return boss2; }
@@ -100,5 +99,8 @@ public:
 	void RemoveAllObjPool();
 
 	virtual void Draw(sf::RenderWindow& window);
+
+	void LoadNextStage(); 
+	void ClearStage();
 };
 

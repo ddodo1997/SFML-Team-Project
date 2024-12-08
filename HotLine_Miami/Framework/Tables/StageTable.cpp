@@ -5,24 +5,98 @@
 bool StageTable::Load()
 {
 	Release();
-	std::ifstream inFile("tables/stage_0.json");
-
-	if (!inFile)
+	int i = 0;
+	while(true)
 	{
-		std::cerr << "JSON ÆÄÀÏÀ» ¿­ ¼ö ¾ø½À´Ï´Ù: " << std::endl;
-		return false;
+		std::ifstream inFile("tables/stage_" + std::to_string(i) + ".json");
+
+		if (!inFile)
+		{
+			std::cerr << "JSON ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½: " << "tables/stage_" + std::to_string(i) + ".json" << std::endl;
+			break;
+		}
+
+		json data;
+		inFile >> data;
+		inFile.close();
+
+		DataStage stage;
+		tileSize = { data["tileSizeX"], data["tileSizeY"] };
+		stage.tileSize = { data["tileSizeX"], data["tileSizeY"] };
+		stage.tileCount = { data["tileCountX"], data["tileCountY"] };
+		stage.tileTextureId = data["floor"]["textureId"];
+		stage.floorTiles = data["floor"]["tiles"].get<std::vector<int>>();
+
+		ParseDecorations(data["decorations"]["decos"], stage);
+		ParseEnemies(data["enemy"]["enemies"], stage);
+		ParseWalls(data["wall"]["walls"], stage);
+		ParseWeapons(data["weapon"]["weapons"], stage);
+
+		if (data.contains("player"))
+		{
+			stage.playerData.pos = { data["player"]["x"], data["player"]["y"] };
+			stage.playerData.rotation = data["player"]["rotation"];
+		}
+
+		if (data.contains("boss1"))
+		{
+			stage.boss1Data.pos = { data["boss1"]["x"], data["boss1"]["y"] };
+			stage.boss1Data.rotation = data["boss1"]["rotation"];
+		}
+		else
+		{
+			stage.boss1Data.pos = { -1.f, -1.f };
+			stage.boss1Data.rotation = 0.0f;
+		}
+
+		if (data.contains("boss2"))
+		{
+			stage.boss2Position = { data["boss2"]["x"], data["boss2"]["y"] };
+		}
+		else
+		{
+			stage.boss2Position = { -1.f, -1.f };
+		}
+
+		for (const auto& pos : data["EndPosition"])
+		{
+			stage.endPoints.push_back({ pos["x"], pos["y"] });
+		}
+
+		stageDatas.push_back(stage);
+		i++;
 	}
 
-	json data;
-	inFile >> data;
 
-	tileSize = { data["tileSizeX"], data["tileSizeY"] };
-	tileCount = { data["tileCountX"], data["tileCountY"] };
-	tileTextureId = data["floor"]["textureId"];
-	floorTiles = data["floor"]["tiles"].get<std::vector<int>>();
+	return !stageDatas.empty();
+}
 
+void StageTable::Release()
+{
+	for (auto& stage : stageDatas)
+	{
+		stage.decoTable.clear();
+		stage.enemyTable.clear();
+		stage.wallTable.clear();
+		stage.weaponTable.clear();
+		stage.floorTiles.clear();
+		stage.endPoints.clear();
 
-	for (const auto& decoration : data["decorations"]["decos"])
+		stage.tileSize = { 0, 0 };
+		stage.tileCount = { 0, 0 };
+		stage.tileTextureId.clear();
+		stage.playerData = DataPlayer();
+		stage.boss1Data = DataBoss1();
+		stage.boss2Position = { 0.f, 0.f };
+	}
+
+	stageDatas.clear();
+	currentStageIndex = 0;
+}
+
+void StageTable::ParseDecorations(const json& decorations, DataStage& stage)
+{
+	for (const auto& decoration : decorations)
 	{
 		DataDecoration decoData;
 		decoData.id = decoration["id"];
@@ -34,30 +108,13 @@ bool StageTable::Load()
 		decoData.textureId = DECORATION_TABLE->GetFilePath() + decoInfo.textureId;
 		decoData.size = decoInfo.size;
 
-		decoTable.insert({ decoData.id, decoData });
+		stage.decoTable.insert({ decoData.id, decoData });
 	}
+}
 
-	for (const auto& enemy : data["enemy"]["enemies"])
-	{
-		DataEnemy enemyData;
-		enemyData.id = enemy["id"];
-		enemyData.pos = { enemy["x"], enemy["y"] };
-		enemyData.rotation = enemy["rotation"];
-
-		const auto& enemyTypeInfo = ENEMY_TABLE->GetEnemyType(enemy["state"]);
-
-		enemyData.state = enemyTypeInfo.state;
-		enemyData.weaponType = enemyTypeInfo.weaponType;
-		
-		for (const auto& waypoint : enemy["waypoint"])
-		{
-			enemyData.waypoints.emplace_back((waypoint["x"] * GetTileSize().x) + GetTileSize().x * 0.5f, (waypoint["y"] * GetTileSize().y) + GetTileSize().y * 0.5f);
-		}
-
-		enemyTable.insert({ enemyData.id, enemyData });
-	}
-
-	for (const auto& wall : data["wall"]["walls"])
+void StageTable::ParseWalls(const json& walls, DataStage& stage)
+{
+	for (const auto& wall : walls)
 	{
 		DataWall wallData;
 		wallData.id = wall["id"];
@@ -76,10 +133,36 @@ bool StageTable::Load()
 				wallData.textureIds.push_back(WALL_TABLE->GetVerticalWallTextureId(textureId));
 			}
 		}
-		wallTable.insert({ wallData.id, wallData });
+		stage.wallTable.insert({ wallData.id, wallData });
 	}
+}
 
-	for (const auto& weapon : data["weapon"]["weapons"])
+void StageTable::ParseEnemies(const json& enemies, DataStage& stage)
+{
+	for (const auto& enemy : enemies)
+	{
+		DataEnemy enemyData;
+		enemyData.id = enemy["id"];
+		enemyData.pos = { enemy["x"], enemy["y"] };
+		enemyData.rotation = enemy["rotation"];
+
+		const auto& enemyTypeInfo = ENEMY_TABLE->GetEnemyType(enemy["state"]);
+
+		enemyData.state = enemyTypeInfo.state;
+		enemyData.weaponType = enemyTypeInfo.weaponType;
+
+		for (const auto& waypoint : enemy["waypoint"])
+		{
+			enemyData.waypoints.emplace_back((waypoint["x"] * stage.GetTileSize().x) + stage.GetTileSize().x * 0.5f, (waypoint["y"] * stage.GetTileSize().y) + stage.GetTileSize().y * 0.5f);
+		}
+
+		stage.enemyTable.insert({ enemyData.id, enemyData });
+	}
+}
+
+void StageTable::ParseWeapons(const json& weapons, DataStage& stage)
+{
+	for (const auto& weapon : weapons)
 	{
 		DataWeapon weaponData;
 		weaponData.id = weapon["id"];
@@ -88,49 +171,22 @@ bool StageTable::Load()
 		Weapon::WeaponType temp = weapon["type"];
 		weaponData.weaponState = WEAPON_TABLE->Get(temp);
 
-		weaponTable.insert({ weaponData.id, weaponData });
+		stage.weaponTable.insert({ weaponData.id, weaponData });
 	}
-
-	if (data.contains("player"))
-	{
-		playerData.pos = { data["player"]["x"], data["player"]["y"] };
-		playerData.rotation = data["player"]["rotation"];
-	}
-
-	if (data.contains("boss1"))
-	{
-		boss1Data.pos = { data["boss1"]["x"], data["boss1"]["y"] };
-		boss1Data.rotation = data["boss1"]["rotation"];
-	}
-	else
-	{
-		boss1Data.pos = { -1.f, -1.f };
-		boss1Data.rotation = 0.0f;     
-	}
-
-	if (data.contains("boss2"))
-	{
-		boss2Position = { data["boss2"]["x"], data["boss2"]["y"] };
-	}
-	else
-	{
-		boss2Position = { -1.f, -1.f };
-	}
-
-	for (const auto& pos : data["EndPosition"])
-	{
-		endPoints.push_back({ pos["x"], pos["y"] });
-	}
-
-	inFile.close();
-	return true;
 }
 
-void StageTable::Release()
+const DataStage& StageTable::GetCurrentStage() const
 {
-	floorTiles.clear();
-	enemyTable.clear();
-	decoTable.clear();
-	wallTable.clear();
-	weaponTable.clear();
+	if (currentStageIndex >= 0 && currentStageIndex < stageDatas.size())
+	{
+		return stageDatas[currentStageIndex];
+	}
+}
+
+void StageTable::NextStage()
+{
+	if (currentStageIndex + 1 < stageDatas.size())
+	{
+		currentStageIndex++;
+	}
 }

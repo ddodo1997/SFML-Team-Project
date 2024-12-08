@@ -4,8 +4,6 @@
 #include "Enemy.h"
 #include "Wall.h"
 #include "Wall2.h"
-#include "SceneDev_K.h"
-#include "SceneDevL.h"
 #include "SceneGame.h"
 #include "MafiaBoss.h"
 #include "Fountain.h"

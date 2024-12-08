@@ -367,7 +367,7 @@ void UiMenu::UpdateMainMenuKey(float realDt)
 	if (!repeatPreventerEnterKey && mainMenuIndex == 2 && InputMgr::GetKeyDown(sf::Keyboard::Enter))
 	{
 		repeatPreventerEnterKey = true;
-		SCENE_MGR.ChangeScene(SceneIds::DevS);
+		SCENE_MGR.ChangeScene(SceneIds::SceneEditor);
 		FRAMEWORK.SetTimeScale(1.f);
 	}
 

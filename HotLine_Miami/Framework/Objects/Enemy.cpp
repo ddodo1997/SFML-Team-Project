@@ -1,8 +1,5 @@
 #include "stdafx.h"
 #include "Enemy.h"
-#include <SceneDev_K.h>
-#include "SceneDevS.h"
-#include "SceneDevL.h"
 #include "Player.h"
 #include "Wall2.h"
 #include "Wall.h"

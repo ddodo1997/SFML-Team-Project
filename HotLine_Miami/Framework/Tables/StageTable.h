@@ -37,29 +37,23 @@ struct DataBoss1
     sf::Vector2f pos = { 0.f, 0.f };
     float rotation = 0.f;
 };
-class StageTable : public DataTable
+struct DataStage
 {
-private:
-    sf::Vector2i tileSize;
-    sf::Vector2i tileCount;
+    sf::Vector2i tileSize = { 16, 16 };
+    sf::Vector2i tileCount = { 0, 0 };
 
-    std::string tileTextureId;
-
+    std::string tileTextureId = "";
     std::vector<int> floorTiles;
+
     std::unordered_map<std::string, DataDecoration> decoTable;
     std::unordered_map<std::string, DataEnemy> enemyTable;
     std::unordered_map<std::string, DataWall> wallTable;
     std::unordered_map<std::string, DataWeapon> weaponTable;
+
     DataPlayer playerData;
     DataBoss1 boss1Data;
     std::vector<sf::Vector2f> endPoints;
     sf::Vector2f boss2Position;
-public:
-    StageTable() : DataTable(DataTable::Types::Stages) { };
-    ~StageTable() = default;
-
-    bool Load() override;
-    void Release() override;
 
     const sf::Vector2i& GetTileSize() const { return tileSize; }
     const sf::Vector2i& GetTileCount() const { return tileCount; }
@@ -73,5 +67,27 @@ public:
     const DataBoss1& GetBoss1Data() const { return boss1Data; }
     const sf::Vector2f& GetBoss2Position() const { return boss2Position; }
     const std::vector<sf::Vector2f>& GetEndPointArea() const { return endPoints; }
+};
+class StageTable : public DataTable
+{
+private:
+    sf::Vector2i tileSize;
+    std::vector<DataStage> stageDatas;
+    int currentStageIndex = 0;
+public:
+    StageTable() : DataTable(DataTable::Types::Stages) { };
+    ~StageTable() = default;
+
+    bool Load() override;
+    void Release() override;
+
+    void ParseDecorations(const json& decorations, DataStage& stage);
+    void ParseWalls(const json& walls, DataStage& stage);
+    void ParseEnemies(const json& enemies, DataStage& stage);
+    void ParseWeapons(const json& weapons, DataStage& stage);
+
+    const sf::Vector2i GetTileSize() const { return tileSize; }
+    const DataStage& GetCurrentStage() const;
+    void NextStage();
 };
 

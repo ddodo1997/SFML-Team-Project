@@ -1,18 +1,14 @@
 #include "stdafx.h"
 #include "SceneMgr.h"
-#include "SceneDevL.h"
-#include "SceneDev_K.h"
-#include "SceneDevS.h"
 #include "SceneGame.h"
 #include "SceneMenu.h"
+#include "SceneEditor.h"
 
 void SceneMgr::Init()
 {
-	scenes.push_back(new SceneDev_K());
-	scenes.push_back(new SceneDevL());
-	scenes.push_back(new SceneDevS());
-	scenes.push_back(new SceneGame());
 	scenes.push_back(new SceneMenu());
+	scenes.push_back(new SceneGame());
+	scenes.push_back(new SceneEditor());
 
 	for (auto scene : scenes)
 	{
