@@ -51,7 +51,7 @@ void ViewMgr::Update(float dt)
 	{
 		UpdateMenuBackground(FRAMEWORK.GetRealDeltaTime());
 	}
-	if (SCENE_MGR.GetCurrentSceneId() == SceneIds::DevS)
+	if (SCENE_MGR.GetCurrentSceneId() == SceneIds::SceneEditor)
 	{
 		UpdateMenuBackground(FRAMEWORK.GetRealDeltaTime());
 	}

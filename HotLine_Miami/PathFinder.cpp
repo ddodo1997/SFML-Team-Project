@@ -14,8 +14,8 @@ namespace std {
 
 PathFinder::PathFinder()
 {
-    map = STAGE_TABLE->GetFloorTiles();
-    mapSize = STAGE_TABLE->GetTileCount();
+    map = STAGE_TABLE->GetCurrentStage().GetFloorTiles();
+    mapSize = STAGE_TABLE->GetCurrentStage().GetTileCount();
     tileSize = static_cast<sf::Vector2f>(STAGE_TABLE->GetTileSize());
 }
 

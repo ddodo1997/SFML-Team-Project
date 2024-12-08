@@ -13,7 +13,7 @@ class Enemy;
 class Decoration;
 class Wall;
 class Wall2;
-class SceneDevS : public SceneGame
+class SceneEditor : public SceneGame
 {
 protected:
 	int minX, minY;
@@ -50,8 +50,8 @@ protected:
 	sf::Vector2i tileCount;
 
 public:
-	SceneDevS();
-	~SceneDevS() = default;
+	SceneEditor();
+	~SceneEditor() = default;
 
 	void Init() override;
 	void Enter() override;

@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "SceneDevS.h"
+#include "SceneEditor.h"
 #include "TileMap.h"
 #include "TileMapEditor.h"
 #include "StageTable.h"
@@ -15,12 +15,12 @@
 #include "WayPoint.h"
 
 
-SceneDevS::SceneDevS() : SceneGame()
+SceneEditor::SceneEditor() : SceneGame()
 {
-	id = SceneIds::DevS;
+	id = SceneIds::SceneEditor;
 }
 
-void SceneDevS::Init()
+void SceneEditor::Init()
 {
 	VIEW_MGR.Init();
 	tileMap = AddGo(new TileMap("Tile Map"));
@@ -32,11 +32,11 @@ void SceneDevS::Init()
 	Scene::Init();
 }
 
-void SceneDevS::Enter()
+void SceneEditor::Enter()
 {
 	Scene::Enter();
 	FRAMEWORK.GetWindow().setMouseCursorVisible(true);
-	tileMap->SetTexture(&TEXTURE_MGR.Get(STAGE_TABLE->GetTileTextureId()));
+	tileMap->SetTexture(&TEXTURE_MGR.Get(STAGE_TABLE->GetCurrentStage().GetTileTextureId()));
 	tileMap->InitializeEmpty(STAGE_TABLE->GetTileSize(), { 40, 40 });
 	//tileMap->Initialize(STAGE_TABLE->GetTileSize(), STAGE_TABLE->GetTileCount(), STAGE_TABLE->GetFloorTiles());
 	// SetStatusEnemies();
@@ -51,12 +51,12 @@ void SceneDevS::Enter()
 	isWayPointMode = false;
 }
 
-void SceneDevS::Exit()
+void SceneEditor::Exit()
 {
 	Scene::Exit();
 }
 
-void SceneDevS::Update(float dt)
+void SceneEditor::Update(float dt)
 {
 	Scene::Update(dt);
 	VIEW_MGR.Update(dt);
@@ -279,13 +279,13 @@ void SceneDevS::Update(float dt)
 	}
 }
 
-void SceneDevS::Draw(sf::RenderWindow& window)
+void SceneEditor::Draw(sf::RenderWindow& window)
 {
 	VIEW_MGR.DrawBackground();
 	Scene::Draw(window);
 }
 
-void SceneDevS::CreateWall(const sf::Vector2f& pos)
+void SceneEditor::CreateWall(const sf::Vector2f& pos)
 {
 	int xIndex = static_cast<int>(pos.x) / tileSize.x;
 	int yIndex = static_cast<int>(pos.y) / tileSize.y;
@@ -355,7 +355,7 @@ void SceneDevS::CreateWall(const sf::Vector2f& pos)
 		}
 	}
 
-	// º® »ý¼º ¹× Ãß°¡
+	// ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ß°ï¿½
 	Wall2* wall = new Wall2("Wall");
 	wall->SetPosition(wallPosition);
 	wall->SetStartPostion(wallStart);
@@ -376,7 +376,7 @@ void SceneDevS::CreateWall(const sf::Vector2f& pos)
 	AddGo(wall);
 }
 
-void SceneDevS::CreateEnemy(const sf::Vector2f& pos)
+void SceneEditor::CreateEnemy(const sf::Vector2f& pos)
 {
 	int xIndex = static_cast<int>(pos.x) / tileSize.x;
 	int yIndex = static_cast<int>(pos.y) / tileSize.y;
@@ -417,7 +417,7 @@ void SceneDevS::CreateEnemy(const sf::Vector2f& pos)
 	}
 }
 
-void SceneDevS::StartWayPointMode(Enemy* enemy)
+void SceneEditor::StartWayPointMode(Enemy* enemy)
 {
 	isWayPointMode = true;
 	waypoints.clear();
@@ -432,7 +432,7 @@ void SceneDevS::StartWayPointMode(Enemy* enemy)
 	patrolEnemy = enemy;
 }
 
-void SceneDevS::AddWayPoints(const sf::Vector2f& pos)
+void SceneEditor::AddWayPoints(const sf::Vector2f& pos)
 {
 	int xIndex = static_cast<int>(pos.x) / tileSize.x;
 	int yIndex = static_cast<int>(pos.y) / tileSize.y;
@@ -458,7 +458,7 @@ void SceneDevS::AddWayPoints(const sf::Vector2f& pos)
 	}
 }
 
-void SceneDevS::CreateWeapon(const sf::Vector2f& pos)
+void SceneEditor::CreateWeapon(const sf::Vector2f& pos)
 {
 	int xIndex = static_cast<int>(pos.x) / tileSize.x;
 	int yIndex = static_cast<int>(pos.y) / tileSize.y;
@@ -487,7 +487,7 @@ void SceneDevS::CreateWeapon(const sf::Vector2f& pos)
 	AddGo(weapon);
 }
 
-void SceneDevS::CreatePlayer(const sf::Vector2f& pos)
+void SceneEditor::CreatePlayer(const sf::Vector2f& pos)
 {
 	int xIndex = static_cast<int>(pos.x) / tileSize.x;
 	int yIndex = static_cast<int>(pos.y) / tileSize.y;
@@ -510,7 +510,7 @@ void SceneDevS::CreatePlayer(const sf::Vector2f& pos)
 	AddGo(player);
 }
 
-void SceneDevS::CreateBoss1(const sf::Vector2f& pos)
+void SceneEditor::CreateBoss1(const sf::Vector2f& pos)
 {
 	int xIndex = static_cast<int>(pos.x) / tileSize.x;
 	int yIndex = static_cast<int>(pos.y) / tileSize.y;
@@ -531,7 +531,7 @@ void SceneDevS::CreateBoss1(const sf::Vector2f& pos)
 	AddGo(boss1);
 }
 
-void SceneDevS::CreateBoss2(const sf::Vector2f& pos)
+void SceneEditor::CreateBoss2(const sf::Vector2f& pos)
 {
 	if (boss2 != nullptr)
 	{
@@ -546,7 +546,7 @@ void SceneDevS::CreateBoss2(const sf::Vector2f& pos)
 	AddGo(boss2);
 }
 
-void SceneDevS::CreateEndPoint(const sf::Vector2f& pos)
+void SceneEditor::CreateEndPoint(const sf::Vector2f& pos)
 {
 	int xIndex = static_cast<int>(pos.x) / tileSize.x;
 	int yIndex = static_cast<int>(pos.y) / tileSize.y;
@@ -575,9 +575,9 @@ void SceneDevS::CreateEndPoint(const sf::Vector2f& pos)
 	endPoints.push_back(endPoint);
 }
 
-void SceneDevS::LoadWalls()
+void SceneEditor::LoadWalls()
 {
-	const auto& wallTable = STAGE_TABLE->GetWallTable();
+	const auto& wallTable = STAGE_TABLE->GetCurrentStage().GetWallTable();
 
 	for (const auto& WallPair : wallTable)
 	{
@@ -591,9 +591,9 @@ void SceneDevS::LoadWalls()
 	}
 }
 
-void SceneDevS::LoadDecorations()
+void SceneEditor::LoadDecorations()
 {
-	const auto& decoTable = STAGE_TABLE->GetDecoTable();
+	const auto& decoTable = STAGE_TABLE->GetCurrentStage().GetDecoTable();
 	for (const auto& decoPair : decoTable)
 	{
 		const DataDecoration& decoData = decoPair.second;
@@ -608,9 +608,9 @@ void SceneDevS::LoadDecorations()
 	}
 }
 
-void SceneDevS::LoadEnemies()
+void SceneEditor::LoadEnemies()
 {
-	const auto& enemyTable = STAGE_TABLE->GetEnemyTable();
+	const auto& enemyTable = STAGE_TABLE->GetCurrentStage().GetEnemyTable();
 	for (const auto& enemyPair : enemyTable)
 	{
 		const DataEnemy& enemyData = enemyPair.second;
@@ -625,17 +625,17 @@ void SceneDevS::LoadEnemies()
 	}
 }
 
-void SceneDevS::SetStatusEnemies()
+void SceneEditor::SetStatusEnemies()
 {
 	int i = 0;
-	const auto& enemyTable = STAGE_TABLE->GetEnemyTable();
+	const auto& enemyTable = STAGE_TABLE->GetCurrentStage().GetEnemyTable();
 	for (const auto& enemyPair : enemyTable)
 	{
 		enemies[i++]->SetStatus(enemyPair.second.state);
 	}
 }
 
-void SceneDevS::DeleteWall(const sf::Vector2f& pos)
+void SceneEditor::DeleteWall(const sf::Vector2f& pos)
 {
 	for (int i = 0; i < wallsHorizontal.size(); i++)
 	{
@@ -655,7 +655,7 @@ void SceneDevS::DeleteWall(const sf::Vector2f& pos)
 	}
 }
 
-void SceneDevS::DeleteEnemy(const sf::Vector2f& pos)
+void SceneEditor::DeleteEnemy(const sf::Vector2f& pos)
 {
 	for (int i = 0; i < createdEnemies.size(); i++)
 	{
@@ -667,7 +667,7 @@ void SceneDevS::DeleteEnemy(const sf::Vector2f& pos)
 	}
 }
 
-void SceneDevS::DeleteWaypoint(const sf::Vector2f& pos)
+void SceneEditor::DeleteWaypoint(const sf::Vector2f& pos)
 {
 	for (int i = 0; i < waypoints.size(); i++)
 	{
@@ -679,7 +679,7 @@ void SceneDevS::DeleteWaypoint(const sf::Vector2f& pos)
 	}
 }
 
-void SceneDevS::DeleteWeapon(const sf::Vector2f& pos)
+void SceneEditor::DeleteWeapon(const sf::Vector2f& pos)
 {
 	for (int i = 0; i < createdWeapons.size(); i++)
 	{
@@ -691,7 +691,7 @@ void SceneDevS::DeleteWeapon(const sf::Vector2f& pos)
 	}
 }
 
-void SceneDevS::DeleteEndPoint(const sf::Vector2f& pos)
+void SceneEditor::DeleteEndPoint(const sf::Vector2f& pos)
 {
 	for (int i = 0; i < endPoints.size(); i++)
 	{
@@ -703,7 +703,7 @@ void SceneDevS::DeleteEndPoint(const sf::Vector2f& pos)
 	}
 }
 
-void SceneDevS::DeleteWalls()
+void SceneEditor::DeleteWalls()
 {
 	for (auto& wall : wallsHorizontal)
 	{
@@ -717,7 +717,7 @@ void SceneDevS::DeleteWalls()
 	wallsVertical.clear();
 }
 
-void SceneDevS::DeleteEnemies()
+void SceneEditor::DeleteEnemies()
 {
 	for (auto& enemy : createdEnemies)
 	{
@@ -726,7 +726,7 @@ void SceneDevS::DeleteEnemies()
 	createdEnemies.clear();
 }
 
-void SceneDevS::DeleteWaypoints()
+void SceneEditor::DeleteWaypoints()
 {
 	for (auto& waypoint : waypoints)
 	{
@@ -735,7 +735,7 @@ void SceneDevS::DeleteWaypoints()
 	waypoints.clear();
 }
 
-void SceneDevS::DeleteWeapons()
+void SceneEditor::DeleteWeapons()
 {
 	for (auto& weapon : createdWeapons)
 	{
@@ -744,25 +744,25 @@ void SceneDevS::DeleteWeapons()
 	weapons.clear();
 }
 
-void SceneDevS::DeletePlayer()
+void SceneEditor::DeletePlayer()
 {
 	RemoveGo(player);
 	player = nullptr;
 }
 
-void SceneDevS::DeleteBoss1()
+void SceneEditor::DeleteBoss1()
 {
 	RemoveGo(boss1);
 	boss1 = nullptr;
 }
 
-void SceneDevS::DeleteBoss2()
+void SceneEditor::DeleteBoss2()
 {
 	RemoveGo(boss2);
 	boss2 = nullptr;
 }
 
-void SceneDevS::DeleteEndPoints()
+void SceneEditor::DeleteEndPoints()
 {
 	for (auto& endPoint : endPoints)
 	{
@@ -771,7 +771,7 @@ void SceneDevS::DeleteEndPoints()
 	endPoints.clear();
 }
 
-void SceneDevS::SaveMap()
+void SceneEditor::SaveMap()
 {
 	json mapData;
 
@@ -791,7 +791,7 @@ void SceneDevS::SaveMap()
 		for (int x = 0; x < tileCount.x; x++)
 		{
 			int tileIndex = y * tileCount.x + x;
-			if (floorTiles[tileIndex] != -1)  // À¯È¿ÇÑ Å¸ÀÏÀÌ ÀÖ´Â °æ¿ì
+			if (floorTiles[tileIndex] != -1)  // ï¿½ï¿½È¿ï¿½ï¿½ Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½
 			{
 				if (x < minX)
 				{
@@ -822,7 +822,7 @@ void SceneDevS::SaveMap()
 	mapData["tileCountX"] = maxX - minX + 1;
 	mapData["tileCountY"] = maxY - minY + 1;
 
-	mapData["floor"]["textureId"] = STAGE_TABLE->GetTileTextureId();
+	mapData["floor"]["textureId"] = STAGE_TABLE->GetCurrentStage().GetTileTextureId();
 
 	std::vector<int> resizedTiles((maxY - minY + 1) * (maxX - minX + 1), -1);
 
@@ -878,7 +878,7 @@ void SceneDevS::SaveMap()
 	}
 }
 
-void SceneDevS::SaveWall(json& mapData)
+void SceneEditor::SaveWall(json& mapData)
 {
 	std::vector<bool> processedHorizontal(wallsHorizontal.size(), false);
 	std::vector<bool> processedVertical(wallsVertical.size(), false);
@@ -991,7 +991,7 @@ void SceneDevS::SaveWall(json& mapData)
 	}
 }
 
-void SceneDevS::SaveEnemies(json& mapData)
+void SceneEditor::SaveEnemies(json& mapData)
 {
 	mapData["enemy"]["enemies"] = json::array();
 	int i = 1;
@@ -1020,7 +1020,7 @@ void SceneDevS::SaveEnemies(json& mapData)
 	}
 }
 
-void SceneDevS::SaveWeapons(json& mapData)
+void SceneEditor::SaveWeapons(json& mapData)
 {
 	mapData["weapon"]["weapons"] = json::array();
 	int i = 1;
@@ -1039,7 +1039,7 @@ void SceneDevS::SaveWeapons(json& mapData)
 	}
 }
 
-void SceneDevS::SavePlayer(json& mapData)
+void SceneEditor::SavePlayer(json& mapData)
 {
 	if(player != nullptr)
 	{
@@ -1049,7 +1049,7 @@ void SceneDevS::SavePlayer(json& mapData)
 	}
 }
 
-void SceneDevS::SaveBoss(json& mapData)
+void SceneEditor::SaveBoss(json& mapData)
 {
 	if(boss1 != nullptr)
 	{
@@ -1059,7 +1059,7 @@ void SceneDevS::SaveBoss(json& mapData)
 	}
 }
 
-void SceneDevS::SaveBoss2(json& mapData)
+void SceneEditor::SaveBoss2(json& mapData)
 {
 	if(boss2 != nullptr)
 	{
@@ -1068,7 +1068,7 @@ void SceneDevS::SaveBoss2(json& mapData)
 	}
 }
 
-void SceneDevS::SaveEndPoint(json& mapData)
+void SceneEditor::SaveEndPoint(json& mapData)
 {
 	mapData["EndPosition"] = json::array();
 	for (const auto& endPoint : endPoints)
@@ -1081,7 +1081,7 @@ void SceneDevS::SaveEndPoint(json& mapData)
 	}
 }
 
-std::string SceneDevS::EnemyStatusToString(const Enemy::Status& state)
+std::string SceneEditor::EnemyStatusToString(const Enemy::Status& state)
 {
 	if (state == Enemy::Status::Normal)
 	{
@@ -1097,7 +1097,7 @@ std::string SceneDevS::EnemyStatusToString(const Enemy::Status& state)
 	}
 }
 
-std::string SceneDevS::EnemyWeaponToString(const Weapon::WeaponType& type)
+std::string SceneEditor::EnemyWeaponToString(const Weapon::WeaponType& type)
 {
 	if (type == Weapon::WeaponType::Bat)
 	{
