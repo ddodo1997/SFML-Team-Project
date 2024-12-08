@@ -612,14 +612,13 @@ void Enemy::Draw(sf::RenderWindow& window)
 		window.draw(legs);
 
 	window.draw(body);
-
-	window.draw(patrol.originPoint);
 	hitBox.Draw(window);
 
 	if (Variables::isDrawHitBox)
 	{
 		window.draw(viewAngle);
 		window.draw(collisionBox);
+		window.draw(patrol.originPoint);
 		for (auto& point : patrol.wayPoints)
 			window.draw(point.point);
 
