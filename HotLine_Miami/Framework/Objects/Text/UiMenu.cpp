@@ -662,7 +662,6 @@ void UiMenu::UpdateRotationMenu(float realDt)
 		alphabetSprite->setRotation(std::sin(rotationTimerMenuContent * rotationMultiplier) * rotationDurationMenuContent * rotationAmplitude);
 		alphabetSprite->setOrigin(alphabetOrigin * 0.2f);
 	}
-
 }
 
 void UiMenu::OnVolumeChange(bool isBgm)
@@ -670,7 +669,7 @@ void UiMenu::OnVolumeChange(bool isBgm)
 	std::string path = ALPHABET_TABLE->GetSpirtePath();
 	std::string tempText;
 	sf::Vector2f textPos;
-	sf::Vector2f textDefaultPos = { 0.f,500.f };
+	sf::Vector2f textDefaultPos = { 0.f,450.f };
 	sf::Vector2f alphabetScale = { 4.f,4.f };
 	sf::Vector2f alphabetOrigin = { 960.f,700.f };
 	int totalAlphabetWidth = 0;
