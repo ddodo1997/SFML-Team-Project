@@ -73,7 +73,8 @@ class StageTable : public DataTable
 private:
     sf::Vector2i tileSize;
     std::vector<DataStage> stageDatas;
-    int currentStageIndex = 0;
+    int currentStageIndex;
+    int savedStageIndex;
 public:
     StageTable() : DataTable(DataTable::Types::Stages) { };
     ~StageTable() = default;
@@ -88,6 +89,13 @@ public:
 
     const sf::Vector2i GetTileSize() const { return tileSize; }
     const DataStage& GetCurrentStage() const;
+    void SetSavedStageIndex(int idx);
+    void SetCurrentStageIndex(int idx);
+    const int GetSavedStageIndex() const { return savedStageIndex; }
+    const int GetCurrentStageIndex() const { return currentStageIndex; }
+    const int GetStageCount() const { return stageDatas.size(); }
+    
+    void LoadStage();
     void NextStage();
 };
 

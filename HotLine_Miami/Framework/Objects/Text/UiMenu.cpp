@@ -404,6 +404,7 @@ void UiMenu::UpdateMainMenuKey(float realDt)
 
 	if (!repeatPreventerEnterKey && mainMenuIndex == 0 && InputMgr::GetKeyDown(sf::Keyboard::Enter))
 	{
+		STAGE_TABLE->SetCurrentStageIndex(0);
 		repeatPreventerEnterKey = true;
 		SCENE_MGR.ChangeScene(SceneIds::SceneGame);
 		FRAMEWORK.SetTimeScale(1.f);
@@ -413,6 +414,10 @@ void UiMenu::UpdateMainMenuKey(float realDt)
 		mainMenuIndex == 1 && InputMgr::GetKeyDown(sf::Keyboard::Enter))
 	{
 		// Continue 동작 넣으세요
+		STAGE_TABLE->SetCurrentStageIndex(STAGE_TABLE->GetSavedStageIndex());
+		repeatPreventerEnterKey = true;
+		SCENE_MGR.ChangeScene(SceneIds::SceneGame);
+		FRAMEWORK.SetTimeScale(1.f);
 	}
 
 	if (!repeatPreventerEnterKey &&

@@ -107,5 +107,7 @@ public:
 	void LoadNextStage(); 
 	void ClearStage();
 	bool IsClearStage();
+
+	void SaveStage();
 };
 

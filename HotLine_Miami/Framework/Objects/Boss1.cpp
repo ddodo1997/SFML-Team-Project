@@ -54,8 +54,7 @@ void Boss1::SetOrigin(const sf::Vector2f& newOrigin)
 
 void Boss1::Init()
 {
-	sortingLayer = SortingLayers::Foreground;
-	sortingOrder = 1;
+
 }
 
 void Boss1::Release()
@@ -64,6 +63,8 @@ void Boss1::Release()
 
 void Boss1::Reset()
 {
+	sortingLayer = SortingLayers::Foreground;
+	sortingOrder = 0;
 	sceneGame = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene());
 	player = sceneGame->GetPlayer();
 	cleaver = sceneGame->GetCleaver();
@@ -330,7 +331,7 @@ void Boss1::ChangePattern(Patterns pattern)
 		isWalking = false;
 		break;
 	case Patterns::Pounded:
-		SetActive(false);
+		//SetActive(false);
 		speed = 0.f;
 		animatorBody.Stop();
 		isWalking = false;
@@ -373,6 +374,7 @@ void Boss1::OnHit(sf::Vector2f dir)
 {
 	if (currentPattern != Patterns::PickUpCleaver)
 		return;
+	SOUND_MGR.PlaySfx("sound/Attack/sndWeaponHit.wav");
 
 	!isPhase2 ? ChangePattern(Patterns::Stun) : ChangePattern(Patterns::Crawl);
 }

@@ -93,4 +93,5 @@ public:
 
 	bool IsDead() const { return pattern.currentStatus == Status::Die; }
 	bool IsHitAble() const;
+	
 };

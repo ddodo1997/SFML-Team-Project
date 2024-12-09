@@ -254,6 +254,9 @@ void MafiaBoss::SetStatus(Status stat)
 		break;
 	case Status::Suicide:
 		animatorBody.Play("animations/Boss2/boss2_suicide.json");
+		animatorBody.AddEvent("Boss2Suicide", 9, [](){
+			SOUND_MGR.PlaySfx("sound/Attack/sndMagnum.wav");
+			});
 		body.setOrigin({ 22.f,16.f });
 		break;
 	case Status::Die:

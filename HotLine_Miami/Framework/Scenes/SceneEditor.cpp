@@ -847,14 +847,14 @@ void SceneEditor::SaveMap()
 	SaveBoss2(mapData);
 	SaveEndPoint(mapData);
 
-	std::ifstream indexFile("tables/save_index.txt");
+	std::ifstream indexFile("tables/save_data.json");
 	int saveIndex = 0;
 
-	if (indexFile.is_open())
-	{
-		indexFile >> saveIndex;
-		indexFile.close();
-	}
+	json data;
+	indexFile >> data;
+	indexFile.close();
+
+	saveIndex = data["stage_count"];
 
 	std::string fileName = "tables/stage_" + std::to_string(saveIndex) + ".json";
 
@@ -864,12 +864,14 @@ void SceneEditor::SaveMap()
 		outFile << mapData.dump(4);
 		outFile.close();
 
-		std::ofstream indexFileOut("tables/save_index.txt");
-        if (indexFileOut.is_open())
-        {
-            indexFileOut << saveIndex + 1;
-            indexFileOut.close();
-        }
+		std::ofstream indexFileOut("tables/save_data.json");
+
+		json data;
+		data["stage_count"] = saveIndex + 1;
+		data["save_stage"] = STAGE_TABLE->GetSavedStageIndex();
+        indexFileOut << data.dump(4);
+        indexFileOut.close();
+
 		std::cout << "save success!!" << std::endl;
 	}
 	else
