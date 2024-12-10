@@ -84,49 +84,48 @@ void UiMenu::ResetMenuContent()
 
 	std::string path = ALPHABET_TABLE->GetSpirtePath();
 	std::string tempText = "START GAME"; 
+	sf::Vector2f posCalibration2 = { 0.f, -75.f };
 	sf::Vector2f textPos = { 0.f,0.f };
-	sf::Vector2f textDefaultPos = { 0.f,450.f };
-	sf::Vector2f alphabetOrigin = { 960.f,700.f };
+	sf::Vector2f textDefaultPos = FRAMEWORK.GetWindowSizeF() * 0.5f + posCalibration2;
+	sf::Vector2f textDefaultOrigin = { 0.f,0.f };
 	sf::Vector2i alphabetHalfsize = ALPHABET_TABLE->Get(tempText.front()).texCoord.getSize() / 2;
 	int totalAlphabetWidth = 0;
-	float verticalTextInterval = 25.f * alphabetScale.y;
-
+	float verticalTextInterval = 25.f;
+	
 	for (int i = 0; i < tempText.size(); ++i)
 	{
 		totalAlphabetWidth += ALPHABET_TABLE->Get(tempText[i]).characterWidth;
 	}
 
-	textDefaultPos.x = FRAMEWORK.GetWindowSizeF().x * 0.5f - totalAlphabetWidth * 0.5f * alphabetScale.x;
+	textDefaultOrigin.x =  totalAlphabetWidth * 0.5f;
 
 	for (int i = 0; i < tempText.size(); ++i)
 	{
 		sf::Sprite* alphabetSprite = new sf::Sprite(TEXTURE_MGR.Get(path), ALPHABET_TABLE->Get(tempText[i]).texCoord);
-		alphabetSprite->setPosition(textDefaultPos + textPos + alphabetOrigin * 0.8f);
+		alphabetSprite->setPosition(textDefaultPos);
 		alphabetSprite->setScale(alphabetScale);
-		alphabetSprite->setOrigin(alphabetOrigin*0.2f);
+		alphabetSprite->setOrigin(textDefaultOrigin - textPos * 0.25f);
 		textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
 		mainTextStartGame.push_back(alphabetSprite);
 	}
 
 	tempText = "VOLUME";
 	textPos = { 0.f,0.f };
-	alphabetScale = { 4.f,4.f };
 	totalAlphabetWidth = 0;
-	verticalTextInterval = 25.f * alphabetScale.y;
 
 	for (int i = 0; i < tempText.size(); ++i)
 	{
 		totalAlphabetWidth += ALPHABET_TABLE->Get(tempText[i]).characterWidth;
 	}
 
-	textDefaultPos.x = FRAMEWORK.GetWindowSizeF().x * 0.5f - totalAlphabetWidth * 0.5f * alphabetScale.x;
+	textDefaultOrigin.x = totalAlphabetWidth * 0.5f;
 
 	for (int i = 0; i < tempText.size(); ++i)
 	{
 		sf::Sprite* alphabetSprite = new sf::Sprite(TEXTURE_MGR.Get(path), ALPHABET_TABLE->Get(tempText[i]).texCoord);
-		alphabetSprite->setPosition(textDefaultPos + textPos + alphabetOrigin * 0.8f);
+		alphabetSprite->setPosition(textDefaultPos);
 		alphabetSprite->setScale(alphabetScale);
-		alphabetSprite->setOrigin(alphabetOrigin * 0.2f);
+		alphabetSprite->setOrigin(textDefaultOrigin - textPos * 0.25f);
 		textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
 		optionTextVolume.push_back(alphabetSprite);
 	}
@@ -134,47 +133,43 @@ void UiMenu::ResetMenuContent()
 	int tempVol = SOUND_MGR.GetBgmVolume();
 	tempText = "MUSIC  VOLUME " + std::to_string(tempVol) + "%";
 	textPos = { 0.f,0.f };
-	alphabetScale = { 4.f,4.f };
 	totalAlphabetWidth = 0;
-	verticalTextInterval = 25.f * alphabetScale.y;
 
 	for (int i = 0; i < tempText.size(); ++i)
 	{
 		totalAlphabetWidth += ALPHABET_TABLE->Get(tempText[i]).characterWidth;
 	}
 
-	textDefaultPos.x = FRAMEWORK.GetWindowSizeF().x * 0.5f - totalAlphabetWidth * 0.5f * alphabetScale.x;
+	textDefaultOrigin.x = totalAlphabetWidth * 0.5f;
 
 	for (int i = 0; i < tempText.size(); ++i)
 	{
 		sf::Sprite* alphabetSprite = new sf::Sprite(TEXTURE_MGR.Get(path), ALPHABET_TABLE->Get(tempText[i]).texCoord);
-		alphabetSprite->setPosition(textDefaultPos + textPos + alphabetOrigin * 0.8f);
+		alphabetSprite->setPosition(textDefaultPos);
 		alphabetSprite->setScale(alphabetScale);
-		alphabetSprite->setOrigin(alphabetOrigin * 0.2f);
+		alphabetSprite->setOrigin(textDefaultOrigin - textPos * 0.25f);
 		textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
 		volumeTextMusic.push_back(alphabetSprite);
 	}
 
 	tempText = "CONTINUE";
 	textPos = { 0.f,0.f };
-	alphabetScale = { 4.f,4.f };
 	totalAlphabetWidth = 0;
-	verticalTextInterval = 25.f * alphabetScale.y;
 
 	for (int i = 0; i < tempText.size(); ++i)
 	{
 		totalAlphabetWidth += ALPHABET_TABLE->Get(tempText[i]).characterWidth;
 	}
 
-	textDefaultPos.x = FRAMEWORK.GetWindowSizeF().x * 0.5f - totalAlphabetWidth * 0.5f * alphabetScale.x;
-	textDefaultPos.y += verticalTextInterval;
+	textDefaultOrigin.x = totalAlphabetWidth * 0.5f;
+	textDefaultOrigin.y -= verticalTextInterval;
 
 	for (int i = 0; i < tempText.size(); ++i)
 	{
 		sf::Sprite* alphabetSprite = new sf::Sprite(TEXTURE_MGR.Get(path), ALPHABET_TABLE->Get(tempText[i]).texCoord);
-		alphabetSprite->setPosition(textDefaultPos + textPos + alphabetOrigin * 0.8f);
+		alphabetSprite->setPosition(textDefaultPos);
 		alphabetSprite->setScale(alphabetScale);
-		alphabetSprite->setOrigin(alphabetOrigin * 0.2f);
+		alphabetSprite->setOrigin(textDefaultOrigin - textPos * 0.25f);
 		textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
 		mainTextContinue.push_back(alphabetSprite);
 	}
@@ -182,95 +177,87 @@ void UiMenu::ResetMenuContent()
 	tempVol = SOUND_MGR.GetSfxVolume();
 	tempText = "SFX  VOLUME " + std::to_string(tempVol) + "%";
 	textPos = { 0.f,0.f };
-	alphabetScale = { 4.f,4.f };
 	totalAlphabetWidth = 0;
-	verticalTextInterval = 25.f * alphabetScale.y;
 
 	for (int i = 0; i < tempText.size(); ++i)
 	{
 		totalAlphabetWidth += ALPHABET_TABLE->Get(tempText[i]).characterWidth;
 	}
 
-	textDefaultPos.x = FRAMEWORK.GetWindowSizeF().x * 0.5f - totalAlphabetWidth * 0.5f * alphabetScale.x;
+	textDefaultOrigin.x = totalAlphabetWidth * 0.5f;
 
 	for (int i = 0; i < tempText.size(); ++i)
 	{
 		sf::Sprite* alphabetSprite = new sf::Sprite(TEXTURE_MGR.Get(path), ALPHABET_TABLE->Get(tempText[i]).texCoord);
-		alphabetSprite->setPosition(textDefaultPos + textPos + alphabetOrigin * 0.8f);
+		alphabetSprite->setPosition(textDefaultPos);
 		alphabetSprite->setScale(alphabetScale);
-		alphabetSprite->setOrigin(alphabetOrigin * 0.2f);
+		alphabetSprite->setOrigin(textDefaultOrigin - textPos * 0.25f);
 		textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
 		volumeTextSfx.push_back(alphabetSprite);
 	}
 
 	tempText = "OPTION";
 	textPos = { 0.f,0.f };
-	alphabetScale = { 4.f,4.f };
 	totalAlphabetWidth = 0;
-	verticalTextInterval = 25.f * alphabetScale.y;
 
 	for (int i = 0; i < tempText.size(); ++i)
 	{
 		totalAlphabetWidth += ALPHABET_TABLE->Get(tempText[i]).characterWidth;
 	}
 
-	textDefaultPos.x = FRAMEWORK.GetWindowSizeF().x * 0.5f - totalAlphabetWidth * 0.5f * alphabetScale.x;
-	textDefaultPos.y += verticalTextInterval;
+	textDefaultOrigin.x = totalAlphabetWidth * 0.5f;
+	textDefaultOrigin.y -= verticalTextInterval;
 
 	for (int i = 0; i < tempText.size(); ++i)
 	{
 		sf::Sprite* alphabetSprite = new sf::Sprite(TEXTURE_MGR.Get(path), ALPHABET_TABLE->Get(tempText[i]).texCoord);
-		alphabetSprite->setPosition(textDefaultPos + textPos + alphabetOrigin * 0.8f);
+		alphabetSprite->setPosition(textDefaultPos);
 		alphabetSprite->setScale(alphabetScale);
-		alphabetSprite->setOrigin(alphabetOrigin * 0.2f);
+		alphabetSprite->setOrigin(textDefaultOrigin - textPos * 0.25f);
 		textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
 		mainTextOption.push_back(alphabetSprite);
 	}
 
 	tempText = "EDITOR MODE";
 	textPos = { 0.f,0.f };
-	alphabetScale = { 4.f,4.f };
 	totalAlphabetWidth = 0;
-	verticalTextInterval = 25.f * alphabetScale.y;
 
 	for (int i = 0; i < tempText.size(); ++i)
 	{
 		totalAlphabetWidth += ALPHABET_TABLE->Get(tempText[i]).characterWidth;
 	}
 
-	textDefaultPos.x = FRAMEWORK.GetWindowSizeF().x * 0.5f - totalAlphabetWidth * 0.5f * alphabetScale.x;
-	textDefaultPos.y += verticalTextInterval;
+	textDefaultOrigin.x = totalAlphabetWidth * 0.5f;
+	textDefaultOrigin.y -= verticalTextInterval;
 
 	for (int i = 0; i < tempText.size(); ++i)
 	{
 		sf::Sprite* alphabetSprite = new sf::Sprite(TEXTURE_MGR.Get(path), ALPHABET_TABLE->Get(tempText[i]).texCoord);
-		alphabetSprite->setPosition(textDefaultPos + textPos + alphabetOrigin * 0.8f);
+		alphabetSprite->setPosition(textDefaultPos);
 		alphabetSprite->setScale(alphabetScale);
-		alphabetSprite->setOrigin(alphabetOrigin * 0.2f);
+		alphabetSprite->setOrigin(textDefaultOrigin - textPos * 0.25f);
 		textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
 		mainEditorMode.push_back(alphabetSprite);
 	}
 
 	tempText = "EXIT GAME";
 	textPos = { 0.f,0.f };
-	alphabetScale = { 4.f,4.f };
 	totalAlphabetWidth = 0;
-	verticalTextInterval = 25.f * alphabetScale.y;
 
 	for (int i = 0; i < tempText.size(); ++i)
 	{
 		totalAlphabetWidth += ALPHABET_TABLE->Get(tempText[i]).characterWidth;
 	}
 
-	textDefaultPos.x = FRAMEWORK.GetWindowSizeF().x * 0.5f - totalAlphabetWidth * 0.5f * alphabetScale.x;
-	textDefaultPos.y += verticalTextInterval;
+	textDefaultOrigin.x = totalAlphabetWidth * 0.5f;
+	textDefaultOrigin.y -= verticalTextInterval;
 
 	for (int i = 0; i < tempText.size(); ++i)
 	{
 		sf::Sprite* alphabetSprite = new sf::Sprite(TEXTURE_MGR.Get(path), ALPHABET_TABLE->Get(tempText[i]).texCoord);
-		alphabetSprite->setPosition(textDefaultPos + textPos + alphabetOrigin * 0.8f);
+		alphabetSprite->setPosition(textDefaultPos);
 		alphabetSprite->setScale(alphabetScale);
-		alphabetSprite->setOrigin(alphabetOrigin * 0.2f);
+		alphabetSprite->setOrigin(textDefaultOrigin - textPos * 0.25f);
 		textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
 		mainTextExit.push_back(alphabetSprite);
 	}
@@ -296,7 +283,7 @@ void UiMenu::Update(float dt)
 	UpdateOption(FRAMEWORK.GetRealDeltaTime());
 	UpdateVolume(FRAMEWORK.GetRealDeltaTime());
 	UpdateRotationTitle(FRAMEWORK.GetRealDeltaTime());
-	//UpdateRotationMenu(FRAMEWORK.GetRealDeltaTime());
+	UpdateRotationMenu(FRAMEWORK.GetRealDeltaTime());
 
 	repeatPreventerEnterKey = false;
 	repeatPreventerEscKey = false;
@@ -628,39 +615,36 @@ void UiMenu::UpdateRotationMenu(float realDt)
 	for (auto alphabetSprite : mainTextStartGame)
 	{
 		alphabetSprite->setRotation(std::sin(rotationTimerMenuContent * rotationMultiplier) * rotationDurationMenuContent * rotationAmplitude);
-		alphabetSprite->setOrigin(alphabetOrigin * 0.2f);
 	}
 	for (auto alphabetSprite : mainTextContinue)
 	{
 		alphabetSprite->setRotation(std::sin(rotationTimerMenuContent * rotationMultiplier) * rotationDurationMenuContent * rotationAmplitude);
-		alphabetSprite->setOrigin(alphabetOrigin * 0.2f);
 	}
 	for (auto alphabetSprite : mainTextOption)
 	{
 		alphabetSprite->setRotation(std::sin(rotationTimerMenuContent * rotationMultiplier) * rotationDurationMenuContent * rotationAmplitude);
-		alphabetSprite->setOrigin(alphabetOrigin * 0.2f);
 	}
 	for (auto alphabetSprite : mainEditorMode)
 	{
 		alphabetSprite->setRotation(std::sin(rotationTimerMenuContent * rotationMultiplier) * rotationDurationMenuContent * rotationAmplitude);
-		alphabetSprite->setOrigin(alphabetOrigin * 0.2f);
 	}
 	for (auto alphabetSprite : mainTextExit)
 	{
 		alphabetSprite->setRotation(std::sin(rotationTimerMenuContent * rotationMultiplier) * rotationDurationMenuContent * rotationAmplitude);
-		alphabetSprite->setOrigin(alphabetOrigin * 0.2f);
 	}
 
 	for (auto alphabetSprite : optionTextVolume)
 	{
 		alphabetSprite->setRotation(std::sin(rotationTimerMenuContent * rotationMultiplier) * rotationDurationMenuContent * rotationAmplitude);
-		alphabetSprite->setOrigin(alphabetOrigin * 0.2f);
 	}
 
-	for (auto alphabetSprite : volumeTextMusic2)
+	for (auto alphabetSprite : volumeTextMusic)
 	{
 		alphabetSprite->setRotation(std::sin(rotationTimerMenuContent * rotationMultiplier) * rotationDurationMenuContent * rotationAmplitude);
-		alphabetSprite->setOrigin(alphabetOrigin * 0.2f);
+	}
+	for (auto alphabetSprite : volumeTextSfx)
+	{
+		alphabetSprite->setRotation(std::sin(rotationTimerMenuContent * rotationMultiplier) * rotationDurationMenuContent * rotationAmplitude);
 	}
 }
 
@@ -668,12 +652,12 @@ void UiMenu::OnVolumeChange(bool isBgm)
 {
 	std::string path = ALPHABET_TABLE->GetSpirtePath();
 	std::string tempText;
-	sf::Vector2f textPos;
-	sf::Vector2f textDefaultPos = { 0.f,450.f };
+	sf::Vector2f posCalibration2 = { 0.f, -100.f };
+	sf::Vector2f textPos = { 0.f,0.f };
+	sf::Vector2f textDefaultPos = FRAMEWORK.GetWindowSizeF() * 0.5f + posCalibration2;
 	sf::Vector2f alphabetScale = { 4.f,4.f };
-	sf::Vector2f alphabetOrigin = { 960.f,700.f };
 	int totalAlphabetWidth = 0;
-	float verticalTextInterval = 25.f * alphabetScale.y;
+	float verticalTextInterval = 25.f;
 
 	if (isBgm)
 	{
@@ -685,7 +669,7 @@ void UiMenu::OnVolumeChange(bool isBgm)
 		int tempVol = SOUND_MGR.GetSfxVolume();
 		tempText = "SFX  VOLUME " + std::to_string(tempVol) + "%";
 	}
-	sf::Vector2i alphabetHalfsize = ALPHABET_TABLE->Get(tempText.front()).texCoord.getSize() / 2;
+
 	textPos = { 0.f,0.f };
 
 	for (int i = 0; i < tempText.size(); ++i)
@@ -693,7 +677,7 @@ void UiMenu::OnVolumeChange(bool isBgm)
 		totalAlphabetWidth += ALPHABET_TABLE->Get(tempText[i]).characterWidth;
 	}
 
-	textDefaultPos.x = FRAMEWORK.GetWindowSizeF().x * 0.5f - totalAlphabetWidth * 0.5f * alphabetScale.x;
+	sf::Vector2f textDefaultOrigin = { totalAlphabetWidth * 0.5f, 0.f };
 
 	if (isBgm)
 		volumeTextMusic.clear();
@@ -701,16 +685,16 @@ void UiMenu::OnVolumeChange(bool isBgm)
 		volumeTextSfx.clear();
 
 	if(!isBgm)
-		textDefaultPos.y += verticalTextInterval;
+		textDefaultOrigin.y -= verticalTextInterval;
 
 	for (int i = 0; i < tempText.size(); ++i)
 	{
 		sf::Sprite* alphabetSprite = new sf::Sprite(TEXTURE_MGR.Get(path), ALPHABET_TABLE->Get(tempText[i]).texCoord);
-		alphabetSprite->setPosition(textDefaultPos + textPos + alphabetOrigin * 0.8f);
+		alphabetSprite->setPosition(textDefaultPos);
 		alphabetSprite->setScale(alphabetScale);
-		//alphabetSprite->setRotation(std::sin(rotationTimerMenuContent) * rotationDurationMenuContent);
-		alphabetSprite->setOrigin(alphabetOrigin * 0.2f);
+		alphabetSprite->setOrigin(textDefaultOrigin - textPos * 0.25f);
 		textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
+
 		if(isBgm)
 			volumeTextMusic.push_back(alphabetSprite);
 		else
