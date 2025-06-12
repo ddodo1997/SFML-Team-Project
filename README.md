@@ -61,3 +61,27 @@
   - 타일, 벽, 적, 무기, 보스, 플레이어 스폰위치, 스테이지 끝 위치 배치 가능
   - 만들어진 맵은 json형태로 저장 및 불러오기 가능
 
+
+asd
+sa
+das
+d
+sa
+dsa
+dsa
+d
+asd
+as
+dsa
+d
+sa
+dsa
+d
+sad
+sa
+dsa
+d
+asd
+sa
+dsa
+d
