@@ -30,9 +30,11 @@
 
 ## 구현 요소
 
-|[<img width="300" src="https://github.com/user-attachments/assets/0aeeea80-a694-4d62-b0af-774bcdc1e084"/>](#UI)|[<img width="300" src=""/>](#플레이어)|
+|[<img width="450" src="https://github.com/user-attachments/assets/0aeeea80-a694-4d62-b0af-774bcdc1e084"/>](#UI)|[<img width="450" src="https://github.com/user-attachments/assets/87f1ff13-a9c2-4cb5-b3c6-fe163b32ce14"/>](#플레이어)|
 |:---:|:---:|
 | [UI](#UI) | [플레이어](#플레이어)|
+|[<img width="450" src="https://github.com/user-attachments/assets/f4035101-e2c0-4832-83f2-df1cb01cd703"/>](#적군)|[<img width="450" src="https://github.com/user-attachments/assets/23eaec95-f3d8-4edc-b7b9-30d470263e5a"/>](#맵-에디터)|
+| [적군](#적군) | [맵 에디터](#맵-에디터)|
 
 ## 구현 상세
 1. ### UI
@@ -41,4 +43,17 @@
   - Status
 
 2. ### 플레이어
-   
+  - 무기별 애니메이션, 판정 상이
+  - 적이 드랍한 무기 노획
+  - 무기 던지기
+  - 적 처형
+
+3. ### 적군
+  - 상태 패턴을 활용하여 구현
+  - 원/근거리 무기, 상태를 전이하며 행동을 결정
+  - 플레이어의 소음을 감지해 소음 발생지로 길찾기 구현
+
+4. ### 맵 에디터
+  - 타일, 벽, 적, 무기, 보스, 플레이어 스폰위치, 스테이지 끝 위치 배치 가능
+  - 만들어진 맵은 json형태로 저장 및 불러오기 가능
+
