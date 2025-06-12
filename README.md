@@ -11,10 +11,13 @@
 2. [기술 스택](#기술-스택)
 3. [구현 요소](#구현-요소)
 4. [구현 상세](#구현-상세)
+5. [아쉬운 점](#아쉬운-점)
+6. [후기](#후기)
 
 
 ## 프로젝트 개요
 - C++과 **SFML**을 활용한 탑다운 액션게임 **Hotline Miami** 모작.
+- 개발 인원 : 김승욱, 이재혁, 설현기
 - 첫 팀 게임프로젝트로써 팀원간의 협업과 Git 사용 전문화를 목표로 프로젝트를 진행함.
 
 ## 기술 스택
@@ -61,27 +64,44 @@
   - 타일, 벽, 적, 무기, 보스, 플레이어 스폰위치, 스테이지 끝 위치 배치 가능
   - 만들어진 맵은 json형태로 저장 및 불러오기 가능
 
+## 아쉬운 점
 
-asd
-sa
-das
-d
-sa
-dsa
-dsa
-d
-asd
-as
-dsa
-d
-sa
-dsa
-d
-sad
-sa
-dsa
-d
-asd
-sa
-dsa
-d
+| 문제 | 해결 방법 |
+|------|------------|
+| 맵 에디터에 대한 UI/UX의 부족 | UI/UX를 추가하여 맵 에디터 사용시 편의성 개선 |
+| 불완전한 레이캐스팅 | 레이와의 충돌처리를 더 조사하여 레이캐스팅 개선 |
+
+## 후기
+
+<details>
+<summary>
+  김승욱
+</summary>
+<div markdown="1">
+&nbsp&nbsp&nbsp&nbsp첫 협업 프로젝트로써 Git과 Git서드파티 프로그램의 사용에 대해 익숙해질 수 있었고<br>
+&nbsp&nbsp&nbsp&nbsp다른 개발자와 함께 일하는 감을 기를 수 있는 좋은 경험이었다.
+</div>
+</details>
+
+<details>
+<summary>
+  이재혁
+</summary>
+<div markdown="1">
+&nbsp&nbsp&nbsp&nbsp
+</div>
+</details>
+
+<details>
+<summary>
+  설현기
+</summary>
+<div markdown="1">
+&nbsp&nbsp&nbsp&nbsp맵 에디터와 같은 편의성에 연관되는 기능 구현에 대한 필요성을 느꼈고<br>
+&nbsp&nbsp&nbsp&nbsp만족스럽게 진행된 협업의 영향력을 체감해볼 수 있는 기회였다.
+</div>
+</details>
+
+
+
+
