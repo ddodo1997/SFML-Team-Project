@@ -30,10 +30,10 @@
 
 ## 구현 요소
 
-|[<img width="300" src="https://github.com/user-attachments/assets/0aeeea80-a694-4d62-b0af-774bcdc1e084"/>](#UI)|[<img width="300" src="https://github.com/user-attachments/assets/87f1ff13-a9c2-4cb5-b3c6-fe163b32ce14"/>](#플레이어)|
+|[<img width="400" src="https://github.com/user-attachments/assets/0aeeea80-a694-4d62-b0af-774bcdc1e084"/>](#UI)|[<img width="400" src="https://github.com/user-attachments/assets/87f1ff13-a9c2-4cb5-b3c6-fe163b32ce14"/>](#플레이어)|
 |:---:|:---:|
 | [UI](#UI) | [플레이어](#플레이어)|
-|[<img width="300" src="https://github.com/user-attachments/assets/f4035101-e2c0-4832-83f2-df1cb01cd703"/>](#적군)|[<img width="300" src="https://github.com/user-attachments/assets/23eaec95-f3d8-4edc-b7b9-30d470263e5a"/>](#맵-에디터)|
+|[<img width="400" src="https://github.com/user-attachments/assets/f4035101-e2c0-4832-83f2-df1cb01cd703"/>](#적군)|[<img width="400" src="https://github.com/user-attachments/assets/23eaec95-f3d8-4edc-b7b9-30d470263e5a"/>](#맵-에디터)|
 | [적군](#적군) | [맵 에디터](#맵-에디터)|
 
 ## 구현 상세
