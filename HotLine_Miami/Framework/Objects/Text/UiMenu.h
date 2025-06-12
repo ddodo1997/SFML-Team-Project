@@ -5,6 +5,8 @@ class UiMenu : public GameObject
 protected: 
 	sf::Sprite mainSpr;
 	sf::Sprite mainSpr2;
+	sf::RenderStates renderState;
+	sf::Transform transform;
 	
 	std::vector<sf::Sprite*> mainTextStartGame;
 	std::vector<sf::Sprite*> mainTextContinue;
@@ -41,6 +43,11 @@ protected:
 	bool repeatPreventerEnterKey = false;
 	bool repeatPreventerEscKey = false;
 
+	float rotationTimerMenuContent = 0.f;
+	float roataionTimerTitleContent = 0.f;
+	const float rotationDurationMenuContent = 2.4f;
+	const float rotationDurationTitleContent = 4.5f;
+
 public:
 	UiMenu(const std::string& name = "UiMenu");
 	~UiMenu() = default;
@@ -66,6 +73,8 @@ public:
 	void UpdateOptionKey(float realDt);
 	void UpdateVolume(float realDt);
 	void UpdateVolumeKey(float realDt);
+	void UpdateRotationTitle(float realDt);
+	void UpdateRotationMenu(float realDt);
 	
 	void OnVolumeChange(bool isBgm = true);
 

@@ -67,6 +67,8 @@ bool StageTable::Load()
 		i++;
 	}
 
+	LoadStage();
+
 
 	return !stageDatas.empty();
 }
@@ -183,12 +185,32 @@ const DataStage& StageTable::GetCurrentStage() const
 	}
 }
 
+void StageTable::SetSavedStageIndex(int idx)
+{
+	if (idx >= 0 || idx < stageDatas.size())
+	{
+		savedStageIndex = idx;
+	}
+}
+
 void StageTable::SetCurrentStageIndex(int idx)
 {
 	if (idx >= 0 || idx < stageDatas.size())
 	{
 		currentStageIndex = idx;
 	}
+}
+
+void StageTable::LoadStage()
+{
+	std::ifstream saveFile("tables/save_data.json");
+	int saveIndex = 0;
+
+	json data;
+	saveFile >> data;
+	saveFile.close();
+
+	savedStageIndex = data["save_stage"];
 }
 
 void StageTable::NextStage()

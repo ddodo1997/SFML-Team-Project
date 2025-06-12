@@ -61,7 +61,7 @@ protected:
 	sf::Text textBL2;
 	float textBLrotationTimer = 0.5 * Utils::PI;
 	float textBL2rotationTimer = 0.f;
-	const float textBLrotationDuration = 2.4f;
+	const float textBLrotationDuration = 3.6f;
 	float rotationAngle = 0.f;
 
 	bool preventEscRepeat = false;

@@ -458,8 +458,8 @@ void UiHud::ResetPaused()
 
 void UiHud::UpdatePaused(float realDt)
 {
-	if (!wasPaused)
-		ResetPaused();
+	//if (!wasPaused)
+	//	ResetPaused();
 
 	wasPaused = isPaused;
 	//if (fadingIn)
@@ -684,31 +684,21 @@ void UiHud::UpdateSlideInEffect(float realDt)
 	sf::Vector2f text2posCalibration = { 4.f,4.f };
 	int totalAlphabetWidth = 0;
 	float verticalTextInterval = 25.f * alphabetScale.y;
-	int i = 0;
 
 	if (pauseTimer < 0.4f)
 	{
-		for (auto alphabetSprite : pauseText)
+		for (int i = 0; i < tempText.size(); ++i)
 		{
-			if (i <= tempText.size())
-			{
-				totalAlphabetWidth += ALPHABET_TABLE->Get(tempText[i], true).characterWidth;
-				++i;
-			}
+			totalAlphabetWidth += ALPHABET_TABLE->Get(tempText[i], true).characterWidth;
 		}
 
-		i = 0;
 		textDefaultPos.x = FRAMEWORK.GetWindowSizeF().x * 0.5f - totalAlphabetWidth * 0.5f * alphabetScale.x;
 
-		for (auto alphabetSprite : pauseText)
+		for (int i = 0; i < tempText.size(); ++i)
 		{
-			if (i <= tempText.size())
-			{
-				alphabetSprite->setPosition(textDefaultPos + textPos + (slideInFromR * (0.4f - pauseTimer)));
-				Utils::SetOrigin(*alphabetSprite, Origins::TL);
-				textPos.x += ALPHABET_TABLE->Get(tempText[i], true).characterWidth * alphabetScale.x;
-				++i;
-			}
+			pauseText[i]->setPosition(textDefaultPos + textPos + (slideInFromR * (0.4f - pauseTimer)));
+			Utils::SetOrigin(*pauseText[i], Origins::TL);
+			textPos.x += ALPHABET_TABLE->Get(tempText[i], true).characterWidth * alphabetScale.x;
 		}
 
 		tempText = "Resume";
@@ -716,43 +706,29 @@ void UiHud::UpdateSlideInEffect(float realDt)
 		textDefaultPos = { 0.f,500.f };
 		totalAlphabetWidth = 0;
 		verticalTextInterval = 25.f * alphabetScale.y;
-		i = 0;
 
-		for (auto alphabetSprite : pauseTextResume)
+		for (int i = 0; i < tempText.size(); ++i)
 		{
-			if (i <= tempText.size())
-			{
-				totalAlphabetWidth += ALPHABET_TABLE->Get(tempText[i]).characterWidth;
-				++i;
-			}
+			totalAlphabetWidth += ALPHABET_TABLE->Get(tempText[i]).characterWidth;
 		}
 
 		textDefaultPos.x = FRAMEWORK.GetWindowSizeF().x * 0.5f - totalAlphabetWidth * 0.5f * alphabetScale.x;
-		i = 0;
 
-		for (auto alphabetSprite : pauseTextResume)
+		for (int i = 0; i < tempText.size(); ++i)
 		{
-			if (i <= tempText.size())
-			{
-				alphabetSprite->setPosition(textDefaultPos + textPos + (slideInFromR * (0.4f - pauseTimer)));
-				Utils::SetOrigin(*alphabetSprite, Origins::TL);
-				textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
-				++i;
-			}
+			pauseTextResume[i]->setPosition(textDefaultPos + textPos + (slideInFromR * (0.4f - pauseTimer)));
+			Utils::SetOrigin(*pauseTextResume[i], Origins::TL);
+			textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
 		}
 
 		textPos = { 0.f,0.f };
-		i = 0;
 
-		for (auto alphabetSprite : pauseTextResume2)
+		for (int i = 0; i < tempText.size(); ++i)
 		{
-			if (i <= tempText.size())
-			{
-				alphabetSprite->setPosition(textDefaultPos + textPos + text2posCalibration + (slideInFromR * (0.4f - pauseTimer)));
-				Utils::SetOrigin(*alphabetSprite, Origins::TL);
-				textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
-				++i;
-			}
+			pauseTextResume2[i]->setPosition(textDefaultPos + textPos + text2posCalibration + (slideInFromR * (0.4f - pauseTimer)));
+			Utils::SetOrigin(*pauseTextResume2[i], Origins::TL);
+			textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
+			++i;
 		}
 
 		tempText = "Restart";
@@ -760,44 +736,29 @@ void UiHud::UpdateSlideInEffect(float realDt)
 		textDefaultPos = { 0.f,500.f };
 		totalAlphabetWidth = 0;
 		verticalTextInterval = 25.f * alphabetScale.y;
-		i = 0;
 
-		for (auto alphabetSprite : pauseTextRestart)
+		for (int i = 0; i < tempText.size(); ++i)
 		{
-			if (i <= tempText.size())
-			{
-				totalAlphabetWidth += ALPHABET_TABLE->Get(tempText[i]).characterWidth;
-				++i;
-			}
+			totalAlphabetWidth += ALPHABET_TABLE->Get(tempText[i]).characterWidth;
 		}
 
 		textDefaultPos.x = FRAMEWORK.GetWindowSizeF().x * 0.5f - totalAlphabetWidth * 0.5f * alphabetScale.x;
 		textDefaultPos.y += verticalTextInterval;
-		i = 0;
 
-		for (auto alphabetSprite : pauseTextRestart)
+		for (int i = 0; i < tempText.size(); ++i)
 		{
-			if (i <= tempText.size())
-			{
-				alphabetSprite->setPosition(textDefaultPos + textPos + (slideInFromR * (0.4f - pauseTimer)));
-				Utils::SetOrigin(*alphabetSprite, Origins::TL);
-				textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
-				++i;
-			}
+			pauseTextRestart[i]->setPosition(textDefaultPos + textPos + (slideInFromR * (0.4f - pauseTimer)));
+			Utils::SetOrigin(*pauseTextRestart[i], Origins::TL);
+			textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
 		}
 
 		textPos = { 0.f,0.f };
-		i = 0;
 
-		for (auto alphabetSprite : pauseTextRestart2)
+		for (int i = 0; i < tempText.size(); ++i)
 		{
-			if (i <= tempText.size())
-			{
-				alphabetSprite->setPosition(textDefaultPos + textPos + text2posCalibration + (slideInFromR * (0.4f - pauseTimer)));
-				Utils::SetOrigin(*alphabetSprite, Origins::TL);
-				textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
-				++i;
-			}
+			pauseTextRestart2[i]->setPosition(textDefaultPos + textPos + text2posCalibration + (slideInFromR * (0.4f - pauseTimer)));
+			Utils::SetOrigin(*pauseTextRestart2[i], Origins::TL);
+			textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
 		}
 
 		tempText = "Quit";
@@ -805,49 +766,33 @@ void UiHud::UpdateSlideInEffect(float realDt)
 		textDefaultPos = { 0.f,500.f };
 		totalAlphabetWidth = 0;
 		verticalTextInterval = 25.f * alphabetScale.y;
-		i = 0;
 
-		for (auto alphabetSprite : pauseTextQuit)
+		for (int i = 0; i < tempText.size(); ++i)
 		{
-			if (i <= tempText.size())
-			{
-				totalAlphabetWidth += ALPHABET_TABLE->Get(tempText[i]).characterWidth;
-				++i;
-			}
+
+			totalAlphabetWidth += ALPHABET_TABLE->Get(tempText[i]).characterWidth;
+
 		}
 
 		textDefaultPos.x = FRAMEWORK.GetWindowSizeF().x * 0.5f - totalAlphabetWidth * 0.5f * alphabetScale.x;
 		textDefaultPos.y += verticalTextInterval;
-		i = 0;
 
-		for (auto alphabetSprite : pauseTextQuit)
+		for (int i = 0; i < tempText.size(); ++i)
 		{
-			if (i <= tempText.size())
-			{
-				alphabetSprite->setPosition(textDefaultPos + textPos + (slideInFromR * (0.4f - pauseTimer)));
-				Utils::SetOrigin(*alphabetSprite, Origins::TL);
-				textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
-				++i;
-			}
+			pauseTextQuit[i]->setPosition(textDefaultPos + textPos + (slideInFromR * (0.4f - pauseTimer)));
+			Utils::SetOrigin(*pauseTextQuit[i], Origins::TL);
+			textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
 		}
 
 		textPos = { 0.f,0.f };
-		i = 0;
 
-		for (auto alphabetSprite : pauseTextQuit2)
+		for (int i = 0; i < tempText.size(); ++i)
 		{
-			if (i <= tempText.size())
-			{
-				alphabetSprite->setPosition(textDefaultPos + textPos + text2posCalibration + (slideInFromR * (0.4f - pauseTimer)));
-				Utils::SetOrigin(*alphabetSprite, Origins::TL);
-				textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
-				++i;
-			}
+			pauseTextQuit2[i]->setPosition(textDefaultPos + textPos + text2posCalibration + (slideInFromR * (0.4f - pauseTimer)));
+			Utils::SetOrigin(*pauseTextQuit2[i], Origins::TL);
+			textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
 		}
-
 	}
-
-
 }
 
 void UiHud::Resume()
@@ -873,7 +818,6 @@ void UiHud::Restart()
 void UiHud::Quit()
 {
 	selectedFunctionPause = 0;
-	STAGE_TABLE->SetCurrentStageIndex(0);
 	SCENE_MGR.ChangeScene(SceneIds::SceneMenu);
 	isPaused = false;
 	wasPaused = false;

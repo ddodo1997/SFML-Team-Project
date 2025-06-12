@@ -70,15 +70,14 @@ void ViewMgr::Update(float dt)
 	{
 		isCursorVisible = !isCursorVisible;
 		FRAMEWORK.GetWindow().setMouseCursorVisible(isCursorVisible);
-
-		if (isCursorVisible)
-		{
-			UnlockCursor();
-		}
-		else
-		{
-			LockCursor(FRAMEWORK.GetWindow());
-		}
+	}
+	if (isCursorVisible)
+	{
+		UnlockCursor();
+	}
+	else
+	{
+		LockCursor(FRAMEWORK.GetWindow());
 	}
 }
 
@@ -211,9 +210,6 @@ void ViewMgr::UpdateBackground(float realDt)
 	colorRotator += realDt;
 	if (colorRotator > colorCyclingDuration)
 		colorRotator -= colorCyclingDuration;
-
-	float valR = 0.f;
-	float valG = 0.f;
 		
 	if (colorRotator < colorCyclingDuration / 3.f)
 	{

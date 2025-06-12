@@ -56,6 +56,9 @@ void UiMenu::Reset()
 
 void UiMenu::ResetMenuContent()
 {
+	rotationTimerMenuContent = 0.f;
+	roataionTimerTitleContent = 0.f;
+
 	isOnMainMenu = true;
 	mainMenuIndex = 0;
 	isOnOption = false;
@@ -64,23 +67,25 @@ void UiMenu::ResetMenuContent()
 	volumeIndex = 0;
 
 	sf::Vector2f alphabetScale = { 4.f,4.f };
-	sf::Vector2f posCalibration = { 0.f, -300.f };
+	sf::Vector2f posCalibration = { 0.f, -350.f };
 
 	auto wSizeHalf = FRAMEWORK.GetWindowSizeF() * 0.5f;
 	mainSpr.setTexture(TEXTURE_MGR.Get("graphics/ETC/MainMenuScene/sprTitle_0.png"));
 	mainSpr.setPosition(wSizeHalf + posCalibration);
 	mainSpr.setScale(alphabetScale);
+	mainSpr.setColor(sf::Color::Cyan);
 	Utils::SetOrigin(mainSpr, Origins::MC);
 
 	mainSpr2.setTexture(TEXTURE_MGR.Get("graphics/ETC/MainMenuScene/sprTitle_1.png"));
 	mainSpr2.setPosition(wSizeHalf + posCalibration);
 	mainSpr2.setScale(alphabetScale);
+	mainSpr2.setColor(sf::Color::Red);
 	Utils::SetOrigin(mainSpr2, Origins::MC);
 
 	std::string path = ALPHABET_TABLE->GetSpirtePath();
 	std::string tempText = "START GAME"; 
 	sf::Vector2f textPos = { 0.f,0.f };
-	sf::Vector2f textDefaultPos = { 0.f,500.f };
+	sf::Vector2f textDefaultPos = { 0.f,450.f };
 	sf::Vector2f alphabetOrigin = { 960.f,700.f };
 	sf::Vector2i alphabetHalfsize = ALPHABET_TABLE->Get(tempText.front()).texCoord.getSize() / 2;
 	int totalAlphabetWidth = 0;
@@ -290,6 +295,8 @@ void UiMenu::Update(float dt)
 	UpdateMainMenu(FRAMEWORK.GetRealDeltaTime());
 	UpdateOption(FRAMEWORK.GetRealDeltaTime());
 	UpdateVolume(FRAMEWORK.GetRealDeltaTime());
+	UpdateRotationTitle(FRAMEWORK.GetRealDeltaTime());
+	//UpdateRotationMenu(FRAMEWORK.GetRealDeltaTime());
 
 	repeatPreventerEnterKey = false;
 	repeatPreventerEscKey = false;
@@ -397,6 +404,7 @@ void UiMenu::UpdateMainMenuKey(float realDt)
 
 	if (!repeatPreventerEnterKey && mainMenuIndex == 0 && InputMgr::GetKeyDown(sf::Keyboard::Enter))
 	{
+		STAGE_TABLE->SetCurrentStageIndex(0);
 		repeatPreventerEnterKey = true;
 		SCENE_MGR.ChangeScene(SceneIds::SceneGame);
 		FRAMEWORK.SetTimeScale(1.f);
@@ -406,6 +414,10 @@ void UiMenu::UpdateMainMenuKey(float realDt)
 		mainMenuIndex == 1 && InputMgr::GetKeyDown(sf::Keyboard::Enter))
 	{
 		// Continue 동작 넣으세요
+		STAGE_TABLE->SetCurrentStageIndex(STAGE_TABLE->GetSavedStageIndex());
+		repeatPreventerEnterKey = true;
+		SCENE_MGR.ChangeScene(SceneIds::SceneGame);
+		FRAMEWORK.SetTimeScale(1.f);
 	}
 
 	if (!repeatPreventerEnterKey &&
@@ -590,12 +602,79 @@ void UiMenu::UpdateVolumeKey(float realDt)
 	}
 }
 
+void UiMenu::UpdateRotationTitle(float realDt)
+{
+	roataionTimerTitleContent += realDt * 0.6;
+	float speedMultiplier = 1.f;
+	float rotationMultiplier = 1.f;
+	float rotationAmplitude = 1.f;
+	sf::Vector2f alphabetOrigin = { 960.f,700.f };
+
+	if (rotationTimerMenuContent > 2.f * Utils::PI)
+		rotationTimerMenuContent -= 2.f * Utils::PI;
+
+	mainSpr.setRotation(std::sin(roataionTimerTitleContent * rotationMultiplier) * rotationDurationTitleContent * rotationAmplitude);
+	mainSpr2.setRotation(std::sin(roataionTimerTitleContent * rotationMultiplier) * rotationDurationTitleContent * rotationAmplitude);
+}
+
+void UiMenu::UpdateRotationMenu(float realDt)
+{
+	rotationTimerMenuContent += realDt;
+	float speedMultiplier = 1.f;
+	float rotationMultiplier = 1.f;
+	float rotationAmplitude = 1.f;
+	sf::Vector2f alphabetOrigin = { 960.f,700.f };
+
+	if (rotationTimerMenuContent > 2.f * Utils::PI)
+		rotationTimerMenuContent -= 2.f * Utils::PI;
+
+	float rotationTimer1 = rotationTimerMenuContent * speedMultiplier;
+
+	for (auto alphabetSprite : mainTextStartGame)
+	{
+		alphabetSprite->setRotation(std::sin(rotationTimerMenuContent * rotationMultiplier) * rotationDurationMenuContent * rotationAmplitude);
+		alphabetSprite->setOrigin(alphabetOrigin * 0.2f);
+	}
+	for (auto alphabetSprite : mainTextContinue)
+	{
+		alphabetSprite->setRotation(std::sin(rotationTimerMenuContent * rotationMultiplier) * rotationDurationMenuContent * rotationAmplitude);
+		alphabetSprite->setOrigin(alphabetOrigin * 0.2f);
+	}
+	for (auto alphabetSprite : mainTextOption)
+	{
+		alphabetSprite->setRotation(std::sin(rotationTimerMenuContent * rotationMultiplier) * rotationDurationMenuContent * rotationAmplitude);
+		alphabetSprite->setOrigin(alphabetOrigin * 0.2f);
+	}
+	for (auto alphabetSprite : mainEditorMode)
+	{
+		alphabetSprite->setRotation(std::sin(rotationTimerMenuContent * rotationMultiplier) * rotationDurationMenuContent * rotationAmplitude);
+		alphabetSprite->setOrigin(alphabetOrigin * 0.2f);
+	}
+	for (auto alphabetSprite : mainTextExit)
+	{
+		alphabetSprite->setRotation(std::sin(rotationTimerMenuContent * rotationMultiplier) * rotationDurationMenuContent * rotationAmplitude);
+		alphabetSprite->setOrigin(alphabetOrigin * 0.2f);
+	}
+
+	for (auto alphabetSprite : optionTextVolume)
+	{
+		alphabetSprite->setRotation(std::sin(rotationTimerMenuContent * rotationMultiplier) * rotationDurationMenuContent * rotationAmplitude);
+		alphabetSprite->setOrigin(alphabetOrigin * 0.2f);
+	}
+
+	for (auto alphabetSprite : volumeTextMusic2)
+	{
+		alphabetSprite->setRotation(std::sin(rotationTimerMenuContent * rotationMultiplier) * rotationDurationMenuContent * rotationAmplitude);
+		alphabetSprite->setOrigin(alphabetOrigin * 0.2f);
+	}
+}
+
 void UiMenu::OnVolumeChange(bool isBgm)
 {
 	std::string path = ALPHABET_TABLE->GetSpirtePath();
 	std::string tempText;
 	sf::Vector2f textPos;
-	sf::Vector2f textDefaultPos = { 0.f,500.f };
+	sf::Vector2f textDefaultPos = { 0.f,450.f };
 	sf::Vector2f alphabetScale = { 4.f,4.f };
 	sf::Vector2f alphabetOrigin = { 960.f,700.f };
 	int totalAlphabetWidth = 0;
@@ -634,6 +713,7 @@ void UiMenu::OnVolumeChange(bool isBgm)
 		sf::Sprite* alphabetSprite = new sf::Sprite(TEXTURE_MGR.Get(path), ALPHABET_TABLE->Get(tempText[i]).texCoord);
 		alphabetSprite->setPosition(textDefaultPos + textPos + alphabetOrigin * 0.8f);
 		alphabetSprite->setScale(alphabetScale);
+		//alphabetSprite->setRotation(std::sin(rotationTimerMenuContent) * rotationDurationMenuContent);
 		alphabetSprite->setOrigin(alphabetOrigin * 0.2f);
 		textPos.x += ALPHABET_TABLE->Get(tempText[i]).characterWidth * alphabetScale.x;
 		if(isBgm)

@@ -60,10 +60,10 @@ void SceneGame::Enter()
 
 void SceneGame::Exit()
 {
+	SaveStage();
 	RemoveAllObjPool();
 	ClearStage();
 	Scene::Exit();
-	uiHud = nullptr;
 }
 
 void SceneGame::ClearInactivePoolObjects()
@@ -599,7 +599,34 @@ bool SceneGame::IsClearStage()
 	if (boss2 != nullptr)
 		result = boss2->IsClear();
 
-	uiHud->SetIsCleared(result);
+	if(uiHud != nullptr)
+		uiHud->SetIsCleared(result);
 
 	return result;
+}
+
+void SceneGame::SaveStage()
+{
+	if(STAGE_TABLE->GetSavedStageIndex() <= STAGE_TABLE->GetCurrentStageIndex())
+	{
+		std::ifstream indexFile("tables/save_data.json");
+		int saveIndex = 0;
+
+		json data;
+		indexFile >> data;
+		indexFile.close();
+
+		saveIndex = data["stage_count"];
+
+		std::ofstream FileOut("tables/save_data.json");
+
+		json outdata;
+		STAGE_TABLE->SetSavedStageIndex(STAGE_TABLE->GetCurrentStageIndex());
+		outdata["stage_count"] = saveIndex;
+		outdata["save_stage"] = STAGE_TABLE->GetSavedStageIndex();
+		FileOut << outdata.dump(4);
+		FileOut.close();
+
+		STAGE_TABLE->SetCurrentStageIndex(0);
+	}
 }
