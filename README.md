@@ -30,6 +30,15 @@
 
 ## 구현 요소
 
-
+|[<img width="300" src="https://github.com/user-attachments/assets/0aeeea80-a694-4d62-b0af-774bcdc1e084"/>](#UI)|[<img width="300" src=""/>](#플레이어)|
+|:---:|:---:|
+| [UI](#UI) | [플레이어](#플레이어)|
 
 ## 구현 상세
+1. ### UI
+  - Title
+  - Pause
+  - Status
+
+2. ### 플레이어
+   
